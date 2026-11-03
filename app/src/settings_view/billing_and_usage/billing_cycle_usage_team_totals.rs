@@ -59,7 +59,7 @@ pub fn build_team_total_card_summaries(
 ) -> Vec<TeamTotalCardSummary> {
     let (overall_segments, overall_credits, overall_cost) = aggregate_segments(entries.iter());
     let mut summaries = vec![TeamTotalCardSummary {
-        title: "Overall usage",
+        title: warp_i18n::t_static!("settings-billing-team-overall-usage"),
         card_key: "__card_overall__",
         segments: overall_segments,
         total_credits: overall_credits,
@@ -83,7 +83,7 @@ pub fn build_team_total_card_summaries(
                 .filter(|e| e.usage_source == AiCreditsUsageSource::Cloud),
         );
         summaries.push(TeamTotalCardSummary {
-            title: "Local agent usage",
+            title: warp_i18n::t_static!("settings-billing-team-local-agent-usage"),
             card_key: "__card_local__",
             segments: local_segments,
             total_credits: local_credits,
@@ -91,7 +91,7 @@ pub fn build_team_total_card_summaries(
             limit_cents: None,
         });
         summaries.push(TeamTotalCardSummary {
-            title: "Cloud agent usage",
+            title: warp_i18n::t_static!("settings-billing-team-cloud-agent-usage"),
             card_key: "__card_cloud__",
             segments: cloud_segments,
             total_credits: cloud_credits,
@@ -225,7 +225,10 @@ fn build_team_total_card(
     .finish();
 
     let credits_text = Text::new_inline(
-        format!("({} credits)", format_credits(summary.total_credits)),
+        warp_i18n::t!(
+            "settings-billing-team-usage-credits",
+            amount = format_credits(summary.total_credits)
+        ),
         appearance.ui_font_family(),
         13.,
     )
@@ -241,7 +244,10 @@ fn build_team_total_card(
     let totals_row: Box<dyn Element> = match summary.limit_cents {
         Some(limit) => {
             let limit_text = Text::new_inline(
-                format!("Limit: {}", format_cost_cents(limit as f64)),
+                warp_i18n::t!(
+                    "settings-billing-team-usage-limit",
+                    limit = format_cost_cents(limit as f64)
+                ),
                 appearance.ui_font_family(),
                 12.,
             )
@@ -357,9 +363,12 @@ pub fn render_team_totals_block(
 ) -> Box<dyn Element> {
     let mut column = Flex::column().with_cross_axis_alignment(CrossAxisAlignment::Stretch);
     column.add_child(
-        Container::new(render_section_subheader("Team", appearance))
-            .with_margin_bottom(8.)
-            .finish(),
+        Container::new(render_section_subheader(
+            warp_i18n::t_static!("settings-billing-v2-pool-team"),
+            appearance,
+        ))
+        .with_margin_bottom(8.)
+        .finish(),
     );
     column.add_child(render_team_totals_section(
         entries,

@@ -9,7 +9,6 @@ use warpui::ui_components::components::{Coords, UiComponent, UiComponentStyles};
 use super::env_var_collection::{EnvVarCollectionAction, EnvVarCollectionView};
 use crate::ui_components::dialog::{Dialog, dialog_styles};
 
-const UNSAVED_CHANGES_TEXT: &str = "You have unsaved changes.";
 const KEEP_EDITING_TEXT: &str = "Keep editing";
 const DISCARD_CHANGES_TEXT: &str = "Discard changes";
 const BUTTON_FONT_SIZE: f32 = 14.;
@@ -58,7 +57,7 @@ impl EnvVarCollectionView {
 
         Container::new(
             Dialog::new(
-                UNSAVED_CHANGES_TEXT.to_string(),
+                warp_i18n::t_static!("ui-final-you-have-unsaved-changes").to_string(),
                 None,
                 dialog_styles(appearance),
             )

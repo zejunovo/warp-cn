@@ -767,7 +767,8 @@ where
                         appearance
                             .ui_builder()
                             .link(
-                                "Manage AI Autonomy permissions".into(),
+                                warp_i18n::t_static!("ui-final-manage-ai-autonomy-permissions")
+                                    .into(),
                                 None,
                                 Some(Box::new(move |ctx| {
                                     ctx.dispatch_typed_action(
@@ -842,7 +843,7 @@ pub fn render_autonomy_checkbox_setting_speedbump_footer(
                     appearance
                         .ui_builder()
                         .link(
-                            "Manage AI Autonomy permissions".into(),
+                            warp_i18n::t_static!("ui-final-manage-ai-autonomy-permissions").into(),
                             None,
                             Some(Box::new(move |ctx| {
                                 ctx.dispatch_typed_action(

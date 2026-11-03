@@ -156,9 +156,12 @@ impl AgentCliLaunchModal {
         });
 
         let get_started_button = ctx.add_view(|_ctx| {
-            ActionButton::new("Get started", CtaButtonTheme)
-                .with_full_width(true)
-                .on_click(|ctx| ctx.dispatch_typed_action(AgentCliLaunchModalAction::GetStarted))
+            ActionButton::new(
+                warp_i18n::t_static!("ai-ui-agent-get-started"),
+                CtaButtonTheme,
+            )
+            .with_full_width(true)
+            .on_click(|ctx| ctx.dispatch_typed_action(AgentCliLaunchModalAction::GetStarted))
         });
 
         Self {
@@ -208,9 +211,13 @@ impl AgentCliLaunchModal {
     fn render_badge(appearance: &Appearance) -> Box<dyn Element> {
         let text_color = modal_terminal_magenta(appearance);
         let background_color = modal_terminal_magenta_overlay_1(appearance);
-        let text = Text::new_inline("New".to_string(), appearance.ui_font_family(), 14.)
-            .with_color(text_color)
-            .finish();
+        let text = Text::new_inline(
+            warp_i18n::t_static!("ai-ui-agent-cli-modal-badge").to_string(),
+            appearance.ui_font_family(),
+            14.,
+        )
+        .with_color(text_color)
+        .finish();
         ConstrainedBox::new(
             Container::new(
                 Flex::row()
@@ -230,7 +237,7 @@ impl AgentCliLaunchModal {
 
     fn render_title(appearance: &Appearance) -> Box<dyn Element> {
         Text::new(
-            "Introducing the Warp Agent CLI: A coding agent that does what others can't",
+            warp_i18n::t_static!("ai-ui-agent-cli-modal-title"),
             appearance.ui_font_family(),
             20.,
         )

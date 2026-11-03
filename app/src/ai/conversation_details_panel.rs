@@ -91,8 +91,6 @@ const HARNESS_ICON_IN_CIRCLE: f32 = 9.0;
 const PLATFORM_ICON_SIZE: f32 = 14.0;
 const LABEL_VALUE_GAP: f32 = 4.0;
 const SECTION_HEADER_GAP: f32 = 8.0;
-const RUN_METADATA_ACCESS_DENIED_TITLE: &str = "Run metadata is not available";
-const RUN_METADATA_ACCESS_DENIED_DESCRIPTION: &str = "You can view this shared session, but run metadata is only visible to users with access to this run.";
 
 /// Panel rendering mode.
 #[derive(Debug, Clone, PartialEq)]
@@ -730,7 +728,9 @@ impl ConversationDetailsPanel {
         #[cfg(not(target_family = "wasm"))]
         let continue_locally_button = ctx.add_typed_action_view(|_| {
             ActionButton::new("Continue locally", PrimaryTheme)
-                .with_tooltip("Fork this conversation locally")
+                .with_tooltip(warp_i18n::t_static!(
+                    "ui-final-fork-this-conversation-locally"
+                ))
                 .with_size(ButtonSize::Small)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(ConversationDetailsPanelAction::ContinueLocally);
@@ -738,7 +738,9 @@ impl ConversationDetailsPanel {
         });
         let open_in_oz_button = ctx.add_typed_action_view(|_| {
             ActionButton::new("View in Oz", SecondaryTheme)
-                .with_tooltip("View this run in the Oz web app")
+                .with_tooltip(warp_i18n::t_static!(
+                    "ui-final-view-this-run-in-the-oz-web-app"
+                ))
                 .with_size(ButtonSize::Small)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(ConversationDetailsPanelAction::OpenInOz);
@@ -1167,10 +1169,10 @@ impl ConversationDetailsPanel {
         .finish();
 
         let created_text = Text::new(
-            format!(
-                "Created by {} • {}",
-                creator.display_name,
-                format_approx_duration_from_now(created_at)
+            warp_i18n::t!(
+                "ui-final-created-by-with-time",
+                creator = format!("{}", creator.display_name),
+                time = format!("{}", format_approx_duration_from_now(created_at))
             ),
             appearance.ui_font_family(),
             ui_font_size,
@@ -1213,7 +1215,7 @@ impl ConversationDetailsPanel {
         let ui_font_size = appearance.ui_font_size();
 
         let label_text = Text::new(
-            "Agent".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-details-agent").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )
@@ -1270,7 +1272,7 @@ impl ConversationDetailsPanel {
         let ui_font_size = appearance.ui_font_size();
 
         let label_text = Text::new(
-            "Error".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-error").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )
@@ -1321,7 +1323,7 @@ impl ConversationDetailsPanel {
                     .finish();
 
             let title = Text::new(
-                RUN_METADATA_ACCESS_DENIED_TITLE,
+                warp_i18n::t_static!("ui-final-run-metadata-is-not-available"),
                 appearance.ui_font_family(),
                 ui_font_size,
             )
@@ -1330,7 +1332,7 @@ impl ConversationDetailsPanel {
             .with_selectable(true)
             .finish();
             let description = Text::new(
-                RUN_METADATA_ACCESS_DENIED_DESCRIPTION,
+                warp_i18n::t_static!("ui-final-you-can-view-this-shared-session-but-run-metadata-is-only-visible-to-users-with-access-to"),
                 appearance.ui_font_family(),
                 ui_font_size - 1.,
             )
@@ -1401,7 +1403,7 @@ impl ConversationDetailsPanel {
 
         // Section header
         let header = Text::new(
-            "Status".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-status").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )
@@ -1509,7 +1511,7 @@ impl ConversationDetailsPanel {
         let ui_font_size = appearance.ui_font_size();
 
         let label_text = Text::new(
-            "Harness".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-harness").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )
@@ -1592,7 +1594,7 @@ impl ConversationDetailsPanel {
         let oz_link = appearance
             .ui_builder()
             .link(
-                "Open in Oz".to_string(),
+                warp_i18n::t_static!("ui-final-open-in-oz").to_string(),
                 Some(skill_url),
                 None,
                 self.mouse_states.skill_link.clone(),
@@ -1629,7 +1631,7 @@ impl ConversationDetailsPanel {
             let source_link = appearance
                 .ui_builder()
                 .link(
-                    "Open in GitHub".to_string(),
+                    warp_i18n::t_static!("ai-ui-open-github").to_string(),
                     Some(github_url),
                     None,
                     self.mouse_states.skill_source_link.clone(),
@@ -1653,7 +1655,7 @@ impl ConversationDetailsPanel {
         let ui_font_size = appearance.ui_font_size();
 
         let label_text = Text::new(
-            "Initial query".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-details-initial-query").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )
@@ -1695,7 +1697,7 @@ impl ConversationDetailsPanel {
         let ui_font_size = appearance.ui_font_size();
 
         let label_text = Text::new(
-            "Artifacts".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-artifacts").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )
@@ -1734,7 +1736,7 @@ impl ConversationDetailsPanel {
         let ui_font_size = appearance.ui_font_size();
 
         let header_text = Text::new(
-            "Environment setup commands".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-env-setup").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )
@@ -1799,7 +1801,7 @@ impl ConversationDetailsPanel {
 
         // Section header
         let header = Text::new(
-            "Environment details".to_string(),
+            warp_i18n::t_static!("ai-ui-conversation-env-details").to_string(),
             appearance.ui_font_family(),
             ui_font_size,
         )

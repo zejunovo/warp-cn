@@ -17,7 +17,6 @@ use crate::{Appearance, FeatureFlag, WorkspaceAction};
 
 const TITLE_EXISTING_USERS: &str = "We've updated our telemetry policy.";
 const TITLE_NEW_USERS: &str = "Help improve Warp.";
-const DESCRIPTION: &str = "We may collect certain console interactions to improve Warp's AI capabilities. You can opt out any time.";
 const PRIVACY_URL: &str = "https://warp.dev/privacy";
 
 #[derive(Default, Debug, Clone)]
@@ -82,7 +81,7 @@ impl View for TelemetryBanner {
                                 .finish(),
                         )
                         .with_child(
-                            Text::new(DESCRIPTION, ui_builder.ui_font_family(), 12.)
+                            Text::new(warp_i18n::t_static!("ui-final-we-may-collect-certain-console-interactions-to-improve-warp-s-ai-capabilities-you-can-opt"), ui_builder.ui_font_family(), 12.)
                                 .with_color(theme.nonactive_ui_text_color().into_solid())
                                 .soft_wrap(true)
                                 .finish(),
@@ -99,7 +98,7 @@ impl View for TelemetryBanner {
                 Container::new(
                     ui_builder
                         .button(ButtonVariant::Text, self.learn_more_mouse_state.clone())
-                        .with_text_label("Learn more".into())
+                        .with_text_label(warp_i18n::t_static!("ai-ui-learn-more").into())
                         .with_style(UiComponentStyles {
                             height: Some(24.),
                             padding: Some(Coords {
@@ -130,7 +129,9 @@ impl View for TelemetryBanner {
                             ButtonVariant::Outlined,
                             self.privacy_settings_mouse_state.clone(),
                         )
-                        .with_text_label("Manage privacy settings".into())
+                        .with_text_label(
+                            warp_i18n::t_static!("ui-final-manage-privacy-settings").into(),
+                        )
                         .with_style(UiComponentStyles {
                             ..Default::default()
                         })

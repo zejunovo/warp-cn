@@ -117,6 +117,8 @@ fn bucket_balance_is_dollars_only_when_shown_in_dollars_with_every_grant_priced(
 
 #[test]
 fn balance_amount_formats_in_its_unit() {
+    warp_i18n::init(warp_i18n::Locale::En).expect("English translations should load");
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     assert_eq!(BalanceAmount::Credits(1_500).format(), "1,500");
     assert_eq!(
         BalanceAmount::Credits(1_500).pool_label("Team"),

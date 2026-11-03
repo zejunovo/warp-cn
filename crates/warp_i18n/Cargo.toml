@@ -1,0 +1,36 @@
+[package]
+name = "warp_i18n"
+edition = "2024"
+description = "Warp i18n runtime: Fluent bundle loading, locale resolution, lock-free t!() lookup"
+publish.workspace = true
+license.workspace = true
+
+[dependencies]
+warp_i18n_macros.workspace = true
+fluent-bundle = "0.15"
+unic-langid = { version = "0.9", features = ["macros"] }
+sys-locale = "0.3"
+arc-swap = "1.7"
+once_cell.workspace = true
+tokio = { workspace = true, features = ["sync"] }
+tracing.workspace = true
+serde = { workspace = true }
+unicode-segmentation.workspace = true
+parking_lot.workspace = true
+anyhow.workspace = true
+
+[build-dependencies]
+fluent-syntax = "0.11"
+phf_codegen = "0.11"
+walkdir.workspace = true
+
+[dev-dependencies]
+proptest = "=1.5.0"
+trybuild = "1"
+criterion = { version = "0.5.1", features = ["html_reports"] }
+fluent-syntax = "0.11"
+serde_json.workspace = true
+
+[[bench]]
+name = "lookup"
+harness = false

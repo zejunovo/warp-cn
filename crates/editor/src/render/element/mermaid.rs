@@ -69,7 +69,7 @@ impl RenderableBlock for RenderableMermaidDiagram {
         let placeholder_color = model.styles().placeholder_color;
         let placeholder = Align::new(
             Text::new(
-                "Rendering Mermaid diagram…",
+                warp_i18n::t_static!("misc-mermaid-rendering"),
                 code_text.font_family,
                 code_text.font_size,
             )
@@ -81,7 +81,7 @@ impl RenderableBlock for RenderableMermaidDiagram {
         .finish();
         let failure_notice = Align::new(
             Text::new(
-                "Error rendering Mermaid diagram. Please check syntax.",
+                warp_i18n::t_static!("coding-mermaid-error-rendering"),
                 code_text.font_family,
                 code_text.font_size,
             )
@@ -93,7 +93,7 @@ impl RenderableBlock for RenderableMermaidDiagram {
         .finish();
         let timeout_notice = Align::new(
             Text::new(
-                "Failed to render Mermaid diagram",
+                warp_i18n::t_static!("coding-mermaid-failed-rendering"),
                 code_text.font_family,
                 code_text.font_size,
             )

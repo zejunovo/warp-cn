@@ -418,7 +418,7 @@ pub fn render_cloud_mode_cancelled_screen(appearance: &Appearance) -> Box<dyn El
 
     // Title text - "Cloud Agent Run Cancelled"
     let title_text = Text::new(
-        "Cloud Agent Run Cancelled",
+        warp_i18n::t_static!("ai-ui-ambient-cancelled-title"),
         appearance.ui_font_family(),
         appearance.monospace_font_size() + 2.,
     )
@@ -428,7 +428,7 @@ pub fn render_cloud_mode_cancelled_screen(appearance: &Appearance) -> Box<dyn El
 
     // Subtitle text - "No cloud environment was started"
     let subtitle_text = Text::new(
-        "No cloud environment was started",
+        warp_i18n::t_static!("ai-ui-ambient-no-cloud-env"),
         appearance.ui_font_family(),
         appearance.monospace_font_size(),
     )

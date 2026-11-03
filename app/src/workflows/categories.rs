@@ -762,7 +762,7 @@ impl CategoriesView {
             appearance
                 .ui_builder()
                 .link(
-                    "creating your own workflow".into(),
+                    warp_i18n::t_static!("ui-final-creating-your-own-workflow").into(),
                     Some(
                         "https://docs.warp.dev/knowledge-and-collaboration/warp-drive/workflows"
                             .into(),
@@ -1245,7 +1245,7 @@ impl View for CategoriesView {
 
 impl VoltronFeatureViewMeta for CategoriesView {
     fn editor_placeholder_text(&self) -> &'static str {
-        "Search workflows"
+        warp_i18n::t_static!("workflow-search-placeholder")
     }
 
     fn custom_action() -> Option<CustomAction> {

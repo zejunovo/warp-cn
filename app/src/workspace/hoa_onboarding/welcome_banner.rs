@@ -105,7 +105,7 @@ pub fn render_welcome_banner(
 
     // Title
     let title = Text::new(
-        "Introducing universal agent support: level up any coding agent with Warp",
+        warp_i18n::t_static!("onboarding-universal-agent-support"),
         appearance.ui_font_family(),
         20.,
     )

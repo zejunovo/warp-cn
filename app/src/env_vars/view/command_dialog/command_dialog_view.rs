@@ -27,10 +27,8 @@ const CONTAINER_PADDING: f32 = 25.;
 const ELEMENT_SPACING: f32 = 10.;
 const EDITOR_DIVIDE: f32 = 6.;
 
-const SECRET_SPAN: &str = "Secret command";
 const SAVE_BUTTON_LABEL: &str = "Save";
 const CANCEL_BUTTON_LABEL: &str = "Cancel";
-const NAME_PLACEHOLDER_TEXT: &str = "Name";
 const COMMAND_PLACEHOLDER_TEXT: &str = "Command";
 
 #[derive(Debug, Clone)]
@@ -70,7 +68,7 @@ impl EnvVarCommandDialog {
                 };
 
                 let mut editor = EditorView::single_line(options, ctx);
-                editor.set_placeholder_text(NAME_PLACEHOLDER_TEXT, ctx);
+                editor.set_placeholder_text(warp_i18n::t_static!("ai-ui-profile-name"), ctx);
                 editor
             })
         };
@@ -254,7 +252,7 @@ impl EnvVarCommandDialog {
         Container::new(
             appearance
                 .ui_builder()
-                .span(SECRET_SPAN)
+                .span(warp_i18n::t_static!("ui-final-secret-command"))
                 .with_style(UiComponentStyles {
                     font_size: Some(SPAN_FONT_SIZE),
                     ..Default::default()

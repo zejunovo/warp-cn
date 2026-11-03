@@ -93,10 +93,15 @@ const MAX_PROFILE_NAME_WIDTH_SCALE_FACTOR: f32 = 10.0;
 
 const PROFILE_SELECTOR_POSITION_ID: &str = "profile_selector";
 
-const PROFILE_PICKER_TOOLTIP: &str = "Choose an AI execution profile";
-const MODEL_PICKER_TOOLTIP: &str = "Choose an agent model";
-const MODEL_USES_CHATGPT_SUBSCRIPTION_TOOLTIP: &str =
-    "Requests for this model use your ChatGPT plan";
+fn localized_profile_picker_tooltip() -> &'static str {
+    warp_i18n::t_static!("ai-ui-choose-execution-profile")
+}
+fn localized_model_picker_tooltip() -> &'static str {
+    warp_i18n::t_static!("ai-ui-choose-agent-model")
+}
+fn localized_model_uses_chatgpt_subscription_tooltip() -> &'static str {
+    warp_i18n::t_static!("ai-ui-model-uses-chatgpt-subscription")
+}
 const MODEL_LOCKED_FOR_FOLLOWUP_TOOLTIP: &str = "Follow-ups use the original run's model";
 const MODEL_REQUIRES_EDIT_ACCESS_TOOLTIP: &str = "Request edit access to change model";
 const HARNESS_DEFAULT_MODEL_LABEL: &str = "default";
@@ -283,7 +288,7 @@ impl ProfileModelSelector {
                 ),
                 is_blurred: false,
             })
-            .with_tooltip(PROFILE_PICKER_TOOLTIP)
+            .with_tooltip(localized_profile_picker_tooltip())
             .with_size(ButtonSize::UDIButton)
             .with_icon(Icon::Psychology)
         });
@@ -311,14 +316,14 @@ impl ProfileModelSelector {
                 ),
                 is_blurred: false,
             })
-            .with_tooltip(MODEL_PICKER_TOOLTIP)
+            .with_tooltip(localized_model_picker_tooltip())
             .with_size(ButtonSize::UDIButton)
         });
 
         let profile_compact_button = ctx.add_typed_action_view(|_| {
             ActionButton::new("", PromptIconButtonTheme::new(false))
                 .with_icon(Icon::Psychology)
-                .with_tooltip(PROFILE_PICKER_TOOLTIP)
+                .with_tooltip(localized_profile_picker_tooltip())
                 .with_size(ButtonSize::UDIButton)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(ProfileModelSelectorAction::ToggleProfileMenu);
@@ -328,7 +333,7 @@ impl ProfileModelSelector {
         let model_compact_button = ctx.add_typed_action_view(|_| {
             ActionButton::new("", PromptIconButtonTheme::new(false))
                 .with_icon(Icon::Neurology)
-                .with_tooltip(MODEL_PICKER_TOOLTIP)
+                .with_tooltip(localized_model_picker_tooltip())
                 .with_size(ButtonSize::UDIButton)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(ProfileModelSelectorAction::ToggleModelMenu);
@@ -561,8 +566,8 @@ impl ProfileModelSelector {
         );
 
         let manage_api_key_button = ctx.add_typed_action_view(|_ctx| {
-            ActionButton::new("Manage", SecondaryTheme)
-                .with_tooltip("Manage API keys")
+            ActionButton::new(warp_i18n::t_static!("ai-ui-manage"), SecondaryTheme)
+                .with_tooltip(warp_i18n::t_static!("ai-ui-manage-api-keys"))
                 .with_size(ButtonSize::XSmall)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(WorkspaceAction::ShowSettingsPageWithSearch {
@@ -575,7 +580,7 @@ impl ProfileModelSelector {
         let manage_chatgpt_usage_button = ctx.add_typed_action_view(|_ctx| {
             let source = ByoKeySource::ChatGPTSubscription;
             ActionButton::new(source.manage_button_label(), SecondaryTheme)
-                .with_tooltip("Manage ChatGPT usage")
+                .with_tooltip(warp_i18n::t_static!("ui-final-manage-chatgpt-usage"))
                 .with_size(ButtonSize::XSmall)
                 .on_click(move |ctx| {
                     if let Some(url) = source.manage_url() {
@@ -795,7 +800,7 @@ impl ProfileModelSelector {
         } else if self.is_locked_for_non_oz_run(ctx) {
             None
         } else {
-            Some(MODEL_PICKER_TOOLTIP)
+            Some(localized_model_picker_tooltip())
         };
         let locked = self.is_model_locked(ctx);
         self.model_button.update(ctx, |button, ctx| {
@@ -897,12 +902,13 @@ impl ProfileModelSelector {
         let appearance = Appearance::as_ref(ctx);
         let mut menu_items = vec![
             MenuItem::Header {
-                fields: MenuItemFields::new("Profiles").with_override_text_color(
-                    appearance
-                        .theme()
-                        .sub_text_color(appearance.theme().background())
-                        .into_solid(),
-                ),
+                fields: MenuItemFields::new(warp_i18n::t_static!("ai-ui-profiles"))
+                    .with_override_text_color(
+                        appearance
+                            .theme()
+                            .sub_text_color(appearance.theme().background())
+                            .into_solid(),
+                    ),
                 clickable: false,
                 right_side_fields: None,
             },
@@ -928,7 +934,7 @@ impl ProfileModelSelector {
 
         menu_items.push(MenuItem::Separator);
         menu_items.push(MenuItem::Item(
-            MenuItemFields::new("Manage profiles")
+            MenuItemFields::new(warp_i18n::t_static!("ai-ui-manage-profiles"))
                 .with_icon(Icon::Gear)
                 .with_on_select_action(ProfileModelSelectorAction::ManageProfiles),
         ));
@@ -1152,12 +1158,13 @@ impl ProfileModelSelector {
                 items.push(MenuItem::Separator);
             }
             items.push(MenuItem::Header {
-                fields: MenuItemFields::new("Custom models").with_override_text_color(
-                    appearance
-                        .theme()
-                        .sub_text_color(appearance.theme().background())
-                        .into_solid(),
-                ),
+                fields: MenuItemFields::new(warp_i18n::t_static!("ui-final-custom-models"))
+                    .with_override_text_color(
+                        appearance
+                            .theme()
+                            .sub_text_color(appearance.theme().background())
+                            .into_solid(),
+                    ),
                 clickable: false,
                 right_side_fields: None,
             });
@@ -1722,7 +1729,7 @@ impl ProfileModelSelector {
 
                 let tooltip = appearance
                     .ui_builder()
-                    .tool_tip(PROFILE_PICKER_TOOLTIP.to_owned());
+                    .tool_tip(localized_profile_picker_tooltip().to_owned());
                 let mut stack = Stack::new();
                 stack.add_child(button_with_hover);
                 stack.add_positioned_overlay_child(
@@ -1872,9 +1879,9 @@ impl ProfileModelSelector {
         let is_locked = is_locked_for_followup || is_locked_for_non_oz;
         let can_interact = has_edit_access && !is_locked;
         let interactive_tooltip = if is_using_chatgpt_subscription {
-            MODEL_USES_CHATGPT_SUBSCRIPTION_TOOLTIP
+            localized_model_uses_chatgpt_subscription_tooltip()
         } else {
-            MODEL_PICKER_TOOLTIP
+            localized_model_picker_tooltip()
         };
 
         let hoverable = Hoverable::new(self.model_mouse_state.clone(), move |state| {

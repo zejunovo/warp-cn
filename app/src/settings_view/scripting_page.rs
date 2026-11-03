@@ -71,7 +71,12 @@ impl ScriptingSettingsPageView {
             vec![Box::new(LocalControlModeWidget)];
 
         Self {
-            page: PageType::new_uncategorized(widgets, Some(PageTitle::new("Scripting"))),
+            page: PageType::new_uncategorized(
+                widgets,
+                Some(PageTitle::new(warp_i18n::t_static!(
+                    "settings-section-scripting"
+                ))),
+            ),
             local_only_icon_tooltip_states: RefCell::new(HashMap::new()),
             local_control_mode_dropdown,
             #[cfg(target_os = "macos")]
@@ -90,7 +95,14 @@ impl ScriptingSettingsPageView {
                     .into_iter()
                     .map(|mode| {
                         DropdownItem::new(
-                            mode.as_dropdown_label(),
+                            match mode {
+                                LocalControlMode::Disabled => {
+                                    warp_i18n::t_static!("onboarding-toggle-disabled")
+                                }
+                                LocalControlMode::Enabled => {
+                                    warp_i18n::t_static!("onboarding-toggle-enabled")
+                                }
+                            },
                             ScriptingSettingsPageAction::SetLocalControlMode(mode),
                         )
                     })
@@ -120,8 +132,9 @@ impl ScriptingSettingsPageView {
                 match result {
                     Ok(()) => {
                         let command_name = ChannelState::channel().warpctrl_command_name();
-                        let message = format!(
-                            "Successfully installed the Warp Control CLI! You can now run '{command_name}' from the command line."
+                        let message = warp_i18n::t!(
+                            "fork-settings-scripting-install-success",
+                            command = command_name
                         );
                         ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
                             toast_stack.add_ephemeral_toast(
@@ -132,8 +145,11 @@ impl ScriptingSettingsPageView {
                         });
                     }
                     Err(error) => {
-                        let message = format!("Failed to install Warp Control command: {error}");
-                        log::warn!("{message}");
+                        log::warn!("Failed to install Warp Control command: {error}");
+                        let message = warp_i18n::t!(
+                            "fork-settings-scripting-install-failed",
+                            error = error.to_string()
+                        );
                         ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
                             toast_stack.add_persistent_toast(
                                 DismissibleToast::error(message),
@@ -231,11 +247,11 @@ impl SettingsWidget for WarpControlCliInstallWidget {
         let installed = cli_install::is_warpctrl_installed();
         let disabled = view.warpctrl_installing || installed;
         let label = if view.warpctrl_installing {
-            "Installing…"
+            warp_i18n::t_static!("fork-settings-scripting-installing")
         } else if installed {
-            "Installed"
+            warp_i18n::t_static!("settings-code-lsp-installed")
         } else {
-            "Install"
+            warp_i18n::t_static!("settings-mcp-install-confirm")
         };
         let mut button = appearance
             .ui_builder()
@@ -259,13 +275,13 @@ impl SettingsWidget for WarpControlCliInstallWidget {
         };
 
         render_body_item::<ScriptingSettingsPageAction>(
-            "Warp Control CLI command".into(),
+            warp_i18n::t_static!("fork-settings-scripting-command-title").into(),
             None,
             LocalOnlyIconState::Hidden,
             ToggleState::Enabled,
             appearance,
             button,
-            Some("Install the warpctrl command for scripting Warp from your terminal.".to_owned()),
+            Some(warp_i18n::t_static!("fork-settings-scripting-install-description").to_owned()),
         )
     }
 }
@@ -296,7 +312,7 @@ impl SettingsWidget for LocalControlModeWidget {
             ToggleState::Enabled,
             appearance,
             ChildView::new(&view.local_control_mode_dropdown).finish(),
-            Some("warpctrl allows for scripting Warp's UI. Use with care.".to_owned()),
+            Some(warp_i18n::t_static!("fork-settings-scripting-control-description").to_owned()),
         )
     }
 }

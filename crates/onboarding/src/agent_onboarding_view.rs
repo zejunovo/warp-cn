@@ -490,7 +490,9 @@ impl AgentOnboardingView {
         let cancel_button = self.no_ai_cancel_button.render(
             appearance,
             button::Params {
-                content: button::Content::Label("Give me AI features".into()),
+                content: button::Content::Label(
+                    warp_i18n::t_static!("onboarding-no-ai-dialog-cancel").into(),
+                ),
                 theme: &button::themes::Naked,
                 options: button::Options {
                     on_click: Some(Box::new(|ctx, _app, _pos| {
@@ -505,7 +507,9 @@ impl AgentOnboardingView {
         let confirm_button = self.no_ai_confirm_button.render(
             appearance,
             button::Params {
-                content: button::Content::Label("I don't want AI".into()),
+                content: button::Content::Label(
+                    warp_i18n::t_static!("onboarding-no-ai-dialog-confirm").into(),
+                ),
                 theme: &button::themes::Primary,
                 options: button::Options {
                     keystroke: Some(enter),
@@ -520,9 +524,8 @@ impl AgentOnboardingView {
         render_feature_optout_dialog(
             appearance,
             FeatureOptOutDialog {
-                title: "Are you sure you don't want AI?",
-                body: "Without AI, you'll still get Warp's terminal experience, but you'll miss \
-                       our agentic features like automatic fixes for terminal errors.",
+                title: warp_i18n::t_static!("onboarding-no-ai-dialog-title"),
+                body: warp_i18n::t_static!("onboarding-no-ai-dialog-body"),
                 features: &[],
                 close_button,
                 cancel_button,
@@ -594,7 +597,9 @@ impl AgentOnboardingView {
         .finish();
 
         let text = ui_builder
-            .span("Plan successfully activated!")
+            .span(warp_i18n::t_static!(
+                "onboarding-agent-toast-plan-activated"
+            ))
             .with_style(UiComponentStyles {
                 font_color: Some(text_color),
                 font_size: Some(FONT_SIZE),

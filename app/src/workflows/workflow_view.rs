@@ -134,7 +134,6 @@ const SCROLLBAR_WIDTH: ScrollbarWidth = ScrollbarWidth::Auto;
 const TITLE_PLACEHOLDER_TEXT: &str = "Add a title";
 const DESCRIPTION_PLACEHOLDER_TEXT: &str = "Add a description";
 const COMMAND_PLACEHOLDER_TEXT: &str = "echo \"Hello {{your_name}}\" # insert arguments with curly braces\n# enter a single-line command or an entire shell script";
-const AGENT_MODE_QUERY_PLACEHOLDER_TEXT: &str = "Enter your prompt here... (e.g., 'Create a function to sort an array of objects by date' or 'Help me debug this React component').";
 const DESCRIPTION_MARGIN_TOP: f32 = 10.;
 
 const CORE_HORIZONATAL_MARGIN: f32 = 24.;
@@ -173,9 +172,6 @@ const ALIAS_HELP_TEXT: &str = "Aliases allow you to create short strings to exec
 const RUN_ON_DESKTOP_BUTTON_TEXT: &str = "Run in Warp";
 const RUN_ON_DESKTOP_BUTTON_WIDTH: f32 = 108.;
 
-const UNSAVED_CHANGES_TEXT: &str = "You have unsaved changes.";
-const KEEP_EDITING_TEXT: &str = "Keep editing";
-const DISCARD_CHANGES_TEXT: &str = "Discard changes";
 const DIALOG_WIDTH: f32 = 460.;
 const MODAL_HORIZONTAL_MARGIN: f32 = 28.;
 
@@ -488,7 +484,7 @@ impl WorkflowView {
         self.is_for_agent_mode = is_for_agent_mode;
         if is_for_agent_mode {
             self.content_editor.update(ctx, |editor, ctx| {
-                editor.set_placeholder_text(AGENT_MODE_QUERY_PLACEHOLDER_TEXT, ctx);
+                editor.set_placeholder_text(warp_i18n::t_static!("ui-final-enter-your-prompt-here-e-g-create-a-function-to-sort-an-array-of-objects-by-date-or-help-m"), ctx);
                 editor.set_font_family(Appearance::as_ref(ctx).ui_font_family(), ctx);
             });
         }
@@ -511,7 +507,7 @@ impl WorkflowView {
 
         if is_for_agent_mode {
             self.content_editor.update(ctx, |editor, ctx| {
-                editor.set_placeholder_text(AGENT_MODE_QUERY_PLACEHOLDER_TEXT, ctx);
+                editor.set_placeholder_text(warp_i18n::t_static!("ui-final-enter-your-prompt-here-e-g-create-a-function-to-sort-an-array-of-objects-by-date-or-help-m"), ctx);
             });
         }
 
@@ -708,7 +704,7 @@ impl WorkflowView {
         self.is_for_agent_mode = workflow.model().data.is_agent_mode_workflow();
         if self.is_for_agent_mode {
             self.content_editor.update(ctx, |editor, ctx| {
-                editor.set_placeholder_text(AGENT_MODE_QUERY_PLACEHOLDER_TEXT, ctx);
+                editor.set_placeholder_text(warp_i18n::t_static!("ui-final-enter-your-prompt-here-e-g-create-a-function-to-sort-an-array-of-objects-by-date-or-help-m"), ctx);
                 editor.set_font_family(Appearance::as_ref(ctx).ui_font_family(), ctx);
             });
         }
@@ -800,7 +796,7 @@ impl WorkflowView {
 
         if self.is_for_agent_mode {
             self.content_editor.update(ctx, |editor, ctx| {
-                editor.set_placeholder_text(AGENT_MODE_QUERY_PLACEHOLDER_TEXT, ctx);
+                editor.set_placeholder_text(warp_i18n::t_static!("ui-final-enter-your-prompt-here-e-g-create-a-function-to-sort-an-array-of-objects-by-date-or-help-m"), ctx);
             });
         } else {
             self.content_editor_highlight_model
@@ -2268,7 +2264,7 @@ impl WorkflowView {
                 padding: Some(Coords::uniform(BUTTON_PADDING)),
                 ..Default::default()
             })
-            .with_text_label(KEEP_EDITING_TEXT.into())
+            .with_text_label(warp_i18n::t_static!("ui-final-keep-editing").into())
             .build()
             .with_cursor(Cursor::PointingHand)
             .on_click(move |ctx, _, _| {
@@ -2288,7 +2284,7 @@ impl WorkflowView {
                 padding: Some(Coords::uniform(BUTTON_PADDING)),
                 ..Default::default()
             })
-            .with_text_label(DISCARD_CHANGES_TEXT.into())
+            .with_text_label(warp_i18n::t_static!("settings-discard-changes").into())
             .build()
             .with_cursor(Cursor::PointingHand)
             .on_click(move |ctx, _, _| {
@@ -2298,7 +2294,7 @@ impl WorkflowView {
 
         Container::new(
             Dialog::new(
-                UNSAVED_CHANGES_TEXT.to_string(),
+                warp_i18n::t_static!("ui-final-you-have-unsaved-changes").to_string(),
                 None,
                 dialog_styles(appearance),
             )
@@ -3182,7 +3178,7 @@ impl BackingView for WorkflowView {
         // Add "Copy Link" to menu
         if let Some(link) = self.workflow_link(ctx) {
             menu_items.push(
-                MenuItemFields::new("Copy link")
+                MenuItemFields::new(warp_i18n::t_static!("drive-menu-copy-link"))
                     .with_on_select_action(WorkflowAction::CopyLink(link))
                     .with_icon(Icon::Link)
                     .into_item(),
@@ -3194,7 +3190,7 @@ impl BackingView for WorkflowView {
             && let Ok(url) = Url::parse(&link)
         {
             menu_items.push(
-                MenuItemFields::new("Open on Desktop")
+                MenuItemFields::new(warp_i18n::t_static!("drive-menu-open-on-desktop"))
                     .with_on_select_action(WorkflowAction::OpenLinkOnDesktop(url))
                     .with_icon(Icon::Laptop)
                     .into_item(),

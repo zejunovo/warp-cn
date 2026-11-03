@@ -180,7 +180,7 @@ impl FirstTimeCloudAgentSetupView {
         // Title - 20px medium weight
         column.add_child(
             Text::new(
-                "Start a new Oz cloud agent",
+                warp_i18n::t_static!("ai-ui-ambient-start-cloud-agent"),
                 appearance.ui_font_family(),
                 20.,
             )
@@ -221,7 +221,7 @@ impl FirstTimeCloudAgentSetupView {
 
         // Bold/semibold text in foreground color (per Figma: font-semibold text-[#e3e2df])
         Text::new(
-            "Cloud agents require an environment that they'll run in to get their task done. Create your first environment below. You'll be able to edit the environment later, or add new environments when you need them.",
+            warp_i18n::t_static!("ai-ui-ambient-cloud-env-intro"),
             appearance.ui_font_family(),
             appearance.ui_font_size(),
         )
@@ -240,9 +240,9 @@ impl FirstTimeCloudAgentSetupView {
         let theme = appearance.theme();
 
         let badge_text = if credits.usage_cents.is_some() {
-            "Free usage"
+            warp_i18n::t_static!("ai-ui-ambient-free-usage")
         } else {
-            "Free credits"
+            warp_i18n::t_static!("ai-ui-ambient-free-credits")
         };
         // Badge with blue border
         let badge = Container::new(

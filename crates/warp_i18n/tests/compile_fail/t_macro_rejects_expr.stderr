@@ -1,0 +1,5 @@
+error: expected string literal
+ --> tests/compile_fail/t_macro_rejects_expr.rs:9:21
+  |
+9 |     let _label = t!(get_key()); //~ ERROR
+  |                     ^^^^^^^

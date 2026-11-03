@@ -596,7 +596,7 @@ impl WorkflowView {
                     Container::new(
                         appearance
                         .ui_builder()
-                        .span("Fill out the arguments in this workflow and copy it to run in your terminal session")
+                        .span(warp_i18n::t_static!("ui-final-fill-out-the-arguments-in-this-workflow-and-copy-it-to-run-in-your-terminal-session"))
                         .with_soft_wrap()
                         .with_style(UiComponentStyles {
                             font_size: Some(EDITOR_FONT_SIZE),
@@ -820,7 +820,9 @@ impl WorkflowView {
                         .add_environment_variables_mouse_state
                         .clone(),
                 )
-                .with_centered_text_label("Add environment variables".to_string())
+                .with_centered_text_label(
+                    warp_i18n::t_static!("ui-final-add-environment-variables").to_string(),
+                )
                 .build()
                 .on_click(|ctx, _, _| {
                     ctx.dispatch_typed_action(WorkspaceAction::CreatePersonalEnvVarCollection);
@@ -832,7 +834,7 @@ impl WorkflowView {
             .with_children([
                 appearance
                     .ui_builder()
-                    .span("Environment variables")
+                    .span(warp_i18n::t_static!("drive-object-env-vars"))
                     .with_style(UiComponentStyles {
                         font_size: Some(13.),
                         ..Default::default()

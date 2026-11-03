@@ -46,8 +46,12 @@ const TOS_URL: &str = "https://www.warp.dev/terms-of-service";
 const COMMON_BODY_UI_FONT_SIZE: f32 = 12.;
 const AUTH_MODAL_GAP: f32 = 16.;
 
-const AUTH_TOKEN_INPUT_PLACEHOLDER_TEXT: &str = "Auth Token";
-const AUTH_TOKEN_INPUT_PLACEHOLDER_TEXT_EXPERIMENTAL: &str = "Browser auth token";
+fn localized_auth_token_input_placeholder_text() -> &'static str {
+    warp_i18n::t_static!("dialog-auth-token-placeholder")
+}
+fn localized_auth_token_input_placeholder_text_experimental() -> &'static str {
+    warp_i18n::t_static!("dialog-auth-browser-token-placeholder")
+}
 
 const AUTH_TOKEN_INPUT_BORDER_RADIUS: Radius = Radius::Pixels(4.);
 
@@ -164,9 +168,9 @@ impl AuthViewBody {
 
             let placeholder_text =
                 if matches!(experiment_group, Some(AuthFlowInstructions::Experiment)) {
-                    AUTH_TOKEN_INPUT_PLACEHOLDER_TEXT_EXPERIMENTAL
+                    localized_auth_token_input_placeholder_text_experimental()
                 } else {
-                    AUTH_TOKEN_INPUT_PLACEHOLDER_TEXT
+                    localized_auth_token_input_placeholder_text()
                 };
 
             editor.set_placeholder_text(placeholder_text, ctx);
@@ -256,7 +260,7 @@ impl AuthViewBody {
             .with_child(
                 ui_builder
                     .link(
-                        "Click here to paste your token from the browser".into(),
+                        warp_i18n::t_static!("dialog-auth-paste-browser-token-link").into(),
                         None,
                         Some(Box::new(|ctx| {
                             ctx.dispatch_typed_action(AuthViewBodyAction::EnterToken);
@@ -329,7 +333,9 @@ impl AuthViewBody {
             Flex::row()
                 .with_child(
                     ui_builder
-                        .span("By continuing, you agree to Warp's ")
+                        .span(warp_i18n::t_static!(
+                            "ui-final-by-continuing-you-agree-to-warp-s"
+                        ))
                         .with_style(disclaimer_styles)
                         .build()
                         .finish(),
@@ -337,7 +343,7 @@ impl AuthViewBody {
                 .with_child(
                     ui_builder
                         .link(
-                            "Terms of Service".into(),
+                            warp_i18n::t_static!("dialog-auth-terms-service").into(),
                             Some(TOS_URL.into()),
                             None,
                             self.mouse_state_handles.tos_mouse_state_handle.clone(),
@@ -357,7 +363,7 @@ impl AuthViewBody {
             Align::new(
                 ui_builder
                     .link(
-                        "Privacy Settings".into(),
+                        warp_i18n::t_static!("dialog-auth-privacy-settings").into(),
                         None,
                         Some(Box::new(|ctx| {
                             ctx.dispatch_typed_action(AuthViewBodyAction::ShowOverlay(
@@ -378,7 +384,7 @@ impl AuthViewBody {
             Flex::column()
                 .with_child(
                     ui_builder
-                        .paragraph("If you'd like to opt out of analytics and AI features,")
+                        .paragraph(warp_i18n::t_static!("dialog-auth-privacy-opt-out-prefix"))
                         .with_style(disclaimer_styles)
                         .build()
                         .finish(),
@@ -387,7 +393,7 @@ impl AuthViewBody {
                     Flex::row()
                         .with_child(
                             ui_builder
-                                .paragraph("you can adjust your ")
+                                .paragraph(warp_i18n::t_static!("ui-final-you-can-adjust-your"))
                                 .with_style(disclaimer_styles)
                                 .build()
                                 .finish(),
@@ -395,7 +401,7 @@ impl AuthViewBody {
                         .with_child(
                             ui_builder
                                 .link(
-                                    "Privacy Settings".into(),
+                                    warp_i18n::t_static!("dialog-auth-privacy-settings").into(),
                                     None,
                                     Some(Box::new(|ctx| {
                                         ctx.dispatch_typed_action(AuthViewBodyAction::ShowOverlay(
@@ -475,7 +481,7 @@ impl AuthViewBody {
                 Some(click_button_style),
                 None,
             )
-            .with_centered_text_label("Sign up".into())
+            .with_centered_text_label(warp_i18n::t_static!("dialog-auth-sign-up").into())
             .build()
             .on_click(move |ctx, _, _| {
                 ctx.dispatch_typed_action(on_click_action);
@@ -487,14 +493,14 @@ impl AuthViewBody {
         Flex::row()
             .with_child(
                 ui_builder
-                    .span("Already have an account? ")
+                    .span(warp_i18n::t_static!("ui-final-already-have-an-account"))
                     .build()
                     .finish(),
             )
             .with_child(
                 ui_builder
                     .link(
-                        "Sign in".into(),
+                        warp_i18n::t_static!("dialog-auth-sign-in").into(),
                         None,
                         Some(Box::new(|ctx| {
                             ctx.dispatch_typed_action(AuthViewBodyAction::Login);
@@ -515,14 +521,16 @@ impl AuthViewBody {
             Flex::row()
                 .with_child(
                     ui_builder
-                        .span("Don't want to sign in right now? ")
+                        .span(warp_i18n::t_static!(
+                            "ui-final-don-t-want-to-sign-in-right-now"
+                        ))
                         .build()
                         .finish(),
                 )
                 .with_child(
                     ui_builder
                         .link(
-                            "Skip for now".into(),
+                            warp_i18n::t_static!("dialog-auth-skip-for-now").into(),
                             None,
                             Some(Box::new(|ctx| {
                                 ctx.dispatch_typed_action(AuthViewBodyAction::InitiateLoginLater);
@@ -546,13 +554,13 @@ impl AuthViewBody {
             Flex::column()
                 .with_child(
                     ui_builder
-                        .paragraph("Are you sure you want to skip login?")
+                        .paragraph(warp_i18n::t_static!("dialog-auth-skip-confirm-title"))
                         .build()
                         .finish(),
                 )
                 .with_child(
                     ui_builder
-                        .paragraph("You can sign up later, but some features, such as AI,")
+                        .paragraph(warp_i18n::t_static!("dialog-auth-skip-confirm-body"))
                         .build()
                         .finish(),
                 )
@@ -560,14 +568,16 @@ impl AuthViewBody {
                     Flex::row()
                         .with_child(
                             ui_builder
-                                .span("are only available to logged-in users. ")
+                                .span(warp_i18n::t_static!(
+                                    "ui-final-are-only-available-to-logged-in-users"
+                                ))
                                 .build()
                                 .finish(),
                         )
                         .with_child(
                             ui_builder
                                 .link(
-                                    "Yes, skip login".into(),
+                                    warp_i18n::t_static!("dialog-auth-skip-confirm-action").into(),
                                     None,
                                     Some(Box::new(|ctx| {
                                         ctx.dispatch_typed_action(AuthViewBodyAction::LoginLater);
@@ -608,10 +618,10 @@ impl AuthViewBody {
                 "In order to use Warp’s AI features or collaborate with others, please create an account."
             }
             AuthViewVariant::HitDriveObjectLimitCloseable => {
-                "In order to create more objects in Warp Drive, please create an account."
+                warp_i18n::t_static!("dialog-auth-force-login-drive")
             }
             AuthViewVariant::ShareRequirementCloseable => {
-                "In order to share, please create an account."
+                warp_i18n::t_static!("dialog-auth-force-login-share")
             }
             _ => "",
         };
@@ -637,10 +647,12 @@ impl AuthViewBody {
         };
 
         let text = match self.variant {
-            AuthViewVariant::Initial => "Welcome to Warp!",
+            AuthViewVariant::Initial => warp_i18n::t_static!("dialog-auth-welcome"),
             AuthViewVariant::RequireLoginCloseable
             | AuthViewVariant::HitDriveObjectLimitCloseable
-            | AuthViewVariant::ShareRequirementCloseable => "Sign up for Warp",
+            | AuthViewVariant::ShareRequirementCloseable => {
+                warp_i18n::t_static!("dialog-auth-sign-up-for-warp")
+            }
         };
 
         ui_builder
@@ -756,7 +768,9 @@ impl AuthViewBody {
 
         let header = Container::new(
             ui_builder
-                .paragraph("Sign in on your browser \nto continue")
+                .paragraph(warp_i18n::t_static!(
+                    "ui-final-sign-in-on-your-browser-to-continue"
+                ))
                 .with_style(header_styles)
                 .build()
                 .finish(),
@@ -770,14 +784,16 @@ impl AuthViewBody {
                     Flex::row()
                         .with_child(
                             ui_builder
-                                .span("If your browser hasn't launched, ")
+                                .span(warp_i18n::t_static!(
+                                    "ui-final-if-your-browser-hasn-t-launched"
+                                ))
                                 .build()
                                 .finish(),
                         )
                         .with_child(
                             ui_builder
                                 .link(
-                                    "copy the URL".into(),
+                                    warp_i18n::t_static!("dialog-auth-browser-copy-url").into(),
                                     None,
                                     Some(Box::new(|event_ctx| {
                                         event_ctx.dispatch_typed_action(
@@ -796,7 +812,7 @@ impl AuthViewBody {
                 )
                 .with_child(
                     ui_builder
-                        .span("and open the page manually.")
+                        .span(warp_i18n::t_static!("dialog-auth-browser-hint-suffix"))
                         .build()
                         .finish(),
                 )
@@ -992,8 +1008,8 @@ impl View for AuthViewBody {
 
     fn accessibility_contents(&self, _: &AppContext) -> Option<AccessibilityContent> {
         Some(AccessibilityContent::new(
-            "Welcome to Warp!",
-            "Press enter to open your browser to Sign Up or Sign In.",
+            warp_i18n::t_static!("a11y-auth-welcome-label"),
+            warp_i18n::t_static!("a11y-auth-welcome-help"),
             WarpA11yRole::HelpRole,
         ))
     }

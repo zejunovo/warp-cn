@@ -122,7 +122,7 @@ impl PasteAuthTokenModalView {
                 },
                 ctx,
             );
-            editor.set_placeholder_text("Enter auth token", ctx);
+            editor.set_placeholder_text(warp_i18n::t_static!("ui-final-enter-auth-token"), ctx);
             editor
         });
 

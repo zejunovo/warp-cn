@@ -1482,7 +1482,10 @@ fn render_search_codebase(
                                 appearance
                                     .ui_builder()
                                     .link(
-                                        "Manage AI Autonomy permissions".into(),
+                                        warp_i18n::t_static!(
+                                            "ui-final-manage-ai-autonomy-permissions"
+                                        )
+                                        .into(),
                                         None,
                                         Some(Box::new(move |ctx| {
                                             ctx.dispatch_typed_action(
@@ -2370,7 +2373,7 @@ fn render_requested_edits_output_message(
         match requested_edit.view.as_ref(app).display_mode() {
             DisplayMode::FullPane => Align::new(
                 Text::new_inline(
-                    "This suggestion is being edited in another tab.",
+                    warp_i18n::t_static!("ui-final-this-suggestion-is-being-edited-in-another-tab"),
                     appearance.ui_font_family(),
                     appearance.monospace_font_size(),
                 )
@@ -2857,7 +2860,10 @@ fn render_comment_addressed_header(comment: &ReviewComment, app: &AppContext) ->
         Shrinkable::new(
             1.,
             Text::new_inline(
-                format!("Comment addressed: \"{content}\""),
+                warp_i18n::t!(
+                    "ui-final-comment-addressed",
+                    content = format!("{}", content)
+                ),
                 appearance.ui_font_family(),
                 appearance.monospace_font_size(),
             )
@@ -4251,7 +4257,7 @@ fn render_collapsible_debug_output(
         // "Debug output" label
         row.add_child(
             Text::new(
-                "Debug output".to_string(),
+                warp_i18n::t_static!("ai-ui-debug-output").to_string(),
                 appearance.ai_font_family(),
                 appearance.monospace_font_size(),
             )

@@ -822,21 +822,39 @@ impl InputSuggestionsMode {
             InputSuggestionsMode::UserQueryMenu {
                 action: UserQueryMenuAction::ForkFrom,
                 ..
-            } => Some("Search queries"),
+            } => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-queries"
+            )),
             InputSuggestionsMode::UserQueryMenu {
                 action: UserQueryMenuAction::Rewind,
                 ..
-            } => Some("Search queries to rewind to"),
-            InputSuggestionsMode::ConversationMenu => Some("Search conversations"),
-            InputSuggestionsMode::SkillMenu => Some("Search skills"),
-            InputSuggestionsMode::ModelSelector => Some("Search models"),
-            InputSuggestionsMode::ProfileSelector => Some("Search profiles"),
-            InputSuggestionsMode::SlashCommands if FeatureFlag::AgentView.is_enabled() => {
-                Some("Search commands")
-            }
-            InputSuggestionsMode::PromptsMenu => Some("Search prompts"),
-            InputSuggestionsMode::IndexedReposMenu => Some("Search indexed repos"),
-            InputSuggestionsMode::PlanMenu { .. } => Some("Search plans"),
+            } => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-queries-rewind"
+            )),
+            InputSuggestionsMode::ConversationMenu => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-conversations"
+            )),
+            InputSuggestionsMode::SkillMenu => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-skills"
+            )),
+            InputSuggestionsMode::ModelSelector => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-models"
+            )),
+            InputSuggestionsMode::ProfileSelector => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-profiles"
+            )),
+            InputSuggestionsMode::SlashCommands if FeatureFlag::AgentView.is_enabled() => Some(
+                warp_i18n::t_static!("terminal-input-placeholder-search-commands"),
+            ),
+            InputSuggestionsMode::PromptsMenu => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-prompts"
+            )),
+            InputSuggestionsMode::IndexedReposMenu => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-indexed-repos"
+            )),
+            InputSuggestionsMode::PlanMenu { .. } => Some(warp_i18n::t_static!(
+                "terminal-input-placeholder-search-plans"
+            )),
             _ => None,
         }
     }
@@ -2186,8 +2204,11 @@ pub fn init(app: &mut AppContext) {
 
     app.register_editable_bindings([EditableBinding::new(
         "workspace:edit_prompt",
-        BindingDescription::new("Edit Prompt")
-            .with_custom_description(bindings::MAC_MENUS_CONTEXT, "Edit Prompt"),
+        BindingDescription::new(warp_i18n::t_static!("command-edit-prompt"))
+            .with_custom_description(
+                bindings::MAC_MENUS_CONTEXT,
+                warp_i18n::t_static!("command-edit-prompt"),
+            ),
         WorkspaceAction::OpenPromptEditor {
             open_source: PromptEditorOpenSource::CommandPalette,
         },
@@ -7457,7 +7478,10 @@ impl Input {
             let show_hint = *InputSettings::as_ref(ctx).show_hint_text;
             self.editor.update(ctx, |editor, ctx| {
                 if show_hint {
-                    editor.set_placeholder_text(CLOUD_MODE_V2_HINT_TEXT, ctx);
+                    editor.set_placeholder_text(
+                        warp_i18n::t_static!("ui-final-kick-off-a-cloud-agent"),
+                        ctx,
+                    );
                 } else {
                     editor.clear_placeholder_text(ctx);
                 }
@@ -7510,7 +7534,10 @@ impl Input {
                 });
             } else if *InputSettings::as_ref(ctx).enable_ai_command_search_hash_trigger {
                 self.editor.update(ctx, |editor, ctx| {
-                    editor.set_placeholder_text(AI_COMMAND_SEARCH_HINT_TEXT, ctx);
+                    editor.set_placeholder_text(
+                        warp_i18n::t_static!("ui-final-type-for-ai-command-suggestions"),
+                        ctx,
+                    );
                 });
             } else {
                 // Don't advertise the '#' shorthand when the user has disabled it;
@@ -8736,7 +8763,7 @@ impl Input {
         }
         ctx.emit_a11y_content(AccessibilityContent::new(
             accessibility_text,
-            "Press shift-tab to select the next workflow argument",
+            warp_i18n::t_static!("a11y-input-workflow-arg-help"),
             WarpA11yRole::UserAction,
         ));
 
@@ -9088,7 +9115,10 @@ impl Input {
                 self.try_execute_command(&command, ctx);
 
                 ctx.emit_a11y_content(AccessibilityContent::new_without_help(
-                    format!("Executed: {command}"),
+                    warp_i18n::t!(
+                        "a11y-input-executed-command",
+                        command = format!("{}", command)
+                    ),
                     WarpA11yRole::UserAction,
                 ));
             }

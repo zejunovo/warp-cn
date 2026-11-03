@@ -1600,7 +1600,7 @@ fn render_summary(card: &RunAgentsCardFields, appearance: &Appearance) -> Box<dy
         column = column.with_child(
             Container::new(
                 Text::new(
-                    "These agents may start their own child agents".to_string(),
+                    warp_i18n::t_static!("ai-ui-run-agents-child-agents-note").to_string(),
                     appearance.ui_font_family(),
                     appearance.monospace_font_size() - 1.,
                 )

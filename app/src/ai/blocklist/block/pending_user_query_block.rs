@@ -169,7 +169,7 @@ impl View for PendingUserQueryBlock {
         .finish();
 
         let queued_badge = Text::new(
-            "Queued",
+            warp_i18n::t_static!("ai-ui-queued"),
             appearance.ui_font_family(),
             appearance.monospace_font_size().max(4.) - 2.,
         )

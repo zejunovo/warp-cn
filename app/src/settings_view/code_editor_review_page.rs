@@ -384,7 +384,7 @@ impl SettingsWidget for AutoOpenCodeReviewPaneCodeWidget {
     ) -> Box<dyn Element> {
         let general_settings = GeneralSettings::as_ref(app);
         render_body_item::<EditorAndCodeReviewPageAction>(
-            "Auto open code review panel".into(),
+            warp_i18n::t_static!("settings-features-auto-open-code-review").into(),
             None,
             LocalOnlyIconState::Hidden,
             ToggleState::Enabled,
@@ -400,7 +400,7 @@ impl SettingsWidget for AutoOpenCodeReviewPaneCodeWidget {
                     );
                 })
                 .finish(),
-            Some("When this setting is on, the code review panel will open on the first accepted diff of a conversation".into()),
+            Some(warp_i18n::t_static!("settings-features-auto-open-code-review-desc").into()),
         )
     }
 }
@@ -426,7 +426,7 @@ impl SettingsWidget for CodeReviewPanelToggleWidget {
         let tab_settings = TabSettings::as_ref(app);
 
         render_body_item::<EditorAndCodeReviewPageAction>(
-            "Show code review button".into(),
+            warp_i18n::t_static!("settings-appearance-show-code-review-btn").into(),
             None,
             LocalOnlyIconState::Hidden,
             ToggleState::Enabled,

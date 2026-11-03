@@ -1174,7 +1174,9 @@ impl CodeView {
                                     ButtonVariant::Outlined,
                                     tab.mouse_state_handles.accept_mouse_state.clone(),
                                 )
-                                .with_text_label("Accept and save".to_string())
+                                .with_text_label(
+                                    warp_i18n::t_static!("ui-final-accept-and-save").to_string(),
+                                )
                                 .build()
                                 .on_click(|ctx, _, _| {
                                     ctx.dispatch_typed_action(
@@ -2162,9 +2164,11 @@ impl CodeView {
             if active_location.is_some() {
                 items.push(MenuItem::Separator);
                 items.push(
-                    MenuItemFields::new("Copy file path")
-                        .with_on_select_action(CodeViewAction::CopyFilePath)
-                        .into_item(),
+                    MenuItemFields::new(warp_i18n::t_static!(
+                        "code-review-view-tooltip-copy-file-path"
+                    ))
+                    .with_on_select_action(CodeViewAction::CopyFilePath)
+                    .into_item(),
                 );
             }
 
@@ -2197,7 +2201,7 @@ impl CodeView {
                 });
             if renders_in_notebook_viewer {
                 items.push(
-                    MenuItemFields::new("View Markdown preview")
+                    MenuItemFields::new(warp_i18n::t_static!("ui-final-view-markdown-preview"))
                         .with_on_select_action(CodeViewAction::RenderMarkdown)
                         .into_item(),
                 );

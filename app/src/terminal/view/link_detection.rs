@@ -146,12 +146,14 @@ impl GridHighlightedLink {
                     .map(|path| path.is_dir())
                     .unwrap_or(false) =>
             {
-                "Open folder"
+                warp_i18n::t_static!("terminal-link-open-folder")
             }
             #[cfg(feature = "local_fs")]
-            GridHighlightedLink::File(_) => "Open file",
-            GridHighlightedLink::Url(_) => "Open link",
-            GridHighlightedLink::Hyperlink { .. } => "Open link",
+            GridHighlightedLink::File(_) => warp_i18n::t_static!("terminal-link-open-file"),
+            GridHighlightedLink::Url(_) => warp_i18n::t_static!("terminal-link-open-link"),
+            GridHighlightedLink::Hyperlink { .. } => {
+                warp_i18n::t_static!("terminal-link-open-link")
+            }
         }
     }
 }
@@ -245,11 +247,11 @@ impl RichContentLink {
         match &self {
             #[cfg(feature = "local_fs")]
             RichContentLink::FilePath { absolute_path, .. } if absolute_path.is_dir() => {
-                "Open folder"
+                warp_i18n::t_static!("terminal-link-open-folder")
             }
             #[cfg(feature = "local_fs")]
-            RichContentLink::FilePath { .. } => "Open file",
-            RichContentLink::Url(_) => "Open link",
+            RichContentLink::FilePath { .. } => warp_i18n::t_static!("terminal-link-open-file"),
+            RichContentLink::Url(_) => warp_i18n::t_static!("terminal-link-open-link"),
         }
     }
 }

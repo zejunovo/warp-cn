@@ -485,13 +485,13 @@ impl CommandSearchView {
 
             let (a11y_content, a11y_help_content) = if was_immediately_executed {
                 (
-                    "Result executed".to_owned(),
-                    "Press Cmd-Up to navigate to the command's output.".to_owned(),
+                    warp_i18n::t_static!("a11y-command-search-result-executed-label").to_owned(),
+                    warp_i18n::t_static!("a11y-command-search-result-executed-help").to_owned(),
                 )
             } else {
                 (
-                    "Result accepted.".to_owned(),
-                    "You can edit the command here before pressing Enter to execute it.".to_owned(),
+                    warp_i18n::t_static!("a11y-command-search-result-accepted-label").to_owned(),
+                    warp_i18n::t_static!("a11y-command-search-result-accepted-help").to_owned(),
                 )
             };
             ctx.emit_a11y_content(AccessibilityContent::new(
@@ -652,7 +652,7 @@ impl CommandSearchView {
             appearance
                 .ui_builder()
                 .link(
-                    "Upgrade".into(),
+                    warp_i18n::t_static!("menu-user-upgrade").into(),
                     None,
                     Some(Box::new(move |ctx| {
                         ctx.dispatch_typed_action(CommandSearchAction::AttemptLoginGatedUpgrade);
@@ -664,7 +664,7 @@ impl CommandSearchView {
             appearance
                 .ui_builder()
                 .link(
-                    "Upgrade".into(),
+                    warp_i18n::t_static!("menu-user-upgrade").into(),
                     None,
                     Some(Box::new(move |ctx| {
                         ctx.dispatch_typed_action(CommandSearchAction::OpenUpgradeLink(
@@ -679,7 +679,9 @@ impl CommandSearchView {
         row.add_child(
             appearance
                 .ui_builder()
-                .span("Looks like you're out of credits. ")
+                .span(warp_i18n::t_static!(
+                    "ui-final-looks-like-you-re-out-of-credits"
+                ))
                 .with_style(UiComponentStyles {
                     font_size: Some(appearance.monospace_font_size()),
                     font_family_id: Some(appearance.ui_font_family()),
@@ -701,7 +703,7 @@ impl CommandSearchView {
         row.add_child(
             appearance
                 .ui_builder()
-                .span(" for more credits.")
+                .span(warp_i18n::t_static!("ui-final-for-more-credits"))
                 .with_style(UiComponentStyles {
                     font_size: Some(appearance.monospace_font_size()),
                     font_family_id: Some(appearance.ui_font_family()),
@@ -728,7 +730,7 @@ impl CommandSearchView {
                 // There are no results to display, so notify the user of that fact.
                 let text = appearance
                     .ui_builder()
-                    .span("No results found.")
+                    .span(warp_i18n::t_static!("ui-final-no-results-found"))
                     .with_style(UiComponentStyles {
                         font_size: Some(appearance.monospace_font_size()),
                         font_family_id: Some(appearance.ui_font_family()),
@@ -971,8 +973,8 @@ impl View for CommandSearchView {
 
     fn accessibility_contents(&self, _ctx: &AppContext) -> Option<AccessibilityContent> {
         Some(AccessibilityContent::new(
-            "Command Search".to_owned(),
-            "Search your history, workflows, and more.  Use the Up and Down arrows to browse search results after typing.  Press Enter to accept a selected result, inserting it into the terminal input.  Press Escape to close.".to_owned(),
+            warp_i18n::t_static!("a11y-command-search-label").to_owned(),
+            warp_i18n::t_static!("a11y-command-search-help").to_owned(),
             WarpA11yRole::MenuRole,
         ))
     }

@@ -62,9 +62,9 @@ pub enum SourceFilter {
 impl SourceFilter {
     pub fn label(self) -> &'static str {
         match self {
-            SourceFilter::All => "All",
-            SourceFilter::Local => "Local",
-            SourceFilter::Cloud => "Cloud",
+            SourceFilter::All => warp_i18n::t_static!("ai-ui-agent-owner-all"),
+            SourceFilter::Local => warp_i18n::t_static!("settings-billing-local-source"),
+            SourceFilter::Cloud => warp_i18n::t_static!("settings-billing-cloud-source"),
         }
     }
 
@@ -460,7 +460,7 @@ fn render_usage_tooltip_content(row: &MemberUsageRow, appearance: &Appearance) -
 fn render_service_account_info_tooltip(appearance: &Appearance) -> Box<dyn Element> {
     let theme = appearance.theme();
     let text = Text::new_inline(
-        "This is an automated agent on your team.".to_string(),
+        warp_i18n::t_static!("settings-billing-automated-agent-tooltip").to_string(),
         appearance.ui_font_family(),
         12.,
     )
@@ -577,7 +577,7 @@ fn render_row_card(
         name_row.add_child(
             Container::new(
                 Text::new_inline(
-                    "Former member",
+                    warp_i18n::t_static!("settings-billing-former-member"),
                     appearance.ui_font_family(),
                     appearance.ui_font_size() - 1.,
                 )

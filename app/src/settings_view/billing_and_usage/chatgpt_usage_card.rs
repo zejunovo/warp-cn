@@ -46,7 +46,7 @@ pub(crate) fn render_chatgpt_usage_card(
         .with_height(16.)
         .finish();
     let label = Text::new_inline(
-        "View and manage your ChatGPT usage",
+        warp_i18n::t_static!("settings-billing-manage-chatgpt-usage"),
         appearance.ui_font_family(),
         14.,
     )

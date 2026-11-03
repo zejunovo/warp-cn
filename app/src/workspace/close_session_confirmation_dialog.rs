@@ -103,7 +103,7 @@ impl View for CloseSessionConfirmationDialog {
         let close_session_button = appearance
             .ui_builder()
             .button(ButtonVariant::Accent, self.confirm_mouse_state.clone())
-            .with_centered_text_label("Close session".into())
+            .with_centered_text_label(warp_i18n::t_static!("ui-final-close-session").into())
             .with_style(button_style)
             .build()
             .with_cursor(Cursor::PointingHand)
@@ -117,7 +117,7 @@ impl View for CloseSessionConfirmationDialog {
         let cancel_button = appearance
             .ui_builder()
             .button(ButtonVariant::Basic, self.cancel_mouse_state.clone())
-            .with_centered_text_label("Cancel".into())
+            .with_centered_text_label(warp_i18n::t_static!("ui-button-cancel").into())
             .with_style(button_style)
             .build()
             .with_cursor(Cursor::PointingHand)
@@ -128,7 +128,7 @@ impl View for CloseSessionConfirmationDialog {
 
         let dialog = Container::new(
             Dialog::new(
-                "Close session?".into(),
+                warp_i18n::t_static!("ui-final-close-session-1dde00").into(),
                 Some(
                     "You are about to close a session that is currently being shared. Closing it will end sharing for everyone."
                         .into(),

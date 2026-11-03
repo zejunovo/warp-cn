@@ -15,10 +15,13 @@ use crate::Appearance;
 use crate::terminal::model::session::SessionId;
 use crate::ui_components::icons::Icon;
 
-const BANNER_TITLE: &str = "Couldn't connect to the Warp SSH extension";
+fn localized_banner_title() -> &'static str {
+    warp_i18n::t_static!("terminal-ssh-failed-banner-title")
+}
 
-const BANNER_BODY: &str = "While advanced features like file browsing and code review are currently \
-    disabled, the rest of your Warpified experience is fully available.";
+fn localized_banner_body() -> &'static str {
+    warp_i18n::t_static!("terminal-ssh-failed-banner-body")
+}
 
 #[derive(Clone, Debug)]
 pub enum SshRemoteServerFailedBannerAction {
@@ -78,7 +81,7 @@ impl View for SshRemoteServerFailedBanner {
         .finish();
 
         let title = Text::new(
-            BANNER_TITLE.to_string(),
+            localized_banner_title().to_string(),
             appearance.ui_font_family(),
             font_size,
         )
@@ -86,7 +89,7 @@ impl View for SshRemoteServerFailedBanner {
         .finish();
 
         let body = Text::new(
-            BANNER_BODY.to_string(),
+            localized_banner_body().to_string(),
             appearance.ui_font_family(),
             small_font_size,
         )

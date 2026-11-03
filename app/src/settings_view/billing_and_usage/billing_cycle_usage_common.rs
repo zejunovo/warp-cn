@@ -93,24 +93,28 @@ pub fn cost_type_color(cost_type: &AiCreditsUsageAndCostType) -> ColorU {
 
 fn cost_type_label(cost_type: &AiCreditsUsageAndCostType) -> &'static str {
     match cost_type {
-        AiCreditsUsageAndCostType::BaseLimit => "Base",
-        AiCreditsUsageAndCostType::BonusGrant => "Add-ons",
-        AiCreditsUsageAndCostType::Payg => "Pay-as-you-go",
-        AiCreditsUsageAndCostType::AmbientBonusGrant => "Cloud-only",
-        AiCreditsUsageAndCostType::Aggregate => "Combined",
-        AiCreditsUsageAndCostType::Other(_) => "Other",
+        AiCreditsUsageAndCostType::BaseLimit => {
+            warp_i18n::t_static!("settings-billing-v2-pool-base")
+        }
+        AiCreditsUsageAndCostType::BonusGrant => warp_i18n::t_static!("settings-billing-addons"),
+        AiCreditsUsageAndCostType::Payg => warp_i18n::t_static!("settings-billing-payg"),
+        AiCreditsUsageAndCostType::AmbientBonusGrant => {
+            warp_i18n::t_static!("settings-billing-cloud-only")
+        }
+        AiCreditsUsageAndCostType::Aggregate => warp_i18n::t_static!("settings-billing-combined"),
+        AiCreditsUsageAndCostType::Other(_) => warp_i18n::t_static!("settings-ai-other"),
     }
 }
 
 fn bucket_label(bucket: &AiCreditsUsageBucket) -> &'static str {
     match bucket {
         AiCreditsUsageBucket::Ai => "AI",
-        AiCreditsUsageBucket::Compute => "Compute",
-        AiCreditsUsageBucket::Platform => "Platform",
-        AiCreditsUsageBucket::SuggestedCodeDiffs => "Suggested code diffs",
-        AiCreditsUsageBucket::Voice => "Voice",
-        AiCreditsUsageBucket::Aggregate => "Total",
-        AiCreditsUsageBucket::Other(_) => "Other",
+        AiCreditsUsageBucket::Compute => warp_i18n::t_static!("settings-billing-compute"),
+        AiCreditsUsageBucket::Platform => warp_i18n::t_static!("settings-billing-platform"),
+        AiCreditsUsageBucket::SuggestedCodeDiffs => warp_i18n::t_static!("settings-billing-diffs"),
+        AiCreditsUsageBucket::Voice => warp_i18n::t_static!("settings-billing-voice"),
+        AiCreditsUsageBucket::Aggregate => warp_i18n::t_static!("settings-billing-total"),
+        AiCreditsUsageBucket::Other(_) => warp_i18n::t_static!("settings-ai-other"),
     }
 }
 

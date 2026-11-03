@@ -54,10 +54,6 @@ const MENU_MAX_HEIGHT: f32 = 280.;
 
 const BUTTON_TOOLTIP: &str = "API key";
 
-const MENU_HEADER_LABEL: &str = "API key";
-
-const SIDECAR_HEADER_LABEL: &str = "Choose a type";
-
 const NO_SECRET_LABEL: &str = "Inherit key from environment";
 
 const NEW_ITEM_LABEL: &str = "New";
@@ -613,7 +609,7 @@ fn build_main_menu_items(
     header_text_color: pathfinder_color::ColorU,
 ) -> Vec<MenuItem<AuthSecretSelectorAction>> {
     let header = MenuItem::Header {
-        fields: MenuItemFields::new(MENU_HEADER_LABEL)
+        fields: MenuItemFields::new(warp_i18n::t_static!("ui-final-api-key"))
             .with_font_size_override(HEADER_FONT_SIZE)
             .with_override_text_color(header_text_color)
             .with_padding_override(6., MENU_HORIZONTAL_PADDING)
@@ -625,11 +621,13 @@ fn build_main_menu_items(
     let mut items = vec![header];
 
     items.push(MenuItem::Item(
-        MenuItemFields::new(NO_SECRET_LABEL)
-            .with_font_size_override(ITEM_FONT_SIZE)
-            .with_padding_override(ITEM_VERTICAL_PADDING, MENU_HORIZONTAL_PADDING)
-            .with_override_hover_background_color(hover_background)
-            .with_on_select_action(AuthSecretSelectorAction::ClearSecret),
+        MenuItemFields::new(warp_i18n::t_static!(
+            "ui-final-inherit-key-from-environment"
+        ))
+        .with_font_size_override(ITEM_FONT_SIZE)
+        .with_padding_override(ITEM_VERTICAL_PADDING, MENU_HORIZONTAL_PADDING)
+        .with_override_hover_background_color(hover_background)
+        .with_on_select_action(AuthSecretSelectorAction::ClearSecret),
     ));
 
     match fetch_state {
@@ -665,7 +663,7 @@ fn build_main_menu_items(
         }
         AuthSecretFetchState::Failed(_) => {
             items.push(MenuItem::Item(
-                MenuItemFields::new("Unable to load secrets")
+                MenuItemFields::new(warp_i18n::t_static!("ui-final-unable-to-load-secrets"))
                     .with_font_size_override(ITEM_FONT_SIZE)
                     .with_padding_override(ITEM_VERTICAL_PADDING, MENU_HORIZONTAL_PADDING)
                     .with_disabled(true)
@@ -693,7 +691,7 @@ fn build_sidecar_items(
     header_text_color: pathfinder_color::ColorU,
 ) -> Vec<MenuItem<AuthSecretSelectorAction>> {
     let header = MenuItem::Header {
-        fields: MenuItemFields::new(SIDECAR_HEADER_LABEL)
+        fields: MenuItemFields::new(warp_i18n::t_static!("ui-final-choose-a-type"))
             .with_font_size_override(HEADER_FONT_SIZE)
             .with_override_text_color(header_text_color)
             .with_padding_override(6., MENU_HORIZONTAL_PADDING)

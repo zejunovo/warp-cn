@@ -932,7 +932,10 @@ impl FileNotebookView {
             .with_child(
                 appearance
                     .ui_builder()
-                    .paragraph(format!("Could not read {}", source.display_name()))
+                    .paragraph(warp_i18n::t!(
+                        "ui-final-could-not-read-file",
+                        file = format!("{}", source.display_name())
+                    ))
                     .with_style(self.state_style(appearance))
                     .build()
                     .finish(),
@@ -970,7 +973,10 @@ impl FileNotebookView {
         Align::new(
             appearance
                 .ui_builder()
-                .paragraph(format!("Loading {}...", source.display_name()))
+                .paragraph(warp_i18n::t!(
+                    "ui-final-loading-file",
+                    file = format!("{}", source.display_name())
+                ))
                 .with_style(self.state_style(appearance))
                 .build()
                 .finish(),
@@ -982,7 +988,7 @@ impl FileNotebookView {
         Align::new(
             appearance
                 .ui_builder()
-                .paragraph("Missing source file".to_string())
+                .paragraph(warp_i18n::t_static!("ui-final-missing-source-file").to_string())
                 .with_style(self.state_style(appearance))
                 .build()
                 .finish(),
@@ -1043,7 +1049,7 @@ impl View for FileNotebookView {
 
     fn accessibility_contents(&self, _ctx: &AppContext) -> Option<AccessibilityContent> {
         Some(AccessibilityContent::new_without_help(
-            format!("{} notebook", self.title()),
+            warp_i18n::t!("a11y-notebook-suffix", title = format!("{}", self.title())),
             WarpA11yRole::TextRole,
         ))
     }
@@ -1209,7 +1215,7 @@ impl BackingView for FileNotebookView {
         if let Some(SourceFile::FileBased { .. }) = self.file_state.source() {
             actions.push(MenuItem::Separator);
             actions.push(
-                MenuItemFields::new("Refresh file")
+                MenuItemFields::new(warp_i18n::t_static!("ui-final-refresh-file"))
                     .with_on_select_action(FileNotebookAction::ReloadFile)
                     .into_item(),
             );
@@ -1219,15 +1225,17 @@ impl BackingView for FileNotebookView {
                 // The markdown rendered/raw toggle is always visible in the pane header, so it is
                 // not duplicated here. "Open in editor" stays available for local files.
                 actions.push(
-                    MenuItemFields::new("Open in editor")
+                    MenuItemFields::new(warp_i18n::t_static!("terminal-open-in-editor"))
                         .with_on_select_action(FileNotebookAction::OpenInEditor)
                         .into_item(),
                 );
                 actions.extend([
                     MenuItem::Separator,
-                    MenuItemFields::new("Copy file path")
-                        .with_on_select_action(FileNotebookAction::CopyFilePath)
-                        .into_item(),
+                    MenuItemFields::new(warp_i18n::t_static!(
+                        "code-review-view-tooltip-copy-file-path"
+                    ))
+                    .with_on_select_action(FileNotebookAction::CopyFilePath)
+                    .into_item(),
                 ]);
             }
         }

@@ -52,7 +52,6 @@ const VARIANT_FONT_SIZE: f32 = 13.;
 const CANCEL_BUTTON_LABEL: &str = "Close";
 const NEW_ENUM_SPAN: &str = "New enum";
 const EXISTING_ENUM_SPAN: &str = "Edit enum";
-const NAME_PLACEHOLDER_TEXT: &str = "Name";
 const CREATE_BUTTON_LABEL: &str = "Create";
 const SAVE_BUTTON_LABEL: &str = "Save";
 const VARIANT_PLACEHOLDER_TEXT: &str = "Variant";
@@ -162,7 +161,7 @@ impl EnumCreationDialog {
                 };
 
                 let mut editor = EditorView::single_line(options, ctx);
-                editor.set_placeholder_text(NAME_PLACEHOLDER_TEXT, ctx);
+                editor.set_placeholder_text(warp_i18n::t_static!("ai-ui-profile-name"), ctx);
                 editor
             })
         };

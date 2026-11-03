@@ -33,7 +33,6 @@ const NOTEBOOK_TITLE: &str = "Notebook name";
 const FOLDER_TITLE: &str = "Folder name";
 const ENV_VAR_COLLECTION_TITLE: &str = "Collection name";
 const CREATE_BUTTON_TEXT: &str = "Create";
-const CANCEL_BUTTON_TEXT: &str = "Cancel";
 const RENAME_BUTTON_TEXT: &str = "Rename";
 
 /// Struct holding necessary information and states for the dialog
@@ -261,7 +260,7 @@ impl CloudObjectNamingDialog {
                                 padding: Some(Coords::uniform(BUTTON_PADDING)),
                                 ..Default::default()
                             })
-                            .with_text_label(CANCEL_BUTTON_TEXT.into())
+                            .with_text_label(warp_i18n::t_static!("ui-button-cancel").into())
                             .build()
                             .with_cursor(Cursor::PointingHand)
                             .on_click(move |ctx, _, _| {

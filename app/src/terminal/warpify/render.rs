@@ -181,7 +181,7 @@ pub fn render_never_warpify_ssh_link(
     let link = appearance
         .ui_builder()
         .link(
-            "Never Warpify this host".into(),
+            warp_i18n::t_static!("ui-final-never-warpify-this-host").into(),
             None,
             Some(Box::new({
                 let ssh_host = ssh_host.clone();

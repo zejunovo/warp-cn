@@ -7,13 +7,6 @@ use warpui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View
 
 use crate::appearance::Appearance;
 use crate::ui_components::dialog::{Dialog, dialog_styles};
-
-const CANCEL_TEXT: &str = "Cancel";
-
-const EMPTY_TRASH_TITLE_TEXT: &str = "Are you sure you want to empty the trash?";
-const EMPTY_TRASH_BODY_TEXT: &str = "This action cannot be undone.";
-const EMPTY_TRASH_CONFIRM_TEXT: &str = "Yes, empty trash";
-
 // This follows our new design standard for confirmation dialogs (e.g. used in the session sharing dialog)
 // Design team has discouraged us from continuing to use CloudActionConfirmationDialog's current design
 // TODO: update CloudActionConfirmationDialog to use this design
@@ -65,7 +58,7 @@ impl View for EmptyTrashConfirmationDialog {
         let confirm_button = appearance
             .ui_builder()
             .button(ButtonVariant::Accent, self.confirm_mouse_state.clone())
-            .with_centered_text_label(EMPTY_TRASH_CONFIRM_TEXT.into())
+            .with_centered_text_label(warp_i18n::t_static!("ui-final-yes-empty-trash").into())
             .with_style(button_style)
             .build()
             .with_cursor(Cursor::PointingHand)
@@ -77,7 +70,7 @@ impl View for EmptyTrashConfirmationDialog {
         let cancel_button = appearance
             .ui_builder()
             .button(ButtonVariant::Basic, self.cancel_mouse_state.clone())
-            .with_centered_text_label(CANCEL_TEXT.into())
+            .with_centered_text_label(warp_i18n::t_static!("ui-button-cancel").into())
             .with_style(button_style)
             .build()
             .with_cursor(Cursor::PointingHand)
@@ -87,8 +80,8 @@ impl View for EmptyTrashConfirmationDialog {
             .finish();
 
         Dialog::new(
-            EMPTY_TRASH_TITLE_TEXT.into(),
-            Some(EMPTY_TRASH_BODY_TEXT.into()),
+            warp_i18n::t_static!("ui-final-are-you-sure-you-want-to-empty-the-trash").into(),
+            Some(warp_i18n::t!("dialog-action-cannot-be-undone")),
             UiComponentStyles {
                 width: Some(460.),
                 padding: Some(Coords::uniform(24.)),

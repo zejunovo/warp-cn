@@ -43,8 +43,6 @@ const MENU_WIDTH: f32 = 208.;
 
 const BUTTON_TOOLTIP: &str = "Execution host";
 
-const MENU_HEADER_LABEL: &str = "Execution host";
-
 const DEFAULT_BADGE: &str = "Default";
 
 const CONNECTED_BADGE: &str = "Connected";
@@ -335,7 +333,7 @@ fn build_menu_items(
     ctx: &mut ViewContext<HostSelector>,
 ) -> Vec<MenuItem<HostSelectorAction>> {
     let header = MenuItem::Header {
-        fields: MenuItemFields::new(MENU_HEADER_LABEL)
+        fields: MenuItemFields::new(warp_i18n::t_static!("ui-final-execution-host"))
             .with_font_size_override(HEADER_FONT_SIZE)
             .with_override_text_color(header_text_color)
             .with_padding_override(HEADER_VERTICAL_PADDING, MENU_HORIZONTAL_PADDING)

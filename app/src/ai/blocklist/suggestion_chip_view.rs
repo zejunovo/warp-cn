@@ -145,7 +145,10 @@ impl Suggestion {
     pub fn tooltip(&self) -> String {
         match self {
             Suggestion::Rule { rule, .. } => {
-                format!("Add rule: {}", rule.content.clone())
+                warp_i18n::t!(
+                    "ai-ui-tooltip-add-rule",
+                    content = format!("{}", rule.content.clone())
+                )
             }
             Suggestion::AgentModeWorkflow { workflow, .. } => {
                 let prompt = if workflow.prompt.chars().count() > MAX_PROMPT_TOOLTIP_LENGTH {
@@ -158,7 +161,10 @@ impl Suggestion {
                 } else {
                     workflow.prompt.clone()
                 };
-                format!("Suggested prompt:\n{prompt}")
+                warp_i18n::t!(
+                    "ai-ui-tooltip-suggested-prompt",
+                    prompt = format!("{}", prompt)
+                )
             }
         }
     }

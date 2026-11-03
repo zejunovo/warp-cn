@@ -59,6 +59,9 @@ use crate::view_components::{
     Dropdown, DropdownItemAction, FilterableDropdown, SubmittableTextInput,
 };
 
+#[path = "settings_search.rs"]
+mod settings_search;
+
 pub const TOGGLE_BUTTON_RIGHT_PADDING: f32 = 5.;
 pub const HEADER_PADDING: f32 = 15.;
 pub const CONTENT_FONT_SIZE: f32 = 12.;
@@ -639,7 +642,7 @@ pub fn render_info_icon<T: Clone + Action>(
 ) -> Box<dyn Element> {
     let tooltip_text = additional_info
         .tooltip_override_text
-        .unwrap_or("Click to learn more in docs".to_owned());
+        .unwrap_or_else(|| warp_i18n::t!("settings-page-tooltip-default-learn-more"));
     let icon = Container::new(
         ConstrainedBox::new(
             Icon::Info
@@ -697,7 +700,8 @@ pub fn render_local_only_icon(
         .ui_builder()
         .local_only_icon_with_tooltip(
             13.,
-            custom_tooltip.unwrap_or("This setting is not synced to your other devices".to_owned()),
+            custom_tooltip
+                .unwrap_or_else(|| warp_i18n::t!("settings-page-tooltip-local-only-default")),
             mouse_state.clone(),
         )
         .finish();
@@ -1159,8 +1163,9 @@ pub(crate) fn render_settings_info_banner(
     .finish()
 }
 
-const WORKSPACE_OVERRIDE_TOOLTIP_TEXT: &str =
-    "This option is enforced by your organization's settings and cannot be customized.";
+fn workspace_override_tooltip_text() -> &'static str {
+    warp_i18n::t_static!("settings-workspace-override-tooltip")
+}
 
 pub struct InputListItem<SettingsPageAction: Action + Clone> {
     pub item: String,
@@ -1269,7 +1274,7 @@ fn render_workspace_override_row_tooltip(
         if state.is_hovered() {
             let tooltip = appearance
                 .ui_builder()
-                .tool_tip(WORKSPACE_OVERRIDE_TOOLTIP_TEXT.to_string())
+                .tool_tip(workspace_override_tooltip_text().to_string())
                 .build()
                 .finish();
             stack.add_positioned_child(
@@ -1482,17 +1487,10 @@ impl From<usize> for MatchData {
     }
 }
 
-/// Returns true if every whitespace-delimited word in `query` appears somewhere
-/// in `terms` (case-insensitive). An empty query matches everything.
+/// Matches every query word against the widget's English terms or Chinese search aliases.
+/// An empty query matches everything.
 pub(super) fn search_terms_match(terms: &str, query: &str) -> bool {
-    if query.is_empty() {
-        return true;
-    }
-    let terms_lower = terms.to_lowercase();
-    query
-        .to_lowercase()
-        .split_whitespace()
-        .all(|word| terms_lower.contains(word))
+    settings_search::matches(terms, query)
 }
 
 /// Combines `header` with `trailing_element`, in a space-between row, when the accessory is
@@ -2209,5 +2207,5 @@ pub(super) fn build_reset_button(
             font_size: Some(appearance.ui_font_size() * 0.8),
             ..Default::default()
         })
-        .with_text_label("Reset to default".to_owned())
+        .with_text_label(warp_i18n::t!("settings-page-button-reset-to-default"))
 }

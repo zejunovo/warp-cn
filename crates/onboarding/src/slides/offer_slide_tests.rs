@@ -59,6 +59,8 @@ fn offer_slide_can_render_before_classification() {
 
 #[test]
 fn head_start_copy_and_telemetry_names_match_spec() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     let variant = OfferVariant::HeadStart;
 
     assert_eq!(variant.title(), "You've got a head start");
@@ -77,7 +79,7 @@ fn head_start_copy_and_telemetry_names_match_spec() {
         "Explore with the AI usage included with your account and upgrade to add more anytime."
     );
     assert_eq!(
-        variant.included_features(),
+        variant.included_features().as_slice(),
         &[
             "Limited monthly AI usage for occasional tasks",
             "Access to premium and open-source models",
@@ -91,6 +93,8 @@ fn head_start_copy_and_telemetry_names_match_spec() {
 
 #[test]
 fn choose_how_to_start_copy_and_telemetry_names_match_spec() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     let variant = OfferVariant::ChooseHowToStart;
 
     assert_eq!(variant.title(), "Choose how to start");
@@ -116,6 +120,8 @@ fn choose_how_to_start_copy_and_telemetry_names_match_spec() {
 
 #[test]
 fn promotion_replaces_recommended_on_both_offer_variants() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     let promotion = Some("50% off Fable and Opus 5");
 
     assert_eq!(

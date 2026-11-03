@@ -56,9 +56,6 @@ const ITEM_ICON_SIZE: f32 = 16.;
 /// Tooltip string for the closed-state button.
 const BUTTON_TOOLTIP: &str = "Agent harness";
 
-/// Label rendered at the top of the dropdown.
-const MENU_HEADER_LABEL: &str = "Agent harness";
-
 /// Actions dispatched by the [`HarnessSelector`].
 #[derive(Clone, Debug, PartialEq)]
 pub enum HarnessSelectorAction {
@@ -281,7 +278,7 @@ fn build_menu_items(
     disabled_text_color: pathfinder_color::ColorU,
 ) -> Vec<MenuItem<HarnessSelectorAction>> {
     let header = MenuItem::Header {
-        fields: MenuItemFields::new(MENU_HEADER_LABEL)
+        fields: MenuItemFields::new(warp_i18n::t_static!("ui-final-agent-harness"))
             .with_font_size_override(HEADER_FONT_SIZE)
             .with_override_text_color(header_text_color)
             .with_padding_override(HEADER_VERTICAL_PADDING, MENU_HORIZONTAL_PADDING)
@@ -310,7 +307,9 @@ fn build_menu_items(
             fields = fields
                 .with_disabled(true)
                 .with_override_text_color(disabled_text_color)
-                .with_tooltip("Disabled by your administrator");
+                .with_tooltip(warp_i18n::t_static!(
+                    "ui-final-disabled-by-your-administrator"
+                ));
         }
         items.push(MenuItem::Item(fields));
     }

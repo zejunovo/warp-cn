@@ -207,7 +207,10 @@ impl MCPServersListPageView {
 
         search_editor.update(ctx, |editor, ctx| {
             editor.clear_buffer_and_reset_undo_stack(ctx);
-            editor.set_placeholder_text("Search MCP Servers", ctx);
+            editor.set_placeholder_text(
+                warp_i18n::t_static!("settings-mcp-list-search-placeholder"),
+                ctx,
+            );
         });
         let search_bar = ctx.add_typed_action_view(|_| SearchBar::new(search_editor.clone()));
 
@@ -348,10 +351,9 @@ impl MCPServersListPageView {
         let server_card = ServerCardView::new(
             item_id,
             template.name.clone(),
-            template
-                .description
-                .clone()
-                .or_else(|| Some("Available to install".to_string())),
+            template.description.clone().or_else(|| {
+                Some(warp_i18n::t_static!("settings-mcp-list-available-to-install").to_string())
+            }),
             None, // Templates can never have tools
             None, // Templates cannot have an error
             title_chip_text.into_iter().collect(),
@@ -1118,7 +1120,7 @@ impl MCPServersListPageView {
         let is_any_ai_enabled = ai_settings.is_any_ai_enabled(app);
 
         let label = render_body_item_label::<MCPServersListPageViewAction>(
-            "Auto-spawn servers from third-party agents".to_string(),
+            warp_i18n::t_static!("settings-mcp-list-auto-spawn-toggle").to_string(),
             None,
             None,
             LocalOnlyIconState::Hidden,
@@ -1155,7 +1157,7 @@ impl MCPServersListPageView {
                     "Automatically detect and spawn MCP servers from globally-scoped third-party AI agent configuration files (e.g. in your home directory). Servers detected inside a repository are never spawned automatically and must be enabled individually in the \"Detected from\" sections below. ",
                 ),
                 FormattedTextFragment::hyperlink(
-                    "See supported providers.",
+                    warp_i18n::t_static!("settings-mcp-list-see-providers"),
                     "https://docs.warp.dev/agents/capabilities/mcp#file-based-mcp-servers",
                 ),
             ]
@@ -1193,7 +1195,7 @@ impl MCPServersListPageView {
         let description_fragments = vec![
             FormattedTextFragment::plain_text(DESCRIPTION_TEXT),
             FormattedTextFragment::hyperlink(
-                "Learn more.",
+                warp_i18n::t_static!("settings-mcp-list-learn-more"),
                 "https://docs.warp.dev/agents/capabilities/mcp",
             ),
         ];
@@ -1277,7 +1279,7 @@ impl MCPServersListPageView {
 
                 if !owned_server_cards.is_empty() {
                     page.add_child(self.render_server_cards_section(
-                        "My MCPs",
+                        warp_i18n::t_static!("settings-mcp-list-section-my-mcps"),
                         &owned_server_cards,
                         appearance,
                         app,
@@ -1289,8 +1291,14 @@ impl MCPServersListPageView {
                         .team_for_view_handle(&self.handle, app)
                         .map(|team| team.name.clone());
                     let shared_by_text = match team_name {
-                        Some(name) => format!("Shared by Warp and {name}"),
-                        None => "Shared by Warp and from other devices".to_string(),
+                        Some(name) => warp_i18n::t!(
+                            "settings-mcp-list-section-shared-by-warp-and-team",
+                            team = format!("{}", name)
+                        ),
+                        None => warp_i18n::t_static!(
+                            "settings-mcp-list-section-shared-by-warp-and-others"
+                        )
+                        .to_string(),
                     };
 
                     page.add_child(self.render_server_cards_section(
@@ -1301,7 +1309,7 @@ impl MCPServersListPageView {
                     ));
                 } else if !filtered_gallery_cards.is_empty() {
                     page.add_child(self.render_server_cards_section(
-                        "Shared from Warp",
+                        warp_i18n::t_static!("settings-mcp-list-section-shared-from-warp"),
                         &filtered_gallery_cards,
                         appearance,
                         app,
@@ -1310,7 +1318,10 @@ impl MCPServersListPageView {
 
                 // Render one section per provider (e.g. "Detected from Claude").
                 for (provider, cards) in &filtered_file_based_cards {
-                    let section_title = format!("Detected from {}", provider.display_name());
+                    let section_title = warp_i18n::t!(
+                        "settings-mcp-list-section-detected-from",
+                        provider = format!("{}", provider.display_name())
+                    );
                     page.add_child(self.render_server_cards_section(
                         &section_title,
                         cards,
@@ -1647,7 +1658,12 @@ impl MCPServersListPageView {
                     .templatable_mcp_server()
                     .description
                     .clone()
-                    .or_else(|| Some("Detected from config file".to_string())),
+                    .or_else(|| {
+                        Some(
+                            warp_i18n::t_static!("settings-mcp-list-detected-from-config")
+                                .to_string(),
+                        )
+                    }),
                 None, // tools only available when running
                 None, // no error when not yet started
                 title_chips,
@@ -1781,11 +1797,18 @@ impl MCPServersListPageView {
 
                 if is_shared {
                     match creator {
-                        Some(creator) => Some(TitleChip::text(format!("Shared by: {creator}"))),
-                        None => Some(TitleChip::text("Shared by a team member")),
+                        Some(creator) => Some(TitleChip::text(warp_i18n::t!(
+                            "settings-mcp-list-chip-shared-by",
+                            name = format!("{}", creator)
+                        ))),
+                        None => Some(TitleChip::text(warp_i18n::t_static!(
+                            "settings-mcp-list-chip-shared-by-team-member"
+                        ))),
                     }
                 } else if matches!(item_id, ServerCardItemId::TemplatableMCP(_)) {
-                    Some(TitleChip::text("From another device"))
+                    Some(TitleChip::text(warp_i18n::t_static!(
+                        "settings-mcp-list-chip-from-another-device"
+                    )))
                 } else {
                     None
                 }

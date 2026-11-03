@@ -195,7 +195,8 @@ impl HandoffEnvironmentCreationModal {
             .finish();
 
         let dialog = Dialog::new(
-            "Create environment".to_string(),
+            warp_i18n::t_static!("settings-environments-update-form-button-create-environment")
+                .to_string(),
             None,
             dialog_styles(appearance),
         )

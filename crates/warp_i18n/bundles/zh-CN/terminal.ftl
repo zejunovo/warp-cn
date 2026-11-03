@@ -1,0 +1,155 @@
+# 终端 / 区块界面字符串。
+# Keys MUST start with `terminal-`.
+
+terminal-filter-placeholder = 搜索区块输出
+terminal-context-lines-tooltip = 显示匹配项的上下文行
+terminal-regex-tooltip = 正则表达式切换
+terminal-case-sensitive-tooltip = 区分大小写搜索
+terminal-invert-filter-tooltip = 反向筛选
+terminal-type-search-phrase = 输入搜索内容。
+terminal-press-escape = 按 Escape 退出
+terminal-tag-agent = 标记智能体以获取帮助
+terminal-save-as-workflow = 保存为工作流
+terminal-workflow-secrets-warning = 包含密钥的区块无法保存。
+terminal-conversation-restored = 对话已恢复
+terminal-previous-session = 上一会话
+terminal-copy = 复制
+terminal-cut = 剪切
+terminal-paste = 粘贴
+terminal-select-all = 全选
+terminal-share-block = 分享区块
+terminal-copy-url = 复制 URL
+terminal-copy-path = 复制路径
+terminal-show-in-finder = 在 Finder 中显示
+terminal-show-containing-folder = 显示所在文件夹
+terminal-open-in-warp = 在 Warp 中打开
+terminal-open-in-editor = 在编辑器中打开
+terminal-reveal-secret = 显示密钥
+terminal-hide-secret = 隐藏密钥
+terminal-copy-secret = 复制密钥
+terminal-insert-into-input = 插入到输入框
+terminal-copy-command = 复制命令
+terminal-copy-commands = 复制命令
+terminal-copy-output = 复制输出
+terminal-copy-filtered-output = 复制筛选后的输出
+terminal-copy-prompt = 复制提示符
+terminal-copy-right-prompt = 复制右侧提示符
+terminal-copy-working-directory = 复制工作目录
+terminal-copy-git-branch = 复制 Git 分支
+terminal-copy-output-markdown = 以 Markdown 复制输出
+terminal-copy-conversation-text = 复制会话文本
+terminal-save-as-prompt = 保存为提示词
+terminal-ask-warp-ai = 询问 Warp AI
+terminal-command-search = 命令搜索
+terminal-ai-command-search = AI 命令搜索
+terminal-find-within-block = 在区块内查找
+terminal-find-within-blocks = 在区块内查找
+terminal-toggle-block-filter = 切换区块筛选
+terminal-toggle-bookmark = 切换书签
+terminal-scroll-top-block = 滚动到区块顶部
+terminal-scroll-top-blocks = 滚动到区块顶部
+terminal-scroll-bottom-block = 滚动到区块底部
+terminal-scroll-bottom-blocks = 滚动到区块底部
+terminal-share = 分享...
+terminal-share-block-menu = 分享区块...
+terminal-fork-last-query = 从上一条提问 fork
+terminal-fork-query = 从“{ $query }”fork
+terminal-fork-from-here = 从这里 fork（仅开发）
+terminal-rewind-before-here = 回退到这里之前
+terminal-split-pane-right = 向右拆分窗格
+terminal-split-pane-left = 向左拆分窗格
+terminal-split-pane-down = 向下拆分窗格
+terminal-split-pane-up = 向上拆分窗格
+terminal-close-pane = 关闭窗格
+terminal-edit-cli-agent-toolbelt = 编辑 CLI 智能体工具栏
+terminal-edit-agent-toolbelt = 编辑智能体工具栏
+terminal-edit-prompt = 编辑提示符
+terminal-hide-input-hint = 隐藏输入提示文本
+terminal-show-input-hint = 显示输入提示文本
+terminal-share-session = 分享会话...
+terminal-stop-sharing = 停止分享
+terminal-copy-session-sharing-link = 复制会话分享链接
+terminal-copy-debugging-link = 复制调试链接
+terminal-copy-conversation-id = 复制会话 ID
+terminal-copy-debugging-id = 复制调试 ID
+terminal-for-terminal = 返回终端
+terminal-loading-session = 正在加载会话...
+
+# 链接提示气泡（富内容 + 网格链接）
+terminal-link-open-folder = 打开文件夹
+terminal-link-open-file = 打开文件
+terminal-link-open-link = 打开链接
+
+# 零态 / SSH / 共享会话 / 初始化环境 / 区块引导
+terminal-zero-new-session = 新建终端会话
+terminal-zero-dont-show-again = 不再显示
+terminal-ssh-dont-ask-again = 不再询问
+# SSH 远程服务端启动失败横幅
+terminal-ssh-failed-banner-title = 无法连接到 Warp SSH 扩展
+terminal-ssh-failed-banner-body = 文件浏览、代码审查等高级功能暂不可用，但 Warpify 体验的其他部分仍完全可用。
+terminal-shared-snapshot-title = 你正在查看快照
+terminal-shared-snapshot-desc = 此共享会话显示打开时的状态。若智能体仍在运行，请刷新以查看最新进度。
+terminal-init-env-mode-prompt = 选择你希望如何设置环境
+terminal-init-env-suggested = 建议
+terminal-thinking = 思考中...
+terminal-onboarding-welcome = 欢迎使用 Warp！
+terminal-onboarding-ai-examples-prefix = 下面是几个例子，展示如何在终端中使用 AI 能力和
+terminal-onboarding-agent-mode = 智能体模式
+terminal-onboarding-snake-title = 从零用 Python 创建贪吃蛇游戏
+terminal-onboarding-snake-desc = 让智能体模式带你完整创建一个贪吃蛇游戏
+terminal-onboarding-git-history-title = 查看 { $repo } 的 Git 历史
+terminal-onboarding-git-history-desc = 与智能体模式一起理解 Git 仓库的近期变更
+terminal-onboarding-matrix-title = 创建 Matrix 风格的自定义主题
+terminal-onboarding-matrix-desc = 让你的终端看起来像进入了 Matrix
+terminal-onboarding-other-title = 其他任务？
+terminal-onboarding-other-desc = 和智能体一起完成其他任务
+terminal-onboarding-other-prompt = 你可以帮我做什么？
+
+# CLI 智能体插件说明
+terminal-plugin-install-warp-plugin = 安装 Warp 插件
+terminal-plugin-install-latest-version = 安装最新插件版本
+terminal-plugin-run-following-commands = 运行以下命令。
+terminal-plugin-claude-install-title = 为 Claude Code 安装 Warp 插件
+terminal-plugin-claude-install-subtitle = 确保你的机器已安装 jq，然后运行这些命令。
+terminal-plugin-claude-add-marketplace = 添加 Warp 插件市场仓库
+terminal-plugin-claude-restart-activate = 重启 Claude Code 以启用插件。
+terminal-plugin-claude-known-issues = Claude Code 的插件系统存在一些已知问题。如果第 1 步后找不到插件，可以尝试手动向 ~/.claude/settings.json 添加 "extraKnownMarketplaces" 条目。
+terminal-plugin-claude-update-title = 更新 Claude Code 的 Warp 插件
+terminal-plugin-claude-remove-marketplace = 移除已有市场（如果存在）
+terminal-plugin-claude-readd-marketplace = 重新添加市场
+terminal-plugin-claude-restart-activate-update = 重启 Claude Code 以启用更新。
+terminal-plugin-install-warp-extension = 安装 Warp 扩展
+terminal-plugin-update-warp-extension = 更新 Warp 扩展
+terminal-plugin-gemini-install-title = 为 Gemini CLI 安装 Warp 插件
+terminal-plugin-gemini-command-then-restart = 运行以下命令，然后重启 Gemini CLI。
+terminal-plugin-gemini-restart-activate = 重启 Gemini CLI 以启用插件。
+terminal-plugin-gemini-update-title = 更新 Gemini CLI 的 Warp 插件
+terminal-plugin-gemini-restart-activate-update = 重启 Gemini CLI 以启用更新。
+terminal-plugin-opencode-install-title = 为 OpenCode 安装 Warp 插件
+terminal-plugin-opencode-install-subtitle = 将 Warp 插件添加到 OpenCode 配置中，然后重启 OpenCode。
+terminal-plugin-opencode-open-config = 打开或创建 opencode.json。它可以位于项目根目录，也可以位于全局配置路径：
+terminal-plugin-opencode-add-plugin = 将 "@warp-dot-dev/opencode-warp" 添加到顶层 JSON 对象的 "plugin" 数组中：
+terminal-plugin-opencode-restart-activate = 重启 OpenCode 以启用插件。
+terminal-plugin-opencode-update-title = 更新 OpenCode 的 Warp 插件
+terminal-plugin-opencode-update-subtitle = 在 opencode.json 中将插件固定到最新版本。OpenCode 会按版本规格缓存插件，因此修改版本固定会让它在重启时重新获取插件。
+terminal-plugin-opencode-replace-plugin = 将 "plugin" 数组中已有的 "@warp-dot-dev/opencode-warp" 条目替换为显式版本：
+terminal-plugin-opencode-restart-update = 重启 OpenCode 以加载更新后的插件。
+
+# 终端输入
+terminal-no-results = 无结果
+terminal-billed-to-api = 按 API 计费
+terminal-or-separator = { " 或 " }
+
+# 输入建议模式 placeholder 文案（terminal/input.rs InputSuggestionsMode）
+terminal-input-placeholder-search-queries = 搜索查询
+terminal-input-placeholder-search-queries-rewind = 搜索可回退到的查询
+terminal-input-placeholder-search-conversations = 搜索会话
+terminal-input-placeholder-search-skills = 搜索技能
+terminal-input-placeholder-search-models = 搜索模型
+terminal-input-placeholder-search-profiles = 搜索配置文件
+terminal-input-placeholder-search-commands = 搜索命令
+terminal-input-placeholder-search-prompts = 搜索提示词
+terminal-input-placeholder-search-indexed-repos = 搜索已索引仓库
+terminal-input-placeholder-search-plans = 搜索计划
+terminal-fork = Fork
+terminal-copy-share-link = 复制分享链接

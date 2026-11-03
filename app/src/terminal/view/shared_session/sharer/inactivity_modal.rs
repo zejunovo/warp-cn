@@ -179,7 +179,9 @@ impl InactivityModalBody {
                     font_weight: Some(Weight::Bold),
                     ..Default::default()
                 })
-                .with_centered_text_label(String::from("Stop sharing"))
+                .with_centered_text_label(String::from(warp_i18n::t_static!(
+                    "menu-tab-stop-sharing"
+                )))
                 .build()
                 .with_cursor(Cursor::PointingHand)
                 .on_click(move |ctx, _, _| {
@@ -205,7 +207,9 @@ impl InactivityModalBody {
                 font_weight: Some(Weight::Bold),
                 ..Default::default()
             })
-            .with_centered_text_label(String::from("Continue sharing"))
+            .with_centered_text_label(String::from(warp_i18n::t_static!(
+                "ui-final-continue-sharing"
+            )))
             .build()
             .with_cursor(Cursor::PointingHand)
             .on_click(move |ctx, _, _| {
@@ -232,7 +236,7 @@ impl View for InactivityModalBody {
 
         let header = Container::new(
             Text::new_inline(
-                "Are you still there?",
+                warp_i18n::t_static!("ui-final-are-you-still-there"),
                 appearance.ui_font_family(),
                 HEADER_FONT_SIZE,
             )

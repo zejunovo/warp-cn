@@ -438,9 +438,15 @@ impl AITip for AgentTip {
 impl WorkspaceAction {
     pub fn display_text(&self) -> Option<String> {
         match self {
-            WorkspaceAction::OpenPalette { .. } => Some("Open palette".to_string()),
-            WorkspaceAction::OpenWarpDrive => Some("Warp Drive.".to_string()),
-            WorkspaceAction::ToggleRightPanel => Some("Show diff view".to_string()),
+            WorkspaceAction::OpenPalette { .. } => {
+                Some(warp_i18n::t_static!("ai-ui-agent-tip-action-open-palette").to_string())
+            }
+            WorkspaceAction::OpenWarpDrive => {
+                Some(warp_i18n::t_static!("ai-ui-agent-tip-action-warp-drive").to_string())
+            }
+            WorkspaceAction::ToggleRightPanel => {
+                Some(warp_i18n::t_static!("ai-ui-agent-tip-action-show-diff-view").to_string())
+            }
             _ => None,
         }
     }

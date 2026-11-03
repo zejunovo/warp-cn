@@ -67,7 +67,7 @@ pub fn render_aws_cli_not_installed_banner(
     });
 
     let description_text = warpui::elements::Text::new(
-        "The AWS CLI is required to authenticate with your organization's AWS Bedrock. Install it to continue.",
+        warp_i18n::t_static!("banner-aws-cli-required"),
         appearance.ui_font_family(),
         appearance.monospace_font_size() - 2.,
     )

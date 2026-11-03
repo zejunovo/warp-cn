@@ -117,13 +117,17 @@ impl RequestMetadataTurnView {
         let background = theme.surface_2();
         let font_size = appearance.ui_font_size() + 2.;
 
-        let title = Text::new("Turn".to_string(), appearance.ui_font_family(), font_size)
-            .with_style(warpui::fonts::Properties {
-                weight: warpui::fonts::Weight::Bold,
-                ..Default::default()
-            })
-            .with_color(blended_colors::text_main(theme, background))
-            .finish();
+        let title = Text::new(
+            warp_i18n::t_static!("ai-ui-request-turn").to_string(),
+            appearance.ui_font_family(),
+            font_size,
+        )
+        .with_style(warpui::fonts::Properties {
+            weight: warpui::fonts::Weight::Bold,
+            ..Default::default()
+        })
+        .with_color(blended_colors::text_main(theme, background))
+        .finish();
 
         let close_icon_size = font_size;
         let close_button = Hoverable::new(self.close_button_mouse_state.clone(), {
@@ -370,7 +374,7 @@ impl RequestMetadataTurnView {
         let text_color = blended_colors::text_main(theme, theme.surface_2());
 
         let label = Text::new(
-            "Context window usage".to_string(),
+            warp_i18n::t_static!("ai-ui-context-window-usage").to_string(),
             appearance.ui_font_family(),
             font_size,
         )

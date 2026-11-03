@@ -122,7 +122,7 @@ impl WebSearchView {
 
         if pages.is_empty() {
             let no_results = Text::new_inline(
-                "No URLs found".to_string(),
+                warp_i18n::t_static!("ui-final-no-urls-found").to_string(),
                 appearance.ui_font_family(),
                 appearance.monospace_font_size(),
             )

@@ -94,7 +94,7 @@ where
             Some(click_button_style),
             None,
         )
-        .with_centered_text_label("Learn more".into())
+        .with_centered_text_label(warp_i18n::t_static!("ai-ui-learn-more").into())
         .build()
         .on_click(move |ctx, _, _| {
             ctx.dispatch_typed_action(action.clone());
@@ -184,7 +184,7 @@ where
                 Container::new(
                     appearance
                         .ui_builder()
-                        .span("Using Warp Offline")
+                        .span(warp_i18n::t_static!("ui-final-using-warp-offline"))
                         .with_style(header_styles)
                         .build()
                         .finish(),
@@ -362,7 +362,7 @@ pub fn render_privacy_settings_overlay_body<A: Action + Clone + 'static>(
             .with_child(
                 Container::new(
                     ui_builder
-                        .span("Privacy Settings")
+                        .span(warp_i18n::t_static!("dialog-auth-privacy-settings"))
                         .with_style(header_styles)
                         .build()
                         .finish(),
@@ -476,7 +476,7 @@ pub fn render_privacy_settings_toggles<A: Action + Clone + 'static>(
             appearance
                 .ui_builder()
                 .link(
-                    "Learn more".into(),
+                    warp_i18n::t_static!("ai-ui-learn-more").into(),
                     Some(PRIVACY_URL.into()),
                     None,
                     handles.telemetry_docs_mouse.clone(),

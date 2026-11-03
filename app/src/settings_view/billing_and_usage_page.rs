@@ -73,43 +73,10 @@ use crate::workspaces::workspace::{
 use crate::{WorkspaceAction, send_telemetry_from_ctx};
 
 const HEADER_FONT_SIZE: f32 = 16.;
-const OVERAGE_USAGE_LINK_TEXT: &str = "View details on overage usage";
-const OVERAGE_TOGGLE_ADMIN_HEADER: &str = "Enable premium model usage overages";
-const OVERAGE_TOGGLE_USER_HEADER_ENABLED: &str = "Premium model usage overages are enabled";
-const OVERAGE_TOGGLE_USER_HEADER_DISABLED: &str = "Premium model usage overages are not enabled";
-const OVERAGE_TOGGLE_DESCRIPTION: &str = "Continue using premium models beyond your plan's limits. Usage is charged in $20 increments up to your spending limit, with any remaining balance charged on your scheduled billing date.";
-const OVERAGE_TOGGLE_USER_DESCRIPTION: &str =
-    "Ask a team admin to enable overages for more AI usage.";
 
-const SORT_MENU_ITEM_DISPLAY_NAME_A_Z_LABEL: &str = "A to Z";
-const SORT_MENU_ITEM_DISPLAY_NAME_Z_A_LABEL: &str = "Z to A";
-const SORT_MENU_ITEM_REQUEST_USAGE_ASCENDING_LABEL: &str = "Usage ascending";
-const SORT_MENU_ITEM_REQUEST_USAGE_DESCENDING_LABEL: &str = "Usage descending";
-
-const AUTO_RELOAD_EXCEED_LIMIT_WARNING_STRING: &str = "Auto reload is disabled, as the next reload would exceed your monthly spend limit. Increase your limit to use auto reload.";
-const AUTO_RELOAD_DELINQUENT_WARNING_STRING: &str =
-    "Restricted due to billing issue. Update your payment method to purchase add-on credits.";
-const AUTO_RELOAD_USAGE_DELINQUENT_WARNING_STRING: &str =
-    "Restricted due to billing issue. Update your payment method to purchase usage.";
-const RESTRICTED_BILLING_USAGE_WARNING_STRING: &str = "Auto reload is disabled due to recent failed reload. Please update your payment method and try again.";
-
-const OVERVIEW_TAB_TEXT: &str = "Overview";
-const USAGE_HISTORY_TAB_TEXT: &str = "Usage History";
-
-const ENTERPRISE_USAGE_CALLOUT_HEADER: &str = "Usage reporting is currently limited";
-const ENTERPRISE_USAGE_CALLOUT_BODY_ADMIN_PREFIX: &str = "Enterprise credit usage isn't fully available in this view yet. For the most accurate spend tracking, ";
-const ENTERPRISE_USAGE_CALLOUT_BODY_ADMIN_LINK: &str = "visit the admin panel";
 const ENTERPRISE_USAGE_CALLOUT_BODY_ADMIN_SUFFIX: &str = ".";
-const ENTERPRISE_USAGE_CALLOUT_BODY_NON_ADMIN: &str = "Enterprise credit usage isn't fully available in this view yet. Contact a team admin for detailed usage reporting.";
-
-const ADDITIONAL_ADDON_CREDITS_DESCRIPTION_FOR_TEAM: &str =
-    "Purchased add-on credits are shared across your team.";
-const ADDON_USAGE_DESCRIPTION: &str = "Usage rolls over each billing cycle and expires after one year. Once your base plan usage is depleted, any additional purchased usage will be consumed.";
-const ADDITIONAL_ADDON_USAGE_DESCRIPTION_FOR_TEAM: &str =
-    "Purchased usage is shared across your team.";
 
 // Cloud agent trial widget constants.
-const AMBIENT_AGENT_TRIAL_TITLE: &str = "Cloud agent trial";
 /// The threshold below which we only show the "Buy more" button (not "New agent").
 use crate::ai::request_usage_model::AMBIENT_AGENT_TRIAL_CREDIT_THRESHOLD;
 
@@ -122,9 +89,13 @@ pub fn create_discount_badge(discount: u32, appearance: &Appearance) -> Box<dyn 
     let bg_color: Fill = theme.terminal_colors().normal.green.into();
 
     Container::new(
-        Text::new_inline(format!("{discount}% off"), appearance.ui_font_family(), 10.)
-            .with_color(theme.main_text_color(bg_color).into())
-            .finish(),
+        Text::new_inline(
+            warp_i18n::t!("settings-billing-discount", discount = discount.to_string()),
+            appearance.ui_font_family(),
+            10.,
+        )
+        .with_color(theme.main_text_color(bg_color).into())
+        .finish(),
     )
     .with_corner_radius(CornerRadius::with_all(Radius::Pixels(4.)))
     .with_background(bg_color)
@@ -142,7 +113,9 @@ fn format_addon_premium_percent(premium_bps: i32) -> String {
     }
 }
 
-pub(crate) const CHECKOUT_PENDING_MESSAGE: &str = "Opening your browser to complete your purchase";
+pub(crate) fn checkout_pending_message() -> &'static str {
+    warp_i18n::t_static!("settings-billing-checkout-pending")
+}
 
 /// Renders the savings-framed upsell shown in the add-on credits panel for
 /// plans that purchase at a premium over list price, linking to the upgrade
@@ -156,12 +129,19 @@ pub(crate) fn render_premium_upgrade_savings_note(
     let theme = appearance.theme();
     let percent = format_addon_premium_percent(premium_bps);
     let purchasable = match unit {
-        UsageDisplayUnit::Credits => "add-on credits",
-        UsageDisplayUnit::Dollars => "usage",
+        UsageDisplayUnit::Credits => warp_i18n::t_static!("settings-billing-purchasable-credits"),
+        UsageDisplayUnit::Dollars => warp_i18n::t_static!("settings-billing-purchasable-usage"),
     };
     let fragments = vec![
-        FormattedTextFragment::plain_text(format!("Save {percent} on {purchasable} by ")),
-        FormattedTextFragment::hyperlink("upgrading to a Build plan", upgrade_url),
+        FormattedTextFragment::plain_text(warp_i18n::t!(
+            "settings-billing-save-on-purchase",
+            percent = percent.as_str(),
+            purchasable = purchasable
+        )),
+        FormattedTextFragment::hyperlink(
+            warp_i18n::t_static!("settings-billing-upgrading-build"),
+            upgrade_url,
+        ),
         FormattedTextFragment::plain_text("."),
     ];
 
@@ -189,17 +169,19 @@ pub enum BillingUsageTab {
 }
 impl BillingUsageTab {
     pub fn get_tab_from_label(label: &str) -> Self {
-        match label {
-            OVERVIEW_TAB_TEXT => BillingUsageTab::Overview,
-            USAGE_HISTORY_TAB_TEXT => BillingUsageTab::UsageHistory,
-            _ => BillingUsageTab::Overview,
+        if label == warp_i18n::t_static!("settings-billing-tab-usage-history") {
+            BillingUsageTab::UsageHistory
+        } else {
+            BillingUsageTab::Overview
         }
     }
 
     pub fn label(&self) -> &str {
         match self {
-            BillingUsageTab::Overview => OVERVIEW_TAB_TEXT,
-            BillingUsageTab::UsageHistory => USAGE_HISTORY_TAB_TEXT,
+            BillingUsageTab::Overview => warp_i18n::t_static!("settings-billing-tab-overview"),
+            BillingUsageTab::UsageHistory => {
+                warp_i18n::t_static!("settings-billing-tab-usage-history")
+            }
         }
     }
 }
@@ -364,7 +346,7 @@ impl BillingAndUsagePageView {
 
         let overage_limit_modal_view = ctx.add_typed_action_view(|ctx| {
             Modal::new(
-                Some("Overage spending limit".to_string()),
+                Some(warp_i18n::t_static!("settings-billing-overage-limit-label").to_string()),
                 overage_limit_modal,
                 ctx,
             )
@@ -388,7 +370,7 @@ impl BillingAndUsagePageView {
 
         let addon_credit_modal_view = ctx.add_typed_action_view(|ctx| {
             Modal::new(
-                Some("Monthly spending limit".to_string()),
+                Some(warp_i18n::t_static!("settings-billing-monthly-limit-label").to_string()),
                 addon_credit_modal,
                 ctx,
             )
@@ -416,7 +398,11 @@ impl BillingAndUsagePageView {
         });
 
         let load_more_button = ctx.add_typed_action_view(|_ctx| {
-            ActionButton::new("Load more", SecondaryTheme).on_click(|ctx| {
+            ActionButton::new(
+                warp_i18n::t_static!("settings-billing-load-more"),
+                SecondaryTheme,
+            )
+            .on_click(|ctx| {
                 ctx.dispatch_typed_action(BillingAndUsagePageAction::RenderMoreUsageEntries);
             })
         });
@@ -521,7 +507,7 @@ impl BillingAndUsagePageView {
             }
             UserWorkspacesEvent::UpdateWorkspaceSettingsRejected(_err) => {
                 self.show_toast(
-                    "Failed to update workspace settings",
+                    warp_i18n::t_static!("settings-billing-toast-update-failed"),
                     ToastFlavor::Error,
                     ctx,
                 );
@@ -534,8 +520,12 @@ impl BillingAndUsagePageView {
             UserWorkspacesEvent::PurchaseAddonCreditsSuccess => {
                 self.purchase_addon_credits_loading = false;
                 let message = match usage_display_unit(ctx) {
-                    UsageDisplayUnit::Credits => "Successfully purchased add-on credits",
-                    UsageDisplayUnit::Dollars => "Successfully purchased usage",
+                    UsageDisplayUnit::Credits => {
+                        warp_i18n::t_static!("settings-billing-toast-purchase-success")
+                    }
+                    UsageDisplayUnit::Dollars => {
+                        warp_i18n::t_static!("settings-billing-toast-purchase-usage-success")
+                    }
                 };
                 self.show_toast(message, ToastFlavor::Success, ctx);
                 AIRequestUsageModel::handle(ctx).update(ctx, |ai_request_usage_model, ctx| {
@@ -546,7 +536,7 @@ impl BillingAndUsagePageView {
                 if self.purchase_addon_credits_loading {
                     self.purchase_addon_credits_loading = false;
                     ctx.open_url(checkout_url);
-                    self.show_toast(CHECKOUT_PENDING_MESSAGE, ToastFlavor::Default, ctx);
+                    self.show_toast(checkout_pending_message(), ToastFlavor::Default, ctx);
                     // Credits are granted via webhook once checkout completes;
                     // `on_page_selected` refreshes billing data when the user
                     // returns (e.g. via the confirmation page's Open Warp link).
@@ -939,22 +929,22 @@ impl TypedActionView for BillingAndUsagePageView {
                 // Build four menu items with checkmark for selected state
                 let sort_options = [
                     (
-                        SORT_MENU_ITEM_DISPLAY_NAME_A_Z_LABEL,
+                        warp_i18n::t_static!("settings-billing-sort-name-a-z"),
                         SortKey::DisplayName,
                         SortOrder::Asc,
                     ),
                     (
-                        SORT_MENU_ITEM_DISPLAY_NAME_Z_A_LABEL,
+                        warp_i18n::t_static!("settings-billing-sort-name-z-a"),
                         SortKey::DisplayName,
                         SortOrder::Desc,
                     ),
                     (
-                        SORT_MENU_ITEM_REQUEST_USAGE_ASCENDING_LABEL,
+                        warp_i18n::t_static!("settings-billing-sort-usage-asc"),
                         SortKey::Requests,
                         SortOrder::Asc,
                     ),
                     (
-                        SORT_MENU_ITEM_REQUEST_USAGE_DESCENDING_LABEL,
+                        warp_i18n::t_static!("settings-billing-sort-usage-desc"),
                         SortKey::Requests,
                         SortOrder::Desc,
                     ),
@@ -1300,10 +1290,14 @@ impl BillingAndUsagePageView {
         let fg = theme.foreground().into_solid();
         let bg = theme.background().into_solid();
 
-        let title = Text::new_inline(AMBIENT_AGENT_TRIAL_TITLE, appearance.ui_font_family(), 14.)
-            .with_color(theme.active_ui_text_color().into())
-            .with_style(Properties::default().weight(Weight::Semibold))
-            .finish();
+        let title = Text::new_inline(
+            warp_i18n::t_static!("settings-billing-ambient-trial-title"),
+            appearance.ui_font_family(),
+            14.,
+        )
+        .with_color(theme.active_ui_text_color().into())
+        .with_style(Properties::default().weight(Weight::Semibold))
+        .finish();
 
         let usage_cents_remaining = match usage_display_unit(app) {
             UsageDisplayUnit::Dollars => {
@@ -1312,11 +1306,16 @@ impl BillingAndUsagePageView {
             UsageDisplayUnit::Credits => None,
         };
         let credits_text = match usage_cents_remaining {
-            Some(cents) => format!("{} remaining", format_dollars(cents as f32)),
-            None if credits_remaining == 1 => "1 credit remaining".to_string(),
-            None => format!(
-                "{} credits remaining",
-                credits_remaining.separate_with_commas()
+            Some(cents) => warp_i18n::t!(
+                "settings-billing-dollars-remaining",
+                amount = format!("{}", format_dollars(cents as f32))
+            ),
+            None if credits_remaining == 1 => {
+                warp_i18n::t_static!("settings-billing-one-credit-remaining").to_string()
+            }
+            None => warp_i18n::t!(
+                "settings-billing-credits-remaining",
+                count = format!("{}", credits_remaining.separate_with_commas())
             ),
         };
         let credits_label = Text::new_inline(credits_text, appearance.ui_font_family(), 12.)
@@ -1338,7 +1337,9 @@ impl BillingAndUsagePageView {
                     ButtonVariant::Secondary,
                     self.ambient_trial_new_agent_button.clone(),
                 )
-                .with_text_label("New agent".to_string())
+                .with_text_label(
+                    warp_i18n::t_static!("settings-billing-new-agent-button").to_string(),
+                )
                 .with_style(UiComponentStyles {
                     font_color: Some(bg),
                     background: Some(fg.into()),
@@ -1375,7 +1376,9 @@ impl BillingAndUsagePageView {
                     ButtonVariant::Secondary,
                     self.ambient_trial_buy_more_button.clone(),
                 )
-                .with_text_label("Buy more".to_string())
+                .with_text_label(
+                    warp_i18n::t_static!("settings-billing-buy-more-button").to_string(),
+                )
                 .with_style(UiComponentStyles {
                     background: Some(bg.into()),
                     font_size: Some(14.),
@@ -1461,16 +1464,19 @@ impl BillingAndUsagePageView {
         let enabled_and_not_delinquent = enabled && !is_delinquent;
 
         let (header_text, description_text) = if has_admin_permissions {
-            (OVERAGE_TOGGLE_ADMIN_HEADER, OVERAGE_TOGGLE_DESCRIPTION)
+            (
+                warp_i18n::t_static!("settings-billing-overage-toggle-admin-header"),
+                warp_i18n::t_static!("settings-billing-overage-toggle-description"),
+            )
         } else if enabled {
             (
-                OVERAGE_TOGGLE_USER_HEADER_ENABLED,
-                OVERAGE_TOGGLE_DESCRIPTION,
+                warp_i18n::t_static!("settings-billing-overage-toggle-user-header-enabled"),
+                warp_i18n::t_static!("settings-billing-overage-toggle-description"),
             )
         } else {
             (
-                OVERAGE_TOGGLE_USER_HEADER_DISABLED,
-                OVERAGE_TOGGLE_USER_DESCRIPTION,
+                warp_i18n::t_static!("settings-billing-overage-toggle-user-header-disabled"),
+                warp_i18n::t_static!("settings-billing-overage-toggle-user-description"),
             )
         };
 
@@ -1566,7 +1572,7 @@ impl BillingAndUsagePageView {
         let spend_limit_text = if let Some(cents) = usage_settings.max_monthly_spend_cents {
             format!("${:.2}", cents as f64 / 100.0)
         } else {
-            "Not set".to_string()
+            warp_i18n::t_static!("settings-billing-not-set").to_string()
         };
 
         let info_icon = render_info_icon(
@@ -1576,13 +1582,13 @@ impl BillingAndUsagePageView {
                 on_click_action: None,
                 secondary_text: None,
                 tooltip_override_text: Some(
-                    "Sets the monthly overage spending limit beyond the plan amount".to_string(),
+                    warp_i18n::t_static!("settings-billing-overage-limit-helper").to_string(),
                 ),
             },
         );
 
         let label = Text::new_inline(
-            "Monthly overage spending limit",
+            warp_i18n::t_static!("settings-billing-monthly-overage-spend-label"),
             appearance.ui_font_family(),
             12.,
         )
@@ -1651,7 +1657,7 @@ impl BillingAndUsagePageView {
                 appearance
                     .ui_builder()
                     .link(
-                        OVERAGE_USAGE_LINK_TEXT.to_string(),
+                        warp_i18n::t_static!("settings-billing-overage-usage-link").to_string(),
                         None,
                         Some(Box::new(move |ctx| {
                             ctx.dispatch_typed_action(
@@ -1814,8 +1820,10 @@ impl BillingAndUsagePageView {
         let unit = usage_display_unit(app);
 
         let header_text = match unit {
-            UsageDisplayUnit::Credits => "Add-on credits",
-            UsageDisplayUnit::Dollars => "Add-on usage",
+            UsageDisplayUnit::Credits => warp_i18n::t_static!("settings-billing-addon-header"),
+            UsageDisplayUnit::Dollars => {
+                warp_i18n::t_static!("settings-billing-addon-usage-header")
+            }
         };
         let header = Text::new_inline(header_text, appearance.ui_font_family(), 16.)
             .with_color(fg.into())
@@ -1880,13 +1888,17 @@ impl BillingAndUsagePageView {
                 let is_legacy_paid = workspace
                     .is_some_and(|workspace| workspace.billing_metadata.is_on_legacy_paid_plan());
                 let link_text = if is_legacy_paid {
-                    "Switch to the Build plan"
+                    warp_i18n::t_static!("settings-billing-switch-build-plan")
                 } else {
-                    "Upgrade to the Build plan"
+                    warp_i18n::t_static!("settings-billing-upgrade-build-plan")
                 };
                 let suffix = match unit {
-                    UsageDisplayUnit::Credits => " to purchase add-on credits.",
-                    UsageDisplayUnit::Dollars => " to purchase usage.",
+                    UsageDisplayUnit::Credits => {
+                        warp_i18n::t_static!("settings-billing-build-plan-suffix")
+                    }
+                    UsageDisplayUnit::Dollars => {
+                        warp_i18n::t_static!("settings-billing-build-plan-usage-suffix")
+                    }
                 };
 
                 let text_fragments = vec![
@@ -1928,9 +1940,11 @@ impl BillingAndUsagePageView {
             (false, false, true) => {
                 let paragraph_text = match unit {
                     UsageDisplayUnit::Credits => {
-                        "Contact your Account Executive for more add-on credits."
+                        warp_i18n::t_static!("settings-billing-contact-ae")
                     }
-                    UsageDisplayUnit::Dollars => "Contact your Account Executive for more usage.",
+                    UsageDisplayUnit::Dollars => {
+                        warp_i18n::t_static!("settings-billing-contact-ae-usage")
+                    }
                 };
                 Some(
                     ui_builder
@@ -1947,8 +1961,12 @@ impl BillingAndUsagePageView {
             // a generic message telling you to talk to them.
             (_, _, false) => {
                 let paragraph_text = match unit {
-                    UsageDisplayUnit::Credits => "Contact a team admin to purchase add-on credits.",
-                    UsageDisplayUnit::Dollars => "Contact a team admin to purchase usage.",
+                    UsageDisplayUnit::Credits => {
+                        warp_i18n::t_static!("settings-billing-contact-admin")
+                    }
+                    UsageDisplayUnit::Dollars => {
+                        warp_i18n::t_static!("settings-billing-contact-admin-usage")
+                    }
                 };
                 Some(
                     ui_builder
@@ -1985,11 +2003,11 @@ impl BillingAndUsagePageView {
         let (description, team_description) = match unit {
             UsageDisplayUnit::Credits => (
                 addon_credits_description(addon_credits_options),
-                ADDITIONAL_ADDON_CREDITS_DESCRIPTION_FOR_TEAM,
+                warp_i18n::t_static!("settings-billing-addon-team-description"),
             ),
             UsageDisplayUnit::Dollars => (
-                ADDON_USAGE_DESCRIPTION.to_string(),
-                ADDITIONAL_ADDON_USAGE_DESCRIPTION_FOR_TEAM,
+                warp_i18n::t_static!("settings-billing-addon-usage-description").to_string(),
+                warp_i18n::t_static!("settings-billing-addon-team-usage-description"),
             ),
         };
         let paragraph_text = if team_member_count > 1 {
@@ -2015,10 +2033,10 @@ impl BillingAndUsagePageView {
                 tooltip_override_text: Some(
                     match unit {
                         UsageDisplayUnit::Credits => {
-                            "Sets the monthly limit spent on add-on credits"
+                            warp_i18n::t_static!("settings-billing-monthly-spend-helper")
                         }
                         UsageDisplayUnit::Dollars => {
-                            "Sets the monthly limit spent on purchased usage"
+                            warp_i18n::t_static!("settings-billing-monthly-spend-helper-usage")
                         }
                     }
                     .to_string(),
@@ -2039,7 +2057,10 @@ impl BillingAndUsagePageView {
         let monthly_spend_row = Flex::row()
             .with_cross_axis_alignment(CrossAxisAlignment::Center)
             .with_children([
-                ui_builder.span("Monthly spend limit").build().finish(),
+                ui_builder
+                    .span(warp_i18n::t_static!("settings-billing-monthly-spend-limit"))
+                    .build()
+                    .finish(),
                 Shrinkable::new(1., Align::new(info_icon).left().finish()).finish(),
                 icon_button(
                     appearance,
@@ -2068,10 +2089,13 @@ impl BillingAndUsagePageView {
                 let cost_cents = bonus_grants.cents_spent;
                 let cost_dollars = cost_cents as f64 / 100.0;
 
-                let label =
-                    Text::new_inline("Purchased this month", appearance.ui_font_family(), 12.)
-                        .with_color(appearance.theme().active_ui_text_color().into())
-                        .finish();
+                let label = Text::new_inline(
+                    warp_i18n::t_static!("settings-billing-purchased-this-month"),
+                    appearance.ui_font_family(),
+                    12.,
+                )
+                .with_color(appearance.theme().active_ui_text_color().into())
+                .finish();
 
                 let mut right_side =
                     Flex::row().with_cross_axis_alignment(CrossAxisAlignment::Center);
@@ -2139,20 +2163,24 @@ impl BillingAndUsagePageView {
         let auto_reload_amount = selected_option
             .map(|option| PackAmount::of(option, unit).label())
             .filter(|_| auto_reload_enabled)
-            .unwrap_or_else(|| "your selected package".to_string());
+            .unwrap_or_else(|| warp_i18n::t!("settings-billing-selected-package"));
         let auto_reload_description = match unit {
-            UsageDisplayUnit::Credits => format!(
-                "When enabled, auto reload will automatically purchase {auto_reload_amount} when \
-                your add-on credit balance reaches 100 credits remaining."
+            UsageDisplayUnit::Credits => warp_i18n::t!(
+                "settings-billing-auto-reload-package-description",
+                amount = auto_reload_amount.as_str()
             ),
-            UsageDisplayUnit::Dollars => format!(
-                "When enabled, auto reload will automatically purchase {auto_reload_amount} when \
-                your purchased usage runs low."
+            UsageDisplayUnit::Dollars => warp_i18n::t!(
+                "settings-billing-auto-reload-usage-description",
+                amount = auto_reload_amount.as_str()
             ),
         };
         let delinquent_warning = match unit {
-            UsageDisplayUnit::Credits => AUTO_RELOAD_DELINQUENT_WARNING_STRING,
-            UsageDisplayUnit::Dollars => AUTO_RELOAD_USAGE_DELINQUENT_WARNING_STRING,
+            UsageDisplayUnit::Credits => {
+                warp_i18n::t_static!("settings-billing-auto-reload-delinquent-warning")
+            }
+            UsageDisplayUnit::Dollars => {
+                warp_i18n::t_static!("settings-billing-auto-reload-usage-delinquent-warning")
+            }
         };
         let auto_reload_switch = ui_builder
             .switch(self.auto_reload_switch.clone())
@@ -2176,7 +2204,7 @@ impl BillingAndUsagePageView {
         };
 
         let auto_reload_switch = Container::new(render_body_item::<BillingAndUsagePageAction>(
-            "Auto reload".into(),
+            warp_i18n::t_static!("settings-billing-auto-reload").into(),
             None,
             Default::default(),
             Default::default(),
@@ -2241,9 +2269,9 @@ impl BillingAndUsagePageView {
         };
 
         let button_text = if purchase_addon_credits_loading {
-            "Buying…".to_string()
+            warp_i18n::t_static!("settings-billing-buying-button").to_string()
         } else {
-            "Buy".to_string()
+            warp_i18n::t_static!("settings-billing-buy-button").to_string()
         };
 
         let would_exceed_limit =
@@ -2325,7 +2353,7 @@ impl BillingAndUsagePageView {
             } else if would_exceed_limit {
                 card_content_upper.add_child(self.render_warning_row(
                     appearance,
-                    AUTO_RELOAD_EXCEED_LIMIT_WARNING_STRING.to_string(),
+                    warp_i18n::t_static!("settings-billing-auto-reload-exceed-warning").to_string(),
                 ));
             }
             let card_upper = Container::new(card_content_upper.finish())
@@ -2344,7 +2372,10 @@ impl BillingAndUsagePageView {
                 .finish();
 
             let mut card_content_lower_children = vec![
-                ui_builder.span("One-time purchase").build().finish(),
+                ui_builder
+                    .span(warp_i18n::t_static!("settings-billing-one-time-purchase"))
+                    .build()
+                    .finish(),
                 buy_row.finish(),
             ];
 
@@ -2365,20 +2396,25 @@ impl BillingAndUsagePageView {
                     .billing_metadata
                     .has_failed_addon_credit_auto_reload_status()
             }) {
-                card_content_lower_children.push(self.render_warning_row(
-                    appearance,
-                    RESTRICTED_BILLING_USAGE_WARNING_STRING.to_string(),
-                ));
+                card_content_lower_children.push(
+                    self.render_warning_row(
+                        appearance,
+                        warp_i18n::t_static!("settings-billing-restricted-billing-usage-warning")
+                            .to_string(),
+                    ),
+                );
             } else if would_exceed_limit {
                 let warning_fragments = vec![
-                    FormattedTextFragment::plain_text(
-                        "Reloading would exceed your monthly limit. ",
-                    ),
+                    FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                        "settings-billing-reload-exceed-prefix"
+                    )),
                     FormattedTextFragment::hyperlink_action(
-                        "Increase your limit",
+                        warp_i18n::t_static!("settings-billing-increase-your-limit"),
                         BillingAndUsagePageAction::ShowAddOnCreditModal,
                     ),
-                    FormattedTextFragment::plain_text(" to continue."),
+                    FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                        "settings-billing-to-continue"
+                    )),
                 ];
                 card_content_lower_children
                     .push(self.render_warning_row_with_link(appearance, warning_fragments));
@@ -2435,24 +2471,34 @@ impl BillingAndUsagePageView {
             if let (Some(count), Some(cost)) = (total_overages_count, total_overages_cost) {
                 if count == 1 {
                     (
-                        "1 credit".to_string(),
+                        warp_i18n::t_static!("settings-billing-one-credit").to_string(),
                         format!("${:.2}", cost as f64 / 100.0),
                     )
                 } else {
                     (
-                        format!("{} credits", count.separate_with_commas()),
+                        warp_i18n::t!(
+                            "settings-billing-n-credits",
+                            count = format!("{}", count.separate_with_commas())
+                        ),
                         format!("${:.2}", cost as f64 / 100.0),
                     )
                 }
             } else {
-                ("0 credits".to_string(), "$0.00".to_string())
+                (
+                    warp_i18n::t!("settings-billing-n-credits", count = "0"),
+                    "$0.00".to_string(),
+                )
             };
 
         let mut left_side_component =
             Flex::row().with_cross_axis_alignment(CrossAxisAlignment::Center);
-        let label = Text::new_inline("Total overages", appearance.ui_font_family(), 12.)
-            .with_color(appearance.theme().active_ui_text_color().into())
-            .finish();
+        let label = Text::new_inline(
+            warp_i18n::t_static!("settings-billing-total-overages"),
+            appearance.ui_font_family(),
+            12.,
+        )
+        .with_color(appearance.theme().active_ui_text_color().into())
+        .finish();
 
         left_side_component.add_child(Container::new(label).with_margin_right(8.).finish());
 
@@ -2476,8 +2522,13 @@ impl BillingAndUsagePageView {
 
         if let Some(period_end) = total_overages_period_end {
             let local_period_end = period_end.with_timezone(&Local);
-            let formatted_date = local_period_end.format("%b %d at %-I:%M %p").to_string();
-            let billing_date_text = format!("Usage resets on {formatted_date}");
+            let formatted_date = local_period_end
+                .format(warp_i18n::t_static!("settings-billing-date-format"))
+                .to_string();
+            let billing_date_text = warp_i18n::t!(
+                "settings-billing-usage-resets-on",
+                date = format!("{}", formatted_date)
+            );
             left_side_component.add_child(
                 Container::new(
                     Text::new_inline(billing_date_text, appearance.ui_font_family(), 12.)
@@ -2534,8 +2585,12 @@ impl BillingAndUsagePageView {
                     on_click_action: None,
                     secondary_text: None,
                     tooltip_override_text: match info.is_current_user {
-                        true => Some("Your credit limit is prorated because you joined midway through the billing cycle.".to_string()),
-                        false => Some("This credit limit is prorated because this user joined midway through the billing cycle.".to_string()),
+                        true => {
+                            Some(warp_i18n::t_static!("settings-billing-prorated-self").to_string())
+                        }
+                        false => Some(
+                            warp_i18n::t_static!("settings-billing-prorated-other").to_string(),
+                        ),
                     },
                 },
             ))
@@ -2555,7 +2610,7 @@ impl BillingAndUsagePageView {
         }
 
         let request_count_label = if workspace_is_delinquent_due_to_payment_issue {
-            "Restricted due to billing issue".to_string()
+            warp_i18n::t_static!("settings-billing-restricted-due-to-billing").to_string()
         } else {
             format_usage_count(used, divisor, usage_cents)
         };
@@ -2634,13 +2689,23 @@ impl BillingAndUsagePageView {
             )
             .finish()
         } else {
-            let (header, unit) = if shows_dollars(divisor, usage_cents) {
-                ("Usage", "usage")
+            let (header, description) = if shows_dollars(divisor, usage_cents) {
+                (
+                    warp_i18n::t_static!("settings-billing-usage-header"),
+                    warp_i18n::t!(
+                        "settings-billing-account-usage-info",
+                        duration = refresh_duration
+                    ),
+                )
             } else {
-                ("Credits", "credits")
+                (
+                    warp_i18n::t_static!("settings-billing-credits-header"),
+                    warp_i18n::t!(
+                        "settings-billing-account-credits-info",
+                        duration = refresh_duration
+                    ),
+                )
             };
-            let description =
-                format!("This is the {refresh_duration} limit of AI {unit} for your account.");
 
             let request_usage_description = FormattedTextElement::from_str(
                 description,
@@ -2708,7 +2773,7 @@ impl BillingAndUsagePageView {
         let ai_request_usage_model = AIRequestUsageModel::as_ref(app);
         let formatted_next_refresh_time = ai_request_usage_model
             .next_refresh_time_local()
-            .format("%b %d at %-I:%M %p")
+            .format(warp_i18n::t_static!("settings-billing-date-format"))
             .to_string();
         let workspace_is_delinquent_due_to_payment_issue = UserWorkspaces::as_ref(app)
             .current_workspace_billing_metadata()
@@ -2781,12 +2846,16 @@ impl BillingAndUsagePageView {
             .with_main_axis_alignment(MainAxisAlignment::Center)
             .with_child(
                 Container::new(
-                    Text::new_inline("Last 30 days".to_string(), appearance.ui_font_family(), 14.)
-                        .with_color(blended_colors::text_sub(
-                            appearance.theme(),
-                            appearance.theme().surface_1(),
-                        ))
-                        .finish(),
+                    Text::new_inline(
+                        warp_i18n::t_static!("settings-billing-last-30-days").to_string(),
+                        appearance.ui_font_family(),
+                        14.,
+                    )
+                    .with_color(blended_colors::text_sub(
+                        appearance.theme(),
+                        appearance.theme().surface_1(),
+                    ))
+                    .finish(),
                 )
                 .with_vertical_margin(12.)
                 .finish(),
@@ -2894,19 +2963,23 @@ impl BillingAndUsagePageView {
                 )
                 .with_child(
                     Container::new(
-                        Text::new("No usage history", appearance.ui_font_family(), 14.)
-                            .with_color(blended_colors::text_sub(
-                                appearance.theme(),
-                                appearance.theme().surface_1(),
-                            ))
-                            .finish(),
+                        Text::new(
+                            warp_i18n::t_static!("settings-billing-no-usage-history"),
+                            appearance.ui_font_family(),
+                            14.,
+                        )
+                        .with_color(blended_colors::text_sub(
+                            appearance.theme(),
+                            appearance.theme().surface_1(),
+                        ))
+                        .finish(),
                     )
                     .with_margin_bottom(4.)
                     .finish(),
                 )
                 .with_child(
                     Text::new(
-                        "Kick off an agent task to view usage history here.",
+                        warp_i18n::t_static!("settings-billing-kick-off-agent"),
                         appearance.ui_font_family(),
                         14.,
                     )
@@ -2953,7 +3026,7 @@ impl BillingAndUsagePageView {
         .finish();
 
         let header = Text::new_inline(
-            ENTERPRISE_USAGE_CALLOUT_HEADER,
+            warp_i18n::t_static!("settings-billing-enterprise-callout-header"),
             appearance.ui_font_family(),
             16.,
         )
@@ -2971,9 +3044,12 @@ impl BillingAndUsagePageView {
         let body = if let Some(team_uid) = team_uid.filter(|_| has_admin_permissions) {
             let admin_panel_url = AdminActions::admin_panel_link_for_team(team_uid);
             let text_fragments = vec![
-                FormattedTextFragment::plain_text(ENTERPRISE_USAGE_CALLOUT_BODY_ADMIN_PREFIX),
+                FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                    "settings-billing-enterprise-callout-admin-prefix"
+                )),
+                FormattedTextFragment::plain_text(" "),
                 FormattedTextFragment::hyperlink(
-                    ENTERPRISE_USAGE_CALLOUT_BODY_ADMIN_LINK,
+                    warp_i18n::t_static!("settings-billing-enterprise-callout-admin-link"),
                     admin_panel_url,
                 ),
                 FormattedTextFragment::plain_text(ENTERPRISE_USAGE_CALLOUT_BODY_ADMIN_SUFFIX),
@@ -2994,7 +3070,9 @@ impl BillingAndUsagePageView {
         } else {
             appearance
                 .ui_builder()
-                .paragraph(ENTERPRISE_USAGE_CALLOUT_BODY_NON_ADMIN)
+                .paragraph(warp_i18n::t_static!(
+                    "settings-billing-enterprise-callout-non-admin"
+                ))
                 .with_style(UiComponentStyles {
                     font_color: Some(theme.sub_text_color(bg).into()),
                     font_size: Some(12.),
@@ -3054,7 +3132,10 @@ impl BillingAndUsagePageView {
             .with_child(
                 appearance
                     .ui_builder()
-                    .paragraph(format!("Resets {formatted_next_refresh_time}"))
+                    .paragraph(warp_i18n::t!(
+                        "settings-billing-resets",
+                        date = formatted_next_refresh_time
+                    ))
                     .with_style(UiComponentStyles {
                         font_color: Some(blended_colors::text_sub(
                             appearance.theme(),
@@ -3104,8 +3185,9 @@ impl BillingAndUsagePageView {
                     let hoverable =
                         Hoverable::new(self.sort_icon_mouse_state.clone(), |mouse_state| {
                             if mouse_state.is_hovered() {
-                                let tooltip =
-                                    appearance.ui_builder().tool_tip("Sort by".to_string());
+                                let tooltip = appearance.ui_builder().tool_tip(
+                                    warp_i18n::t_static!("settings-billing-sort-by").to_string(),
+                                );
 
                                 button.add_positioned_overlay_child(
                                     tooltip.build().finish(),
@@ -3198,7 +3280,7 @@ impl BillingAndUsagePageView {
                 .with_child(
                     build_sub_header(
                         appearance,
-                        "Usage",
+                        warp_i18n::t_static!("settings-billing-usage-column"),
                         Some(
                             appearance
                                 .theme()
@@ -3254,7 +3336,7 @@ impl BillingAndUsagePageView {
             };
 
             usage.add_child(self.render_ai_usage_limit_row(
-                "Team total".to_string(),
+                warp_i18n::t_static!("settings-billing-team-total").to_string(),
                 team_total_used,
                 team_divisor,
                 team_total_usage_cents,
@@ -3377,128 +3459,148 @@ impl BillingAndUsagePageView {
 
         let auth_state = AuthStateProvider::as_ref(app).get();
 
-        let upgrade_cta_text_fragments = if let (Some(team), Some(billing_metadata)) =
-            (team, billing_metadata)
-        {
-            if workspace_is_delinquent_due_to_payment_issue {
-                if has_admin_permissions {
-                    vec![
-                        FormattedTextFragment::hyperlink_action(
-                            "Manage billing",
-                            BillingAndUsagePageAction::GenerateStripeBillingPortalLink {
-                                team_uid: team.uid,
-                            },
-                        ),
-                        FormattedTextFragment::plain_text(" to regain access to AI features."),
-                    ]
-                } else {
-                    // Non-admin team member - show message to contact admin
-                    vec![FormattedTextFragment::plain_text(
-                        "Contact your team admin to resolve billing issues.",
-                    )]
-                }
-            } else if billing_metadata.can_upgrade_to_higher_tier_plan() {
-                let upgrade_url = UserWorkspaces::upgrade_link_for_team(team.uid);
-                if has_admin_permissions {
-                    if billing_metadata.can_upgrade_to_build_plan() {
-                        if billing_metadata.is_on_legacy_paid_plan() {
-                            vec![
-                                FormattedTextFragment::hyperlink(
-                                    "Switch to the Build plan",
+        let upgrade_cta_text_fragments =
+            if let (Some(team), Some(billing_metadata)) = (team, billing_metadata) {
+                if workspace_is_delinquent_due_to_payment_issue {
+                    if has_admin_permissions {
+                        vec![
+                            FormattedTextFragment::hyperlink_action(
+                                warp_i18n::t_static!("settings-billing-manage-billing"),
+                                BillingAndUsagePageAction::GenerateStripeBillingPortalLink {
+                                    team_uid: team.uid,
+                                },
+                            ),
+                            FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                                "settings-billing-manage-billing-suffix"
+                            )),
+                        ]
+                    } else {
+                        // Non-admin team member - show message to contact admin
+                        vec![FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                            "settings-billing-contact-admin-billing"
+                        ))]
+                    }
+                } else if billing_metadata.can_upgrade_to_higher_tier_plan() {
+                    let upgrade_url = UserWorkspaces::upgrade_link_for_team(team.uid);
+                    if has_admin_permissions {
+                        if billing_metadata.can_upgrade_to_build_plan() {
+                            if billing_metadata.is_on_legacy_paid_plan() {
+                                vec![
+                                    FormattedTextFragment::hyperlink(
+                                        warp_i18n::t_static!("settings-billing-switch-build-plan"),
+                                        upgrade_url,
+                                    ),
+                                    FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                                        "settings-billing-flexible-pricing-suffix"
+                                    )),
+                                ]
+                            } else {
+                                let mut fragments = vec![FormattedTextFragment::hyperlink(
+                                    warp_i18n::t_static!("settings-billing-upgrade-build-plan"),
                                     upgrade_url,
-                                ),
-                                FormattedTextFragment::plain_text(
-                                    " for a more flexible pricing model.",
-                                ),
-                            ]
-                        } else {
-                            let mut fragments = vec![FormattedTextFragment::hyperlink(
-                                "Upgrade to the Build plan",
-                                upgrade_url,
-                            )];
-                            if billing_metadata.is_byo_api_key_enabled() {
-                                fragments.push(FormattedTextFragment::plain_text(" or "));
-                                fragments.push(FormattedTextFragment::hyperlink_action(
-                                    "bring your own key",
-                                    BillingAndUsagePageAction::NavigateToByokSettings,
+                                )];
+                                if billing_metadata.is_byo_api_key_enabled() {
+                                    fragments.push(FormattedTextFragment::plain_text(
+                                        warp_i18n::t_static!("settings-billing-or-byok"),
+                                    ));
+                                    fragments.push(FormattedTextFragment::hyperlink_action(
+                                        warp_i18n::t_static!("settings-billing-bring-your-own-key"),
+                                        BillingAndUsagePageAction::NavigateToByokSettings,
+                                    ));
+                                }
+                                fragments.push(FormattedTextFragment::plain_text(
+                                    warp_i18n::t_static!("settings-billing-byok-increased-suffix"),
                                 ));
+                                fragments
                             }
-                            fragments.push(FormattedTextFragment::plain_text(
-                                " for increased access to AI features.",
-                            ));
-                            fragments
+                        } else {
+                            let upgrade_text = match billing_metadata.customer_type {
+                                CustomerType::Prosumer => {
+                                    warp_i18n::t_static!("settings-billing-upgrade-turbo")
+                                }
+                                CustomerType::Turbo => {
+                                    warp_i18n::t_static!("settings-billing-upgrade-lightspeed")
+                                }
+                                _ => warp_i18n::t_static!("settings-teams-upgrade"),
+                            };
+                            vec![
+                                FormattedTextFragment::hyperlink(upgrade_text, upgrade_url),
+                                FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                                    "settings-billing-more-ai-usage-suffix"
+                                )),
+                            ]
                         }
                     } else {
-                        let upgrade_text = match billing_metadata.customer_type {
-                            CustomerType::Prosumer => "Upgrade to Turbo plan",
-                            CustomerType::Turbo => "Upgrade to Lightspeed plan",
-                            _ => "Upgrade",
-                        };
-                        vec![
-                            FormattedTextFragment::hyperlink(upgrade_text, upgrade_url),
-                            FormattedTextFragment::plain_text(" to get more AI usage."),
-                        ]
+                        vec![]
                     }
+                } else if billing_metadata.is_on_build_plan() {
+                    vec![
+                        FormattedTextFragment::hyperlink(
+                            warp_i18n::t_static!("settings-billing-upgrade-max"),
+                            UserWorkspaces::upgrade_link_for_team(team.uid),
+                        ),
+                        FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                            "settings-billing-more-credits-suffix"
+                        )),
+                    ]
+                } else if billing_metadata.is_on_build_max_plan() {
+                    vec![
+                        FormattedTextFragment::hyperlink(
+                            warp_i18n::t_static!("settings-billing-switch-business"),
+                            UserWorkspaces::upgrade_link_for_team(team.uid),
+                        ),
+                        FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                            "settings-billing-business-feature-suffix"
+                        )),
+                    ]
+                } else if billing_metadata.is_on_build_business_plan()
+                    || billing_metadata.is_on_legacy_business_plan()
+                {
+                    vec![
+                        FormattedTextFragment::hyperlink(
+                            warp_i18n::t_static!("settings-billing-upgrade-enterprise"),
+                            "mailto:sales@warp.dev",
+                        ),
+                        FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                            "settings-billing-enterprise-suffix"
+                        )),
+                    ]
+                } else if !billing_metadata.is_usage_based_pricing_toggleable() {
+                    vec![
+                        FormattedTextFragment::hyperlink(
+                            warp_i18n::t_static!("settings-billing-contact-support"),
+                            "mailto:support@warp.dev",
+                        ),
+                        FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                            "settings-billing-contact-support-suffix"
+                        )),
+                    ]
                 } else {
                     vec![]
                 }
-            } else if billing_metadata.is_on_build_plan() {
-                vec![
-                    FormattedTextFragment::hyperlink(
-                        "Upgrade to Max",
-                        UserWorkspaces::upgrade_link_for_team(team.uid),
-                    ),
-                    FormattedTextFragment::plain_text(" for more AI credits."),
-                ]
-            } else if billing_metadata.is_on_build_max_plan() {
-                vec![
-                    FormattedTextFragment::hyperlink(
-                        "Switch to Business",
-                        UserWorkspaces::upgrade_link_for_team(team.uid),
-                    ),
-                    FormattedTextFragment::plain_text(
-                        " for security features like SSO and automatically applied zero data retention.",
-                    ),
-                ]
-            } else if billing_metadata.is_on_build_business_plan()
-                || billing_metadata.is_on_legacy_business_plan()
-            {
-                vec![
-                    FormattedTextFragment::hyperlink(
-                        "Upgrade to Enterprise",
-                        "mailto:sales@warp.dev",
-                    ),
-                    FormattedTextFragment::plain_text(" for custom limits and dedicated support."),
-                ]
-            } else if !billing_metadata.is_usage_based_pricing_toggleable() {
-                vec![
-                    FormattedTextFragment::hyperlink("Contact support", "mailto:support@warp.dev"),
-                    FormattedTextFragment::plain_text(" for more AI usage."),
-                ]
+            } else if billing_metadata.is_none_or(BillingMetadata::can_upgrade_to_build_plan) {
+                let user_id = auth_state.user_id().unwrap_or_default();
+                let upgrade_url = UserWorkspaces::upgrade_link(user_id);
+                let mut fragments = vec![FormattedTextFragment::hyperlink(
+                    warp_i18n::t_static!("settings-billing-upgrade-build-plan"),
+                    upgrade_url,
+                )];
+                if UserWorkspaces::as_ref(app).is_byo_api_key_enabled(app) {
+                    fragments.push(FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                        "settings-billing-or-byok"
+                    )));
+                    fragments.push(FormattedTextFragment::hyperlink_action(
+                        warp_i18n::t_static!("settings-billing-bring-your-own-key"),
+                        BillingAndUsagePageAction::NavigateToByokSettings,
+                    ));
+                }
+                fragments.push(FormattedTextFragment::plain_text(warp_i18n::t_static!(
+                    "settings-billing-build-byok-credits-suffix"
+                )));
+                fragments
             } else {
                 vec![]
-            }
-        } else if billing_metadata.is_none_or(BillingMetadata::can_upgrade_to_build_plan) {
-            let user_id = auth_state.user_id().unwrap_or_default();
-            let upgrade_url = UserWorkspaces::upgrade_link(user_id);
-            let mut fragments = vec![FormattedTextFragment::hyperlink(
-                "Upgrade to the Build plan",
-                upgrade_url,
-            )];
-            if UserWorkspaces::as_ref(app).is_byo_api_key_enabled(app) {
-                fragments.push(FormattedTextFragment::plain_text(" or "));
-                fragments.push(FormattedTextFragment::hyperlink_action(
-                    "bring your own key",
-                    BillingAndUsagePageAction::NavigateToByokSettings,
-                ));
-            }
-            fragments.push(FormattedTextFragment::plain_text(
-                " for more credits and access to more models.",
-            ));
-            fragments
-        } else {
-            vec![]
-        };
+            };
 
         let mut upgrade_cta = FormattedTextElement::new(
             FormattedText::new([FormattedTextLine::Line(upgrade_cta_text_fragments)]),
@@ -3656,7 +3758,7 @@ impl BillingAndUsagePageView {
                 self.anonymous_user_sign_up_button.clone(),
             )
             .with_style(button_styles)
-            .with_text_label("Sign up".to_owned())
+            .with_text_label(warp_i18n::t_static!("settings-billing-sign-up").to_owned())
             .build()
             .on_click(move |ctx, _, _| {
                 ctx.dispatch_typed_action(BillingAndUsagePageAction::SignupAnonymousUser);
@@ -3668,7 +3770,10 @@ impl BillingAndUsagePageView {
             .with_cross_axis_alignment(CrossAxisAlignment::End);
         let current_user_id = auth_state.user_id().unwrap_or_default();
 
-        plan_info.add_child(render_customer_type_badge(appearance, "Free".into()));
+        plan_info.add_child(render_customer_type_badge(
+            appearance,
+            warp_i18n::t_static!("settings-billing-plan-free").into(),
+        ));
         plan_info.add_child(
             Container::new(
                 appearance
@@ -3677,7 +3782,7 @@ impl BillingAndUsagePageView {
                     .with_text_and_icon_label(
                         TextAndIcon::new(
                             TextAndIconAlignment::IconFirst,
-                            "Compare plans",
+                            warp_i18n::t_static!("settings-billing-compare-plans"),
                             Icon::CoinsStacked.to_warpui_icon(appearance.theme().accent()),
                             MainAxisSize::Min,
                             MainAxisAlignment::Center,
@@ -3716,10 +3821,14 @@ impl BillingAndUsagePageView {
     }
 
     fn render_plan_header_text(&self, appearance: &Appearance) -> Box<dyn Element> {
-        Text::new_inline("Plan", appearance.ui_font_family(), HEADER_FONT_SIZE)
-            .with_style(Properties::default().weight(Weight::Bold))
-            .with_color(appearance.theme().active_ui_text_color().into())
-            .finish()
+        Text::new_inline(
+            warp_i18n::t_static!("settings-billing-plan"),
+            appearance.ui_font_family(),
+            HEADER_FONT_SIZE,
+        )
+        .with_style(Properties::default().weight(Weight::Bold))
+        .with_color(appearance.theme().active_ui_text_color().into())
+        .finish()
     }
 
     fn render_team_admin_actions(
@@ -3739,7 +3848,7 @@ impl BillingAndUsagePageView {
                 .with_text_and_icon_label(
                     TextAndIcon::new(
                         TextAndIconAlignment::IconFirst,
-                        "Manage billing",
+                        warp_i18n::t_static!("settings-billing-manage-billing"),
                         Icon::CoinsStacked.to_warpui_icon(appearance.theme().accent()),
                         MainAxisSize::Min,
                         MainAxisAlignment::Center,
@@ -3797,7 +3906,7 @@ impl BillingAndUsagePageView {
                 .with_text_and_icon_label(
                     TextAndIcon::new(
                         TextAndIconAlignment::IconFirst,
-                        "Open admin panel",
+                        warp_i18n::t_static!("settings-billing-open-admin-panel"),
                         Icon::Users.to_warpui_icon(appearance.theme().accent()),
                         MainAxisSize::Min,
                         MainAxisAlignment::Center,
@@ -3830,7 +3939,7 @@ impl BillingAndUsagePageView {
                 .with_text_and_icon_label(
                     TextAndIcon::new(
                         TextAndIconAlignment::IconFirst,
-                        "Compare plans",
+                        warp_i18n::t_static!("settings-billing-compare-plans"),
                         Icon::CoinsStacked.to_warpui_icon(appearance.theme().accent()),
                         MainAxisSize::Min,
                         MainAxisAlignment::Center,

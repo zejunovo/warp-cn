@@ -152,7 +152,9 @@ impl FreeAiRemovalModal {
                 height: Some(32.),
                 ..Default::default()
             })
-            .with_centered_text_label("Bring your own AI".to_string())
+            .with_centered_text_label(
+                warp_i18n::t_static!("ui-final-bring-your-own-ai").to_string(),
+            )
             .build()
             .with_cursor(Cursor::PointingHand)
             .on_click(|ctx, _, _| {
@@ -171,7 +173,7 @@ impl FreeAiRemovalModal {
                 height: Some(32.),
                 ..Default::default()
             })
-            .with_centered_text_label("View pricing".to_string())
+            .with_centered_text_label(warp_i18n::t_static!("ui-final-view-pricing").to_string())
             .build()
             .with_cursor(Cursor::PointingHand)
             .on_click(|ctx, _, _| {

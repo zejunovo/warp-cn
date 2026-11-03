@@ -58,7 +58,7 @@ fn open_in_warp_tooltip(
         None
     };
     Some(GridTooltipLink {
-        text: "Open in Warp".to_string(),
+        text: warp_i18n::t_static!("terminal-open-in-warp").to_string(),
         action: TerminalAction::OpenCodeInWarp {
             path,
             layout: *EditorSettings::as_ref(app).open_file_layout.value(),
@@ -77,9 +77,9 @@ fn show_in_file_explorer_tooltip(
     mouse_state: MouseStateHandle,
 ) -> GridTooltipLink {
     let text = if cfg!(target_os = "macos") {
-        "Show in Finder"
+        warp_i18n::t_static!("terminal-show-in-finder")
     } else {
-        "Show containing folder"
+        warp_i18n::t_static!("terminal-show-containing-folder")
     }
     .to_string();
     GridTooltipLink {
@@ -129,7 +129,7 @@ impl TerminalView {
 
                         if is_redacted {
                             links.push(GridTooltipLink {
-                                text: "Reveal secret".to_string(),
+                                text: warp_i18n::t_static!("terminal-reveal-secret").to_string(),
                                 action: TerminalAction::ToggleGridSecret {
                                     handle,
                                     show_secret: true,
@@ -139,7 +139,7 @@ impl TerminalView {
                             });
                         } else {
                             links.push(GridTooltipLink {
-                                text: "Hide secret".to_string(),
+                                text: warp_i18n::t_static!("terminal-hide-secret").to_string(),
                                 action: TerminalAction::ToggleGridSecret {
                                     handle,
                                     show_secret: false,
@@ -151,7 +151,7 @@ impl TerminalView {
                     }
 
                     links.push(GridTooltipLink {
-                        text: "Copy secret".to_string(),
+                        text: warp_i18n::t_static!("terminal-copy-secret").to_string(),
                         action: TerminalAction::CopyGridSecret(handle),
                         mouse_state: self.mouse_states.copy_secrets_tooltip.clone(),
                         detail: None,
@@ -171,7 +171,7 @@ impl TerminalView {
 
                         if is_obfuscated {
                             links.push(GridTooltipLink {
-                                text: "Reveal secret".to_string(),
+                                text: warp_i18n::t_static!("terminal-reveal-secret").to_string(),
                                 action: TerminalAction::ToggleRichContentSecret {
                                     rich_content_tooltip_info: tooltip_info.clone(),
                                     show_secret: true,
@@ -181,7 +181,7 @@ impl TerminalView {
                             });
                         } else {
                             links.push(GridTooltipLink {
-                                text: "Hide secret".to_string(),
+                                text: warp_i18n::t_static!("terminal-hide-secret").to_string(),
                                 action: TerminalAction::ToggleRichContentSecret {
                                     rich_content_tooltip_info: tooltip_info.clone(),
                                     show_secret: false,
@@ -193,7 +193,7 @@ impl TerminalView {
                     }
 
                     links.push(GridTooltipLink {
-                        text: "Copy secret".to_string(),
+                        text: warp_i18n::t_static!("terminal-copy-secret").to_string(),
                         action: TerminalAction::CopyRichContentSecret(tooltip_info.clone()),
                         mouse_state: self.mouse_states.copy_secrets_tooltip.clone(),
                         detail: None,

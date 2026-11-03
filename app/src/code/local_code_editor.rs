@@ -1998,7 +1998,7 @@ impl LocalCodeEditorView {
                         Shrinkable::new(
                             1.,
                             Text::new_inline(
-                                "Add as context",
+                                warp_i18n::t_static!("ui-final-add-as-context"),
                                 appearance.ui_font_family(),
                                 appearance.ui_font_size(),
                             )
@@ -2115,10 +2115,10 @@ impl LocalCodeEditorView {
     /// Creates menu items for the context menu
     fn context_menu_items(&self) -> Vec<MenuItem<LocalCodeEditorAction>> {
         vec![
-            MenuItemFields::new("Go to definition")
+            MenuItemFields::new(warp_i18n::t_static!("ui-final-go-to-definition"))
                 .with_on_select_action(LocalCodeEditorAction::GotoDefinition)
                 .into_item(),
-            MenuItemFields::new("Find references")
+            MenuItemFields::new(warp_i18n::t_static!("ui-final-find-references"))
                 .with_on_select_action(LocalCodeEditorAction::FindReferences)
                 .into_item(),
         ]
@@ -2500,7 +2500,7 @@ pub fn render_unsaved_changes_banner(
             Shrinkable::new(
                 1.,
                 Text::new(
-                    "This file has saved changes that are not reflected here.",
+                    warp_i18n::t_static!("coding-file-stale-warning"),
                     appearance.ui_font_family(),
                     appearance.ui_font_size(),
                 )
@@ -2518,7 +2518,7 @@ pub fn render_unsaved_changes_banner(
             appearance
                 .ui_builder()
                 .button(ButtonVariant::Text, discard_mouse_state)
-                .with_text_label("Discard this version".into())
+                .with_text_label(warp_i18n::t_static!("ui-final-discard-this-version").into())
                 .with_style(UiComponentStyles {
                     height: Some(24.),
                     padding: Some(Coords {
@@ -2597,7 +2597,7 @@ pub fn render_remote_disconnected_banner(appearance: &Appearance) -> Box<dyn Ele
             Shrinkable::new(
                 1.,
                 Text::new(
-                    "Remote host disconnected. You will not be able to see updates and save changes.",
+                    warp_i18n::t_static!("coding-remote-host-disconnected"),
                     appearance.ui_font_family(),
                     appearance.ui_font_size(),
                 )

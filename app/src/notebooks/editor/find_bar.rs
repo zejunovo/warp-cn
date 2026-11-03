@@ -535,21 +535,25 @@ impl TypedActionView for FindBar {
         let text = match action {
             FindBarAction::ToggleRegex => {
                 if self.searcher.as_ref(ctx).is_regex() {
-                    "Enable regex search"
+                    warp_i18n::t_static!("a11y-notebook-find-bar-enable-regex")
                 } else {
-                    "Disable regex search"
+                    warp_i18n::t_static!("a11y-notebook-find-bar-disable-regex")
                 }
             }
             FindBarAction::ToggleCaseSensitive => {
                 if self.searcher.as_ref(ctx).is_case_sensitive() {
-                    "Enable case-sensitive search"
+                    warp_i18n::t_static!("a11y-notebook-find-bar-enable-case-sensitive")
                 } else {
-                    "Disable case-sensitive search"
+                    warp_i18n::t_static!("a11y-notebook-find-bar-disable-case-sensitive")
                 }
             }
-            FindBarAction::FocusNextMatch => "Focus next match",
-            FindBarAction::FocusPreviousMatch => "Focus previous match",
-            FindBarAction::Close => "Close find bar",
+            FindBarAction::FocusNextMatch => {
+                warp_i18n::t_static!("a11y-notebook-find-bar-focus-next")
+            }
+            FindBarAction::FocusPreviousMatch => {
+                warp_i18n::t_static!("a11y-notebook-find-bar-focus-previous")
+            }
+            FindBarAction::Close => warp_i18n::t_static!("a11y-notebook-find-bar-close"),
         };
         Some(AccessibilityContent::new_without_help(
             text,

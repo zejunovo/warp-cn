@@ -1,0 +1,9 @@
+menu-native-standard-close-window = 关闭窗口
+menu-native-standard-quit = 退出 Warp
+menu-native-standard-hide = 隐藏 Warp
+menu-native-standard-hide-others = 隐藏其他应用
+menu-native-standard-show-all = 显示全部应用
+menu-native-standard-minimize = 最小化
+menu-native-standard-zoom = 缩放
+menu-native-standard-bring-all-to-front = 将全部窗口置于最前
+menu-native-standard-toggle-full-screen = 切换全屏

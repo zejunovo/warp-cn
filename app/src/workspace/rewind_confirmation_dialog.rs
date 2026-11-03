@@ -160,9 +160,13 @@ impl View for RewindConfirmationDialog {
                 } else {
                     cancel_text_color
                 };
-                Text::new_inline("Cancel", appearance.ui_font_family(), 14.)
-                    .with_color(color.into_solid())
-                    .finish()
+                Text::new_inline(
+                    warp_i18n::t_static!("ui-button-cancel"),
+                    appearance.ui_font_family(),
+                    14.,
+                )
+                .with_color(color.into_solid())
+                .finish()
             })
             .with_cursor(Cursor::PointingHand)
             .on_click(move |ctx, _, _| ctx.dispatch_typed_action(RewindConfirmationAction::Cancel))
@@ -187,7 +191,7 @@ impl View for RewindConfirmationDialog {
             )
             .with_child(
                 Text::new_inline(
-                    "Rewinding does not affect files edited manually or via shell commands.",
+                    warp_i18n::t_static!("ui-final-rewinding-does-not-affect-files-edited-manually-or-via-shell-commands"),
                     appearance.ui_font_family(),
                     12.,
                 )

@@ -49,6 +49,8 @@ fn allowance_count_falls_back_to_credits() {
 
 #[test]
 fn allowance_count_keeps_unlimited_display() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     let cents = Some(AllowanceCents {
         used: 70.2,
         limit: 1800.0,

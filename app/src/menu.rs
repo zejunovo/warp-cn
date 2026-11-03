@@ -715,9 +715,9 @@ impl<A: Action + Clone> MenuItemFields<A> {
 
     pub fn toggle_pane_action(is_maximized: bool) -> Self {
         Self::new(if is_maximized {
-            "Minimize pane"
+            warp_i18n::t_static!("menu-context-minimize-pane")
         } else {
-            "Maximize pane"
+            warp_i18n::t_static!("menu-context-maximize-pane")
         })
     }
 
@@ -2554,19 +2554,31 @@ impl<A: Action + Clone> SubMenu<A> {
             Select(_) => {
                 let menu_item = match self.selected_item() {
                     Some(item) => match item {
-                        MenuItem::Item(fields) => format!("{} Selected", fields.get_a11y_text()),
+                        MenuItem::Item(fields) => warp_i18n::t!(
+                            "menu-a11y-selected",
+                            item = format!("{}", fields.get_a11y_text())
+                        ),
                         MenuItem::ItemsRow { items } => {
                             let selected_item_text = items
                                 .get(self.selected_item_index.unwrap_or_default())
                                 .map_or_else(|| "", |item| item.get_a11y_text());
-                            format!("{selected_item_text} Selected")
+                            warp_i18n::t!(
+                                "menu-a11y-selected",
+                                item = format!("{}", selected_item_text)
+                            )
                         }
                         MenuItem::Separator => String::from(""),
                         MenuItem::Submenu { fields, .. } => {
-                            format!("{} Expanded", fields.get_a11y_text())
+                            warp_i18n::t!(
+                                "menu-a11y-expanded",
+                                item = format!("{}", fields.get_a11y_text())
+                            )
                         }
                         MenuItem::Header { fields, .. } => {
-                            format!("{} Selected", fields.get_a11y_text())
+                            warp_i18n::t!(
+                                "menu-a11y-selected",
+                                item = format!("{}", fields.get_a11y_text())
+                            )
                         }
                     },
                     None => String::from(""),
@@ -2574,9 +2586,9 @@ impl<A: Action + Clone> SubMenu<A> {
 
                 let instructions = if matches!(self.selected_item(), Some(MenuItem::Submenu { .. }))
                 {
-                    "Press the up key or the down key to select a menu item. Press the right key to open the submenu"
+                    warp_i18n::t_static!("menu-a11y-instructions-submenu-open")
                 } else {
-                    "Press the up key or the down key to select a menu item"
+                    warp_i18n::t_static!("menu-a11y-instructions-submenu")
                 };
 
                 Custom(AccessibilityContent::new(
@@ -2586,23 +2598,23 @@ impl<A: Action + Clone> SubMenu<A> {
                 ))
             }
             OpenSubmenu => Custom(AccessibilityContent::new(
-                String::from("Submenu Expanded"),
-                "Press the right key to open the selected submenu",
+                String::from(warp_i18n::t_static!("menu-a11y-submenu-expanded")),
+                warp_i18n::t_static!("menu-a11y-instructions-open"),
                 WarpA11yRole::TextRole,
             )),
             CloseSubmenu(_) => Custom(AccessibilityContent::new(
-                String::from("Submenu Closed"),
-                "Removing focus from a submenu will close the submenu",
+                String::from(warp_i18n::t_static!("menu-a11y-submenu-closed")),
+                warp_i18n::t_static!("menu-a11y-instructions-close-submenu"),
                 WarpA11yRole::TextRole,
             )),
             Close(_) => Custom(AccessibilityContent::new(
-                String::from("Menu Closed"),
-                "Press the escape key to close the menu",
+                String::from(warp_i18n::t_static!("menu-a11y-menu-closed")),
+                warp_i18n::t_static!("menu-a11y-instructions-close-menu"),
                 WarpA11yRole::TextRole,
             )),
             Enter => Custom(AccessibilityContent::new(
-                String::from("Action Selected"),
-                "Press the enter key to execute the selected menu item action",
+                String::from(warp_i18n::t_static!("menu-a11y-action-selected")),
+                warp_i18n::t_static!("menu-a11y-instructions-enter"),
                 WarpA11yRole::TextRole,
             )),
             HoverSubmenuLeafNode { .. }

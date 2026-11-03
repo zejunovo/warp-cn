@@ -30,8 +30,12 @@ struct ChangelogMouseStateHandles {
     view_changelogs_mouse_state: MouseStateHandle,
 }
 
-const CHANGELOG_FETCH_ERROR_MSG: &str = "Unable to fetch the latest changelog.";
-const CHANGELOG_LOADING_MSG: &str = "Loading...";
+fn localized_changelog_fetch_error_msg() -> &'static str {
+    warp_i18n::t_static!("resource-center-changelog-fetch-error")
+}
+fn localized_changelog_loading_msg() -> &'static str {
+    warp_i18n::t_static!("resource-center-changelog-loading")
+}
 
 pub struct ChangelogSectionView {
     changelog_model_handle: ModelHandle<ChangelogModel>,
@@ -97,9 +101,11 @@ impl ChangelogSectionView {
             improvements_highlighted_link: Default::default(),
             bug_fixes_highlighted_link: Default::default(),
             changelog_fetch_error: create_formatted_text_from_string(
-                CHANGELOG_FETCH_ERROR_MSG.to_string(),
+                localized_changelog_fetch_error_msg().to_string(),
             ),
-            changelog_loading: create_formatted_text_from_string(CHANGELOG_LOADING_MSG.to_string()),
+            changelog_loading: create_formatted_text_from_string(
+                localized_changelog_loading_msg().to_string(),
+            ),
         }
     }
 
@@ -366,7 +372,7 @@ impl SectionView for ChangelogSectionView {
             appearance
                 .ui_builder()
                 .link(
-                    "Read all changelogs".into(),
+                    warp_i18n::t_static!("resource-center-changelog-read-all").into(),
                     Some("https://docs.warp.dev/changelog".into()),
                     None,
                     self.changelog_button_mouse_states

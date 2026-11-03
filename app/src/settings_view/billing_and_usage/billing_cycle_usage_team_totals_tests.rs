@@ -63,6 +63,8 @@ fn titles(summaries: &[TeamTotalCardSummary]) -> Vec<&'static str> {
 
 #[test]
 fn team_aggregate_visibility_yields_overall_card_only() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     // Server collapses teammates' usage into an `Aggregate`-source row under
     // TeamAggregate, so the Local/Cloud split can't be honestly attributed
     // — only the Overall card is meaningful.
@@ -75,6 +77,8 @@ fn team_aggregate_visibility_yields_overall_card_only() {
 
 #[test]
 fn own_only_visibility_yields_overall_card_only() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     // OwnOnly viewers don't normally render the team-totals block at all,
     // but the builder should still degrade gracefully to a single card.
     let summaries = build_team_total_card_summaries(
@@ -86,6 +90,8 @@ fn own_only_visibility_yields_overall_card_only() {
 
 #[test]
 fn per_user_totals_visibility_yields_overall_card_only() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     let summaries = build_team_total_card_summaries(
         &entries_two_per_source(),
         &visibility(UsageVisibilityGranularity::PerUserTotals),
@@ -95,6 +101,8 @@ fn per_user_totals_visibility_yields_overall_card_only() {
 
 #[test]
 fn full_breakdown_visibility_returns_three_cards_with_partitioned_sums() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     let summaries = build_team_total_card_summaries(
         &entries_two_per_source(),
         &visibility(UsageVisibilityGranularity::FullBreakdown),

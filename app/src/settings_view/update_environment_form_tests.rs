@@ -177,8 +177,14 @@ fn create_test_window(app: &mut App) -> WindowId {
     window_id
 }
 
+fn initialize_english_locale() {
+    warp_i18n::init(warp_i18n::Locale::En).expect("English translations should load");
+    warp_i18n::set_locale(warp_i18n::Locale::En);
+}
+
 fn init_update_environment_form_test_models(app: &mut App) {
     initialize_settings_for_tests(app);
+    initialize_english_locale();
 
     app.add_singleton_model(|_ctx| ServerApiProvider::new_for_test());
     app.add_singleton_model(|_| AuthStateProvider::new_for_test());
@@ -1095,6 +1101,7 @@ fn test_create_environment_form_without_team_does_not_render_checkbox_and_defaul
 
 #[test]
 fn test_environment_form_copy_orchestration_modal_overrides_settings_defaults() {
+    initialize_english_locale();
     let default_copy = EnvironmentFormCopy::default();
     let orchestration_copy = EnvironmentFormCopy::orchestration_modal();
 

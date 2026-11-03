@@ -321,7 +321,7 @@ impl LeftPanelView {
                     ButtonVariant::Accent,
                     self.mouse_state_handles.sign_in_button.clone(),
                 )
-                .with_text_label("Sign in".to_string())
+                .with_text_label(warp_i18n::t_static!("dialog-auth-sign-in").to_string())
                 .build()
                 .on_click(|ctx, _, _| {
                     ctx.dispatch_typed_action(LeftPanelAction::SignIn);

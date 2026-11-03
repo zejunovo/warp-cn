@@ -207,37 +207,47 @@ impl HoaOnboardingFlow {
         });
 
         let cta_button = ctx.add_view(|_ctx| {
-            ActionButton::new("See what's new", HoaWelcomeModalButtonTheme)
-                .with_full_width(true)
-                .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::AdvanceFromWelcome))
+            ActionButton::new(
+                warp_i18n::t_static!("onboarding-hoa-see-whats-new"),
+                HoaWelcomeModalButtonTheme,
+            )
+            .with_full_width(true)
+            .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::AdvanceFromWelcome))
         });
 
         let enter = Keystroke::parse("enter").unwrap_or_default();
 
         let next_vtabs_button = ctx.add_view(|ctx| {
-            ActionButton::new("Next", HoaPrimaryButtonTheme)
-                .with_keybinding(KeystrokeSource::Fixed(enter.clone()), ctx)
-                .on_click(|ctx| {
-                    ctx.dispatch_typed_action(HoaOnboardingAction::AdvanceFromVerticalTabs)
-                })
+            ActionButton::new(
+                warp_i18n::t_static!("onboarding-nav-next"),
+                HoaPrimaryButtonTheme,
+            )
+            .with_keybinding(KeystrokeSource::Fixed(enter.clone()), ctx)
+            .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::AdvanceFromVerticalTabs))
         });
 
         let dismiss_vtabs_button = ctx.add_view(|ctx| {
-            ActionButton::new("Dismiss", HoaPrimaryButtonTheme)
+            ActionButton::new(warp_i18n::t_static!("ai-ui-dismiss"), HoaPrimaryButtonTheme)
                 .with_keybinding(KeystrokeSource::Fixed(enter.clone()), ctx)
                 .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::Dismiss))
         });
 
         let next_inbox_button = ctx.add_view(|ctx| {
-            ActionButton::new("Next", HoaPrimaryButtonTheme)
-                .with_keybinding(KeystrokeSource::Fixed(enter.clone()), ctx)
-                .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::AdvanceFromInbox))
+            ActionButton::new(
+                warp_i18n::t_static!("onboarding-nav-next"),
+                HoaPrimaryButtonTheme,
+            )
+            .with_keybinding(KeystrokeSource::Fixed(enter.clone()), ctx)
+            .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::AdvanceFromInbox))
         });
 
         let finish_button = ctx.add_view(|ctx| {
-            ActionButton::new("Finish", HoaPrimaryButtonTheme)
-                .with_keybinding(KeystrokeSource::Fixed(enter), ctx)
-                .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::Finish))
+            ActionButton::new(
+                warp_i18n::t_static!("onboarding-callout-finish"),
+                HoaPrimaryButtonTheme,
+            )
+            .with_keybinding(KeystrokeSource::Fixed(enter), ctx)
+            .on_click(|ctx| ctx.dispatch_typed_action(HoaOnboardingAction::Finish))
         });
 
         Self {
@@ -424,7 +434,7 @@ impl HoaOnboardingFlow {
             .finish();
 
         let checkbox_label = Text::new_inline(
-            "Switch back to horizontal tabs".to_string(),
+            warp_i18n::t_static!("onboarding-hoa-switch-horizontal-tabs").to_string(),
             appearance.ui_font_family(),
             12.,
         )
@@ -455,7 +465,7 @@ impl HoaOnboardingFlow {
 
     fn render_inbox_callout(&self, appearance: &Appearance) -> Box<dyn Element> {
         let title = Text::new(
-            "Meet your new agent inbox",
+            warp_i18n::t_static!("onboarding-meet-agent-inbox"),
             appearance.ui_font_family(),
             16.,
         )
@@ -465,7 +475,7 @@ impl HoaOnboardingFlow {
 
         // Build the description with an inline "Learn more" hyperlink.
         let learn_more_fragment = FormattedTextFragment {
-            text: "Learn more".into(),
+            text: warp_i18n::t_static!("onboarding-hoa-learn-more").into(),
             styles: FormattedTextStyles {
                 underline: true,
                 hyperlink: Some(Hyperlink::Url(

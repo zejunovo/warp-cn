@@ -13,7 +13,6 @@ use crate::terminal::view::inline_banner::InlineBannerIcon;
 use crate::terminal::view::{InlineBannerId, TerminalAction};
 
 const SPEEDBUMP_HEADER: &str = "Optimize Warp for this codebase?";
-const SPEEDBUMP_TEXT: &str = "Unlock smarter, more consistent responses by letting the Agent understand your codebase and generate rules for it. You can also do this at any point by running /init";
 /// Text for the button that allows execution
 const ALLOW_BUTTON_TEXT: &str = "Optimize";
 
@@ -85,7 +84,7 @@ pub fn render_agent_mode_setup_banner(
             }),
             content: Some(vec![
                 Text::new(
-                    SPEEDBUMP_TEXT,
+                    warp_i18n::t_static!("ui-final-unlock-smarter-more-consistent-responses-by-letting-the-agent-understand-your-codebase-and"),
                     appearance.ui_font_family(),
                     appearance.monospace_font_size() - 2.,
                 )

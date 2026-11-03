@@ -103,7 +103,7 @@ impl View for DeleteAuthSecretConfirmationDialog {
         );
 
         let dialog = Dialog::new(
-            "Delete secret".to_string(),
+            warp_i18n::t_static!("ui-final-delete-secret").to_string(),
             Some(description),
             dialog_styles(appearance),
         )

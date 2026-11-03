@@ -12,7 +12,6 @@ use warpui::{AppContext, Element, Entity, SingletonEntity, TypedActionView, View
 use crate::appearance::Appearance;
 use crate::server::ids::ServerId;
 use crate::workspaces::team::DiscoverableTeam;
-const SUBTITLE: &str = "You can join any open team in your Warp workspace.";
 const MAX_VISIBLE_TEAMS: usize = 4;
 const TEAM_LIST_MAX_HEIGHT: f32 = 264.;
 
@@ -114,9 +113,9 @@ impl JoinTeamsModal {
                 team_state.join_button_mouse_state.clone(),
             )
             .with_centered_text_label(if is_joining {
-                "Joining…".to_string()
+                warp_i18n::t_static!("settings-teams-joining").to_string()
             } else {
-                "Join".to_string()
+                warp_i18n::t_static!("settings-teams-join").to_string()
             })
             .with_style(UiComponentStyles {
                 width: Some(88.),
@@ -190,7 +189,7 @@ impl View for JoinTeamsModal {
         Flex::column()
             .with_child(
                 Text::new(
-                    SUBTITLE.to_string(),
+                    warp_i18n::t_static!("settings-teams-open-team-modal-subtitle").to_string(),
                     appearance.ui_font_family(),
                     appearance.ui_font_size(),
                 )

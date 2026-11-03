@@ -534,9 +534,10 @@ impl EditorModel {
                 };
                 AccessibilityContent::new(delta, format!(", {action}"), WarpA11yRole::UserAction)
             }
-            (true, false) => {
-                AccessibilityContent::new_without_help("Unselected", WarpA11yRole::UserAction)
-            }
+            (true, false) => AccessibilityContent::new_without_help(
+                warp_i18n::t_static!("a11y-editor-unselected"),
+                WarpA11yRole::UserAction,
+            ),
         }
     }
 
@@ -2294,7 +2295,7 @@ impl EditorModel {
 
         ctx.emit_a11y_content(AccessibilityContent::new(
             self.selected_text(ctx),
-            ", deleted",
+            warp_i18n::t_static!("a11y-editor-deleted-suffix"),
             WarpA11yRole::UserAction,
         ));
         self.change_selections(new_selections, ctx);
@@ -2318,7 +2319,7 @@ impl EditorModel {
 
         ctx.emit_a11y_content(AccessibilityContent::new(
             self.selected_text(ctx),
-            ", deleted",
+            warp_i18n::t_static!("a11y-editor-deleted-suffix"),
             WarpA11yRole::UserAction,
         ));
         self.change_selections(new_selections, ctx);

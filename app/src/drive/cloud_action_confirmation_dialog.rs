@@ -15,7 +15,6 @@ const BUTTON_BORDER_RADIUS: f32 = 4.;
 const BORDER_WIDTH: f32 = 1.;
 
 const DIALOG_WIDTH: f32 = 450.;
-const CANCEL_TEXT: &str = "Cancel";
 
 const DELETE_TEAM_TITLE_TEXT: &str = "Are you sure you want to delete this team?";
 const LEAVE_TEAM_TITLE_TEXT: &str = "Are you sure you want to leave this team?";
@@ -225,7 +224,7 @@ impl View for CloudActionConfirmationDialog {
                 padding: Some(Coords::uniform(BUTTON_PADDING)),
                 ..Default::default()
             })
-            .with_text_label(CANCEL_TEXT.into())
+            .with_text_label(warp_i18n::t_static!("ui-button-cancel").into())
             .build()
             .with_cursor(Cursor::PointingHand)
             .on_click(move |ctx, _, _| {

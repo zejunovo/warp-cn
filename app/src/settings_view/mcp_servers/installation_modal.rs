@@ -75,18 +75,25 @@ pub struct InstallationModalBody {
 impl InstallationModalBody {
     pub fn new(ctx: &mut ViewContext<Self>) -> Self {
         let cancel_button = ctx.add_typed_action_view(|_ctx| {
-            ActionButton::new("Cancel", NakedTheme).on_click(|ctx| {
+            ActionButton::new(
+                warp_i18n::t_static!("settings-mcp-install-cancel"),
+                NakedTheme,
+            )
+            .on_click(|ctx| {
                 ctx.dispatch_typed_action(InstallationModalBodyAction::Cancel);
             })
         });
 
         let enter_keystroke = Keystroke::parse("enter").expect("valid keystroke");
         let install_button = ctx.add_typed_action_view(|ctx| {
-            ActionButton::new("Install", PrimaryTheme)
-                .with_keybinding(KeystrokeSource::Fixed(enter_keystroke), ctx)
-                .on_click(|ctx| {
-                    ctx.dispatch_typed_action(InstallationModalBodyAction::Install);
-                })
+            ActionButton::new(
+                warp_i18n::t_static!("settings-mcp-install-confirm"),
+                PrimaryTheme,
+            )
+            .with_keybinding(KeystrokeSource::Fixed(enter_keystroke), ctx)
+            .on_click(|ctx| {
+                ctx.dispatch_typed_action(InstallationModalBodyAction::Install);
+            })
         });
 
         Self {
@@ -257,7 +264,7 @@ impl InstallationModalBody {
 
         // Renders MCP title text
         let title = Text::new(
-            format!("Install {name}"),
+            warp_i18n::t!("settings-mcp-install-title", name = format!("{}", name)),
             appearance.ui_font_family(),
             appearance.header_font_size(),
         )
@@ -301,7 +308,7 @@ impl InstallationModalBody {
         // Renders 'ESC' text for closing the modal
         let escape_button = Container::new(
             Text::new_inline(
-                "ESC".to_string(),
+                warp_i18n::t_static!("settings-mcp-install-modal-esc").to_string(),
                 appearance.ui_font_family(),
                 appearance.ui_font_size() * 0.8,
             )
@@ -423,9 +430,9 @@ impl InstallationModalBody {
         .finish();
 
         let source_text = if is_shared {
-            "Shared from team"
+            warp_i18n::t_static!("settings-mcp-install-source-shared-team")
         } else {
-            "From another device"
+            warp_i18n::t_static!("settings-mcp-install-source-another-device")
         };
 
         let label_text = Text::new_inline(
@@ -548,7 +555,7 @@ impl View for InstallationModalBody {
                 .finish()
         } else {
             Text::new(
-                "No MCP server selected",
+                warp_i18n::t_static!("settings-mcp-no-server-selected"),
                 appearance.ui_font_family(),
                 appearance.ui_font_size(),
             )

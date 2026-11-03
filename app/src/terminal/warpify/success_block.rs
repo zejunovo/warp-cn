@@ -189,7 +189,7 @@ impl WarpifySuccessBlock {
         appearance
             .ui_builder()
             .link(
-                "Learn more".into(),
+                warp_i18n::t_static!("ai-ui-learn-more").into(),
                 None,
                 Some(Box::new({
                     move |ctx| {

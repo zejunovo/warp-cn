@@ -38,7 +38,7 @@ impl RenderableBrokenEmbedding {
 
         let text = Container::new(
             Text::new_inline(
-                "Embed not found",
+                warp_i18n::t_static!("ui-final-embed-not-found"),
                 styles.base_text.font_family,
                 styles.base_text.font_size,
             )

@@ -35,9 +35,6 @@ use crate::view_components::ToastFlavor;
 
 const SCROLLBAR_WIDTH: ScrollbarWidth = ScrollbarWidth::Auto;
 
-const UNSHARE_BLOCK_CONFIRMATION_DIALOG_TEXT: &str = "Are you sure you want to unshare this block?\n\
-\nIt will no longer be accessible by link and will be permanently deleted from Warp servers.";
-
 #[derive(Clone, Debug)]
 struct UserOwnedBlock {
     id: String,
@@ -147,7 +144,9 @@ impl UserOwnedBlock {
                 ButtonVariant::Basic,
                 self.copy_button_mouse_state_handle.clone(),
             )
-            .with_text_label("Copy link".into());
+            .with_text_label(
+                warp_i18n::t_static!("settings-shared-blocks-button-copy-link").into(),
+            );
 
         let button = if self.unshare_request_status == UnshareBlockRequestState::InFlight {
             button.disabled().build()
@@ -164,7 +163,7 @@ impl UserOwnedBlock {
         if self.unshare_request_status == UnshareBlockRequestState::InFlight {
             appearance
                 .ui_builder()
-                .label("Deleting...")
+                .label(warp_i18n::t_static!("settings-shared-blocks-deleting"))
                 .with_style(
                     UiComponentStyles::default()
                         .set_font_family_id(appearance.monospace_font_family())
@@ -240,11 +239,15 @@ impl UserOwnedBlock {
         let timestamp_row = Container::new(
             appearance
                 .ui_builder()
-                .label(format!(
-                    "Executed on: {}",
-                    self.time_started
+                .label(warp_i18n::t!(
+                    "settings-shared-blocks-executed-on",
+                    date = self
+                        .time_started
                         .with_timezone(&Local)
-                        .format("%a, %b %-d %Y at %-I:%M %p")
+                        .format(warp_i18n::t_static!(
+                            "settings-shared-blocks-executed-date-format"
+                        ))
+                        .to_string()
                 ))
                 .with_style(
                     UiComponentStyles::default()
@@ -302,14 +305,15 @@ impl GetBlocksForUserRequestState {
         let ui_builder = appearance.ui_builder();
         match self {
             GetBlocksForUserRequestState::NotStarted => pad(ui_builder
-                .label("You don't have any shared blocks yet.")
+                .label(warp_i18n::t_static!("settings-shared-blocks-empty"))
                 .build()
                 .finish()),
-            GetBlocksForUserRequestState::InFlight => {
-                pad(ui_builder.label("Getting blocks...").build().finish())
-            }
+            GetBlocksForUserRequestState::InFlight => pad(ui_builder
+                .label(warp_i18n::t_static!("settings-shared-blocks-loading"))
+                .build()
+                .finish()),
             GetBlocksForUserRequestState::Failed => pad(ui_builder
-                .label("Failed to load blocks. Please try again.")
+                .label(warp_i18n::t_static!("settings-shared-blocks-load-error"))
                 .build()
                 .finish()),
             GetBlocksForUserRequestState::Done(user_blocks) => {
@@ -362,7 +366,7 @@ impl GetBlocksForUserRequestState {
                     .finish()
                 } else {
                     pad(ui_builder
-                        .label("You don't have any shared blocks yet.")
+                        .label(warp_i18n::t_static!("settings-shared-blocks-empty"))
                         .build()
                         .finish())
                 }
@@ -423,7 +427,10 @@ impl ShowBlocksView {
 
             menu.set_items(
                 vec![MenuItem::Item(
-                    MenuItemFields::new("Unshare").with_on_select_action(ShowBlocksAction::Unshare),
+                    MenuItemFields::new(warp_i18n::t_static!(
+                        "settings-shared-blocks-menu-unshare"
+                    ))
+                    .with_on_select_action(ShowBlocksAction::Unshare),
                 )],
                 ctx,
             );
@@ -490,7 +497,7 @@ impl ShowBlocksView {
         ctx.clipboard()
             .write(ClipboardContent::plain_text(block_url.to_string()));
         ctx.emit(ShowBlocksEvent::ShowToast {
-            message: "Link copied.".to_string(),
+            message: warp_i18n::t_static!("settings-shared-blocks-toast-link-copied").to_string(),
             flavor: ToastFlavor::Default,
         })
     }
@@ -548,14 +555,18 @@ impl ShowBlocksView {
             match request_result {
                 Ok(_) => {
                     ctx.emit(ShowBlocksEvent::ShowToast {
-                        message: "Block was successfully unshared.".to_string(),
+                        message: warp_i18n::t_static!("settings-shared-blocks-toast-unshared")
+                            .to_string(),
                         flavor: ToastFlavor::Success,
                     });
                     user_block.unshare_request_status = UnshareBlockRequestState::Done;
                 }
                 Err(_) => {
                     ctx.emit(ShowBlocksEvent::ShowToast {
-                        message: "Failed to unshare block. Please try again.".to_string(),
+                        message: warp_i18n::t_static!(
+                            "settings-shared-blocks-toast-unshare-failed"
+                        )
+                        .to_string(),
                         flavor: ToastFlavor::Error,
                     });
                     user_block.unshare_request_status = UnshareBlockRequestState::Failed;
@@ -655,7 +666,7 @@ impl ShowBlocksWidget {
                     .with_child(
                         Align::new(
                             ui_builder
-                                .label("Unshare block")
+                                .label(warp_i18n::t_static!("settings-shared-blocks-unshare-title"))
                                 .with_style(UiComponentStyles {
                                     font_size: Some(appearance.header_font_size()),
                                     ..Default::default()
@@ -669,7 +680,9 @@ impl ShowBlocksWidget {
                     .with_child(
                         Container::new(
                             ui_builder
-                                .paragraph(UNSHARE_BLOCK_CONFIRMATION_DIALOG_TEXT)
+                                .paragraph(warp_i18n::t_static!(
+                                    "settings-shared-blocks-unshare-confirmation-description"
+                                ))
                                 .with_style(UiComponentStyles {
                                     font_size: Some(appearance.ui_font_size() * 1.16),
                                     ..Default::default()
@@ -690,7 +703,12 @@ impl ShowBlocksWidget {
                                                 ButtonVariant::Basic,
                                                 view.state_handles.cancel_dialog_handle.clone(),
                                             )
-                                            .with_text_label("Cancel".into())
+                                            .with_text_label(
+                                                warp_i18n::t_static!(
+                                                    "settings-shared-blocks-button-cancel"
+                                                )
+                                                .into(),
+                                            )
                                             .build()
                                             .on_click(|ctx, _, _| {
                                                 ctx.dispatch_typed_action(
@@ -708,7 +726,12 @@ impl ShowBlocksWidget {
                                                         .confirm_dialog_handle
                                                         .clone(),
                                                 )
-                                                .with_text_label("Unshare".into())
+                                                .with_text_label(
+                                                    warp_i18n::t_static!(
+                                                        "settings-shared-blocks-button-unshare"
+                                                    )
+                                                    .into(),
+                                                )
                                                 .build()
                                                 .on_click(|ctx, _, _| {
                                                     ctx.dispatch_typed_action(
@@ -797,7 +820,11 @@ impl SettingsWidget for ShowBlocksWidget {
             );
         }
 
-        let header = render_page_title("Shared blocks", HEADER_FONT_SIZE, appearance);
+        let header = render_page_title(
+            warp_i18n::t_static!("settings-shared-blocks-page-title"),
+            HEADER_FONT_SIZE,
+            appearance,
+        );
         let col = Flex::column()
             .with_child(header)
             .with_child(Expanded::new(1., stack.finish()).finish());

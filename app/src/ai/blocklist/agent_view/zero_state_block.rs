@@ -55,7 +55,6 @@ use crate::ui_components::icon_with_status::{
 use crate::util::time_format::format_approx_duration_from_now_utc;
 
 const CLOUD_AGENT_DOCS_URL: &str = "https://docs.warp.dev/platform/";
-const OZ_UPDATES_SECTION_HEADER: &str = "Latest updates";
 
 // The maximum number of Warp Agent updates from the changelog rendered in-line in the 'Latest updates' section.
 const MAX_OZ_UPDATE_COUNT: usize = 4;
@@ -652,7 +651,7 @@ fn render_title_and_description(props: HeaderProps, app: &AppContext) -> Vec<Box
             items.push(
                 Container::new(
                     Text::new(
-                        "Run your agent task in an isolated cloud environment.",
+                        warp_i18n::t_static!("ai-ui-zero-isolated-cloud"),
                         appearance.ui_font_family(),
                         appearance.monospace_font_size(),
                     )
@@ -892,7 +891,7 @@ fn render_recent_conversations_section(
         .with_child(
             Container::new(
                 Text::new(
-                    "RECENT ACTIVITY",
+                    warp_i18n::t_static!("ai-ui-zero-recent-activity"),
                     appearance.ui_font_family(),
                     header_font_size,
                 )
@@ -1063,7 +1062,7 @@ fn render_oz_updates(props: OzUpdatesProps<'_>, app: &AppContext) -> Option<Box<
                         .with_child(
                             Container::new(
                                 Text::new(
-                                    OZ_UPDATES_SECTION_HEADER,
+                                    warp_i18n::t_static!("ui-final-latest-updates"),
                                     appearance.ui_font_family(),
                                     appearance.monospace_font_size() - 2.,
                                 )
@@ -1123,7 +1122,7 @@ fn render_oz_updates(props: OzUpdatesProps<'_>, app: &AppContext) -> Option<Box<
                                 .with_child(
                                     Container::new(
                                         Text::new(
-                                            "View changelog",
+                                            warp_i18n::t_static!("ai-ui-view-changelog"),
                                             appearance.ui_font_family(),
                                             appearance.monospace_font_size() - 2.,
                                         )

@@ -195,7 +195,7 @@ impl View for SpendingLimitModal {
         let theme = appearance.theme();
 
         let description_text = Text::new(
-            "Warp will prevent use of premium models when this dollar limit is reached. Resets on a monthly basis.",
+            warp_i18n::t_static!("settings-billing-overage-description"),
             appearance.ui_font_family(),
             14.,
         )
@@ -203,7 +203,7 @@ impl View for SpendingLimitModal {
         .finish();
 
         let additional_note_text = Text::new(
-            "Note that AI credits made near your chosen limit may exceed it by a few dollars.",
+            warp_i18n::t_static!("settings-billing-overage-note"),
             appearance.ui_font_family(),
             12.,
         )
@@ -263,7 +263,7 @@ impl View for SpendingLimitModal {
                 ButtonVariant::Accent,
                 self.update_button_mouse_state.clone(),
             )
-            .with_text_label("Update".to_string())
+            .with_text_label(warp_i18n::t_static!("settings-mcp-update-confirm").to_string())
             .with_style(button_style);
 
         if self.input_error_state.is_some() {
@@ -278,7 +278,7 @@ impl View for SpendingLimitModal {
                         ButtonVariant::Secondary,
                         self.cancel_button_mouse_state.clone(),
                     )
-                    .with_text_label("Cancel".to_string())
+                    .with_text_label(warp_i18n::t_static!("ui-button-cancel").to_string())
                     .with_style(button_style)
                     .build()
                     .on_click(|ctx, _, _| {

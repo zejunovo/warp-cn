@@ -1,110 +1,148 @@
+# Warp CN
+
+本仓库是 Warp 的非官方 fork。`cn-dev` 开发分支为桌面客户端加入了简体中文和 English 两种界面语言，涵盖设置、菜单、引导和常用操作提示。自定义模型接入仍在规划中。
+
+[本仓库](https://github.com/zejunovo/warp-cn) · [上游仓库](https://github.com/warpdotdev/warp) · [官方文档](https://docs.warp.dev/)
+
 <a href="https://www.warp.dev">
-    <img width="1024" alt="Warp Agentic Development Environment product preview" src="https://github.com/user-attachments/assets/9976b2da-2edd-4604-a36c-8fd53719c6d4" />
+  <img width="1024" alt="Warp 官方产品预览，非本 fork 的定制效果" src="https://github.com/user-attachments/assets/9976b2da-2edd-4604-a36c-8fd53719c6d4" />
 </a>
-&nbsp;
-<p align="center">
-  <a href="https://warp.dev/factories"><img height="20" alt="Built with Warp" src="https://raw.githubusercontent.com/warpdotdev/brand-assets/main/Github/Built-With-Warp-Export@2x.png" /></a>
-</p>
 
-<p align="center">
-  <a href="https://www.warp.dev">Website</a>
-  ·
-  <a href="https://www.warp.dev/code">Code</a>
-  ·
-  <a href="https://www.warp.dev/agents">Agents</a>
-  ·
-  <a href="https://www.warp.dev/terminal">Terminal</a>
-  ·
-  <a href="https://www.warp.dev/drive">Drive</a>
-  ·
-  <a href="https://docs.warp.dev">Docs</a>
-  ·
-  <a href="https://www.warp.dev/blog/how-warp-works">How Warp Works</a>
-</p>
+## 项目说明
 
-> [!NOTE]
-> OpenAI is the founding sponsor of the new, open-source Warp repository, and the new agentic management workflows are powered by GPT models.
+Warp 是一个从终端发展而来的 AI 开发环境。本仓库包含其开源客户端代码，主要使用 Rust 开发，并使用自研的 WarpUI 界面框架。
 
-<h1></h1>
+上游提供桌面终端、内置 AI 编程助手，以及对 Claude Code、Codex、Gemini CLI 等命令行工具的支持。有关上游产品的功能和使用方法，请查阅[官方文档](https://docs.warp.dev/)。
 
-## About
+## 切换界面语言
 
-[Warp](https://www.warp.dev) is an agentic development environment, born out of the terminal. Use Warp's built-in coding agent, or bring your own CLI agent (Claude Code, Codex, Gemini CLI, and others).
+桌面客户端默认使用简体中文。在 **设置 → 外观 → 语言**（**Settings → Appearance → Language**）选择 **English** 或 **简体中文**，完全退出并重新打开 Warp 后生效。每台设备单独保存语言偏好。终端中的命令、程序输出及用户输入按原文显示。
 
-## Installation
+## 获取源码
 
-You can [download Warp](https://www.warp.dev/download) and [read our docs](https://docs.warp.dev/) for platform-specific instructions.
-
-## Warp Contributions Overview Dashboard
-
-Explore [build.warp.dev](https://build.warp.dev) to:
-- Watch thousands of [Warp Factory](warp.dev/factories) agents triage issues, write specs, implement changes, and review PRs
-- View top contributors and in-flight features
-- Track your own issues with GitHub sign-in
-- Click into active agent sessions in a web-compiled Warp terminal
-
-## Automate development with Warp Factories
-
-This repository is driven by [Warp Factories](https://warp.dev/factories): open, flexible infrastructure for teams to build cloud software factories of their own.
-
-Warp Factories are defined in code and easy to deploy on any model or harness, with evals, benchmarks, and self-improvement built in. [Get early access](https://warp.dev/factories) or [book a demo](https://warp.dev/get-started) for a tailored walk-through of the platform. Eligible teams can receive up to $10,000 in free factory usage.
-
-## Licensing
-
-Warp's UI framework (the `warpui_core` and `warpui` crates) are licensed under the [MIT license](LICENSE-MIT).
-
-The rest of the code in this repository is licensed under the [AGPL v3](LICENSE-AGPL).
-
-## Open Source & Contributing
-
-Warp's client codebase is open source and lives in this repository. We welcome community contributions and have designed a lightweight workflow to help new contributors get started. For the full contribution flow, read our [CONTRIBUTING.md](CONTRIBUTING.md) guide.
-
-> [!TIP]
-> **Chat with contributors and the Warp team** in the [`#oss-contributors`](https://warpcommunity.slack.com/archives/C0B0LM8N4DB) Slack channel — a good place for ad-hoc questions, design discussion, and pairing with maintainers. New here? [Join the Warp Slack community](https://go.warp.dev/join-preview) first, then jump into `#oss-contributors`.
-
-### Issue to PR
-
-Before filing, [search existing issues](https://github.com/warpdotdev/warp/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc) for your bug or feature request. If nothing exists, [file an issue](https://github.com/warpdotdev/warp/issues/new/choose) using our templates. Security vulnerabilities should be reported privately as described in [CONTRIBUTING.md](CONTRIBUTING.md#reporting-security-issues).
-
-Once filed, a Warp maintainer reviews the issue and may apply a readiness label: [`ready-to-spec`](https://github.com/warpdotdev/warp/issues?q=is%3Aissue+is%3Aopen+label%3Aready-to-spec) signals the design is open for contributors to spec out, and [`ready-to-implement`](https://github.com/warpdotdev/warp/issues?q=is%3Aissue+is%3Aopen+label%3Aready-to-implement) signals the design is settled and code PRs are welcome. Anyone can pick up a labeled issue — mention **@oss-maintainers** on an issue if you'd like it considered for a readiness label.
-
-### Building the Repo Locally
-
-To build and run Warp from source:
+需要先安装 Git 和 Git LFS，然后克隆本仓库：
 
 ```bash
-./script/bootstrap   # platform-specific setup
-./script/run         # build and run Warp
-./script/presubmit   # fmt, clippy, and tests
+git clone https://github.com/zejunovo/warp-cn.git
+cd warp-cn
 ```
 
-See [AGENTS.md](AGENTS.md) for the full engineering guide, including coding style, testing, and platform-specific notes.
+后续命令均在仓库根目录执行。构建本 fork 的定制版本前，先用 `git branch -a` 查看分支，再切换到 `cn-dev`：
 
-## Joining the Team
+- 本地已有 `cn-dev`：执行 `git switch cn-dev`。
+- 仅远端已有 `origin/cn-dev`：执行 `git switch --track origin/cn-dev`，接着使用已有的定制代码。
+- 本地和远端均无 `cn-dev`：先同步 `master`，再执行 `git switch -c cn-dev master` 创建开发分支。
 
-Interested in joining the team? See our [open roles](https://www.warp.dev/careers).
+分支约定和上游更新方法见下文。
 
-## Support and Questions
+## 本地构建与运行
 
-1. See our [docs](https://docs.warp.dev/) for a comprehensive guide to Warp's features.
-2. Join our [Slack Community](https://go.warp.dev/join-preview) to connect with other users and get help from the Warp team — contributors hang out in [`#oss-contributors`](https://warpcommunity.slack.com/archives/C0B0LM8N4DB).
-3. Try our [Preview build](https://www.warp.dev/download-preview) to test the latest experimental features.
-4. Mention **@oss-maintainers** on any issue to escalate to the team — for example, if you encounter problems with the automated agents.
+Rust 工具链版本由 [rust-toolchain.toml](rust-toolchain.toml) 固定，请以该文件为准。
+初始化脚本会检查或安装依赖，可能需要管理员权限、下载开发工具或完成登录，请先查看脚本说明并按提示操作。
 
-## Code of Conduct
+### Windows（PowerShell）
 
-We ask everyone to be respectful and empathetic. Warp follows the [Code of Conduct](CODE_OF_CONDUCT.md). To report violations, email warp-coc at warp.dev.
+准备 Git for Windows 和 Git LFS 后，在 PowerShell 中执行：
 
-## Open Source Dependencies
+```powershell
+git lfs install --local
+git lfs pull
+.\script\windows\bootstrap.ps1
+cargo run --bin warp-oss --features gui
+```
 
-We'd like to call out a few of the [open source dependencies](https://docs.warp.dev/help/licenses) that have helped Warp to get off the ground:
+Windows 初始化脚本会准备 Rust、Visual Studio Build Tools、Windows SDK、CMake、Protobuf、LLVM 等依赖。
+如果安装后提示重新打开终端，请在新终端中回到仓库目录，再继续初始化和构建。
 
-- [Tokio](https://github.com/tokio-rs/tokio)
-- [NuShell](https://github.com/nushell/nushell)
-- [Fig Completion Specs](https://github.com/withfig/autocomplete)
-- [Warp Server Framework](https://github.com/seanmonstar/warp)
-- [Alacritty](https://github.com/alacritty/alacritty)
-- [Hyper HTTP library](https://github.com/hyperium/hyper)
-- [FontKit](https://github.com/servo/font-kit)
-- [Core-foundation](https://github.com/servo/core-foundation-rs)
-- [Smol](https://github.com/smol-rs/smol)
+初始化细节见 [Windows 初始化脚本](script/windows/bootstrap.ps1)；制作安装包另见 [Windows 安装包说明](script/windows/README.md)。
+
+### macOS / Linux（Bash）
+
+```bash
+./script/bootstrap --skip-common-skills
+WARP_SKIP_COMMON_SKILLS_INSTALL=1 ./script/run
+```
+
+这里跳过的是可选的共享代理技能安装，平台构建依赖仍会正常准备。需要这些技能时，可按 [AGENTS.md](AGENTS.md) 选择安装方式。
+
+macOS 需要 Xcode。Linux 初始化脚本使用 `apt` 安装系统依赖，其他发行版需要根据脚本自行准备对应依赖。
+Windows 的 Git Bash 也可以使用上述统一入口，脚本会调用 Windows 平台的初始化流程。
+
+有关工程约定、测试命令和 GUI / TUI 的区别，参见 [AGENTS.md](AGENTS.md)。
+
+## 主要目录
+
+| 路径 | 内容 |
+| --- | --- |
+| `app/` | 桌面应用及终端、AI、设置等功能模块 |
+| `crates/` | 核心库、UI 框架、编辑器及其他公共组件 |
+| `crates/warpui/`、`crates/warpui_core/` | WarpUI 界面框架 |
+| `crates/warp_i18n/` | 桌面界面翻译资源和 Fluent 运行时 |
+| `crates/warp_tui/` | 无图形界面的 TUI 前端 |
+| `resources/` | 应用资源 |
+| `script/` | 初始化、构建、运行与打包脚本 |
+| `specs/` | 功能设计与技术方案 |
+
+## 分支约定与上游同步
+
+| 分支 | 用途 |
+| --- | --- |
+| `master` | 跟随上游 `warpdotdev/warp` 的 `master`，不放本 fork 的定制改动 |
+| `cn-dev` | 保存中文文档、本地化和模型接入等二次开发改动 |
+
+### 首次配置上游
+
+`origin` 指向自己的 fork，`upstream` 指向官方仓库。先用 `git remote -v` 检查；尚未配置 `upstream` 时执行：
+
+```bash
+git remote add upstream https://github.com/warpdotdev/warp.git
+```
+
+### 接收上游更新
+
+先妥善保存当前改动并确保工作区干净，再依次执行。任一步报错或出现冲突时，先处理完成，再执行下一步。
+
+```bash
+git fetch upstream
+git switch master
+git merge --ff-only upstream/master
+git push origin master
+
+git switch cn-dev
+git merge master
+```
+
+`master` 使用快进合并，防止不经检查就混入分叉历史；如果无法快进，应先检查本地提交与上游的差异。
+`cn-dev` 通过合并接收更新，保留自己的定制提交。冲突处理完成后，仍需编译并验证受影响的功能；没有文本冲突也不代表功能一定兼容。
+
+若上游新增或调整了界面文案，在对应组件使用 `warp_i18n::t!` 读取词条，并在[英文资源](crates/warp_i18n/bundles/en)和[简体中文资源](crates/warp_i18n/bundles/zh-CN)的对应 `.ftl` 文件中维护相同的键名和参数名。动态内容（如目录名）作为参数传入。运行 `cargo nextest run -p warp_i18n --lib` 检查词条，再分别使用两种语言查看改动涉及的界面。更多示例和约定见[本地化说明](crates/warp_i18n/README.md)。
+
+完成合并和验证后，再把二次开发分支推送到自己的 fork：
+
+```bash
+git push -u origin cn-dev
+```
+
+也可以在 GitHub 页面选择 `master`，通过 **Sync fork → Update branch** 同步该远端分支。
+网页同步不会更新本地代码或 `cn-dev`：本地还需要拉取 `origin/master`，再合并到 `cn-dev`。
+
+## 下载与使用
+
+[Warp 官方下载页](https://www.warp.dev/download)提供的是官方版本，不包含本 fork 的定制改动。
+要使用这里的修改，需要构建对应分支，或使用本仓库后续明确发布的安装包。
+
+## 参与开发与反馈
+
+- 修改本 fork 前，先明确功能范围、方案和验证方式，尽量将定制改动集中在独立模块或配置中，方便后续同步。
+- 向上游贡献前，请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)，按其要求讨论 Issue、设计方案和 Pull Request。
+- 安全问题请按 [SECURITY.md](SECURITY.md) 的指引私下报告。
+- 交流与协作请遵守 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。
+
+## 开源许可与致谢
+
+本 fork 保留上游的许可划分：
+
+- `crates/warpui/` 和 `crates/warpui_core/` 使用 [MIT 许可证](LICENSE-MIT)。
+- 仓库其余代码使用 [AGPL v3 许可证](LICENSE-AGPL)。
+
+界面翻译资源、Fluent 运行时和编译期宏移植自 [Heartcoolman/warp-cn](https://github.com/Heartcoolman/warp-cn)，并针对本分支的客户端调整。感谢 [Warp 团队](https://github.com/warpdotdev/warp)及社区贡献者。

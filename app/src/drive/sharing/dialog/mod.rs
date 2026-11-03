@@ -79,7 +79,9 @@ const QR_VISUAL_SIZE: f32 = 160.;
 const QR_ICON_BUTTON_SIZE: f32 = 32.;
 const QR_EXPORT_SIZE: u32 = 1024;
 
-const NO_ACCESS_LABEL: &str = "No access";
+fn localized_no_access_label() -> &'static str {
+    warp_i18n::t_static!("drive-sharing-no-access")
+}
 
 #[derive(Default)]
 struct UiStateHandles {
@@ -270,7 +272,7 @@ impl SharingDialog {
             email_editor: ctx.add_typed_action_view(|ctx| {
                 let mut view = WordBlockEditorView::new(
                     ctx,
-                    "Emails",
+                    warp_i18n::t_static!("drive-sharing-emails-placeholder"),
                     13.,
                     vec![' ', ','],
                     EMAIL_CHIP_WIDTH,
@@ -985,7 +987,10 @@ impl SharingDialog {
             let window_id = ctx.window_id();
             let object_name = self.targeted_object_name(ctx);
             ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
-                let toast = DismissibleToast::default(format!("Copied link to {object_name}."));
+                let toast = DismissibleToast::default(warp_i18n::t!(
+                    "drive-sharing-copied-link",
+                    object_name = format!("{}", object_name)
+                ));
                 toast_stack.add_ephemeral_toast(toast, window_id, ctx);
             });
         }
@@ -1047,7 +1052,7 @@ impl SharingDialog {
                 if !is_team_guest || !is_session {
                     items.push(MenuItem::Separator);
                     items.push(
-                        MenuItemFields::new("Remove")
+                        MenuItemFields::new(warp_i18n::t_static!("drive-sharing-remove"))
                             .with_on_select_action(SharingDialogAction::RemoveGuest)
                             .with_disabled(inherited_access)
                             .into_item(),
@@ -1486,7 +1491,7 @@ impl SharingDialog {
                 ButtonVariant::Accent,
                 self.ui_state_handles.invite_button.clone(),
             )
-            .with_centered_text_label("Invite".into())
+            .with_centered_text_label(warp_i18n::t_static!("drive-sharing-invite").into())
             .with_style(UiComponentStyles {
                 // Adjust the height to match the email editor's padding.
                 height: Some(style::ACL_ITEM_HEIGHT + 6.),
@@ -1832,7 +1837,7 @@ impl SharingDialog {
     fn render_access_header(&self, appearance: &Appearance) -> Box<dyn Element> {
         appearance
             .ui_builder()
-            .span("Who has access")
+            .span(warp_i18n::t_static!("drive-sharing-who-has-access"))
             .with_style(UiComponentStyles {
                 font_color: Some(style::label_text(appearance)),
                 font_size: Some(style::PRIMARY_TEXT_SIZE),
@@ -1861,10 +1866,10 @@ impl SharingDialog {
         let text = appearance
             .ui_builder()
             .wrappable_text(
-                format!(
-                    "Live session started at {} on {}",
-                    started_at.format("%l:%M%P"),
-                    started_at.format("%m/%d"),
+                warp_i18n::t!(
+                    "drive-sharing-live-session-started",
+                    time = format!("{}", started_at.format("%l:%M%P")),
+                    date = format!("{}", started_at.format("%m/%d"))
                 ),
                 true,
             )
@@ -1927,8 +1932,8 @@ impl SharingDialog {
         let owner = self.owner(app)?;
 
         let tooltip_text = match owner {
-            Subject::Team(_) => "Team objects automatically grant full permissions to team members",
-            _ => "Owners always have full permissions on their objects",
+            Subject::Team(_) => warp_i18n::t_static!("drive-sharing-owner-tooltip-team"),
+            _ => warp_i18n::t_static!("drive-sharing-owner-tooltip-user"),
         };
         let owner_access_label = render_with_detail_tooltip(
             tooltip_text,
@@ -2014,7 +2019,7 @@ impl SharingDialog {
 
         let menu_button_label = match self.link_sharing_state.access_level {
             Some(access_level) => access_level.label(),
-            None => NO_ACCESS_LABEL,
+            None => localized_no_access_label(),
         };
         let mut menu_button = appearance
             .ui_builder()
@@ -2070,13 +2075,13 @@ impl SharingDialog {
         let is_ai_conversation = matches!(self.target, Some(ShareableObject::AIConversation(_)));
 
         let mut items = vec![
-            MenuItemFields::new("Only people invited")
+            MenuItemFields::new(warp_i18n::t_static!("drive-sharing-only-people-invited"))
                 .with_on_select_action(SharingDialogAction::SetLinkPermissions(None))
                 .with_icon(Icon::Lock)
                 .with_disabled(inherited_access)
                 .into_item(),
             MenuItem::Separator,
-            MenuItemFields::new("Anyone with the link")
+            MenuItemFields::new(warp_i18n::t_static!("drive-sharing-anyone-with-link"))
                 .with_no_interaction_on_hover()
                 .with_icon(Icon::Globe)
                 .into_item(),
@@ -2193,7 +2198,7 @@ impl SharingDialog {
         let menu_button = {
             let label = match self.team_sharing_state.access_level {
                 Some(access_level) => access_level.label(),
-                None => NO_ACCESS_LABEL,
+                None => localized_no_access_label(),
             };
             let button = appearance
                 .ui_builder()
@@ -2251,13 +2256,13 @@ impl SharingDialog {
         let inherited_access = self.team_sharing_state.inheritance.is_some();
         let current_access_level = self.team_sharing_state.access_level;
         let items = [
-            MenuItemFields::new("Only invited teammates")
+            MenuItemFields::new(warp_i18n::t_static!("drive-sharing-only-invited-teammates"))
                 .with_on_select_action(SharingDialogAction::SetTeamPermissions(None))
                 .with_icon(Icon::Lock)
                 .with_disabled(inherited_access)
                 .into_item(),
             MenuItem::Separator,
-            MenuItemFields::new("Teammates with the link")
+            MenuItemFields::new(warp_i18n::t_static!("drive-sharing-teammates-with-link"))
                 .with_no_interaction_on_hover()
                 .with_icon(Icon::Users)
                 .into_item(),
@@ -2424,7 +2429,9 @@ impl SharingDialog {
             .with_padding_right(10.)
             .finish();
 
-        let name_text = subject.name(app).unwrap_or(Cow::Borrowed("Unknown"));
+        let name_text = subject
+            .name(app)
+            .unwrap_or(Cow::Borrowed(warp_i18n::t_static!("drive-sharing-unknown")));
         let name_label = appearance
             .ui_builder()
             .span(name_text)
@@ -2647,7 +2654,7 @@ impl SharingDialog {
         .finish();
         let title = appearance
             .ui_builder()
-            .span("Share session QR code")
+            .span(warp_i18n::t_static!("ui-final-share-session-qr-code"))
             .with_style(UiComponentStyles {
                 font_color: Some(foreground),
                 font_size: Some(style::HEADER_TEXT_SIZE),
@@ -2746,7 +2753,9 @@ impl SharingDialog {
             .unwrap_or_else(|| {
                 appearance
                     .ui_builder()
-                    .paragraph("Unable to create QR code for this session link.")
+                    .paragraph(warp_i18n::t_static!(
+                        "ui-final-unable-to-create-qr-code-for-this-session-link"
+                    ))
                     .with_style(UiComponentStyles {
                         font_color: Some(style::acl_secondary_text_color(appearance)),
                         ..Default::default()
@@ -2800,7 +2809,7 @@ impl SharingDialog {
             .with_text_and_icon_label(
                 TextAndIcon::new(
                     TextAndIconAlignment::IconFirst,
-                    "Copy link",
+                    warp_i18n::t_static!("drive-sharing-copy-link"),
                     Icon::Link.to_warpui_icon(copy_button_foreground),
                     MainAxisSize::Min,
                     MainAxisAlignment::SpaceBetween,

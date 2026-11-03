@@ -256,16 +256,19 @@ impl<T: FindModel + Entity<Event = FindEvent> + 'static> Find<T> {
     pub fn emit_result_a11y_content(&mut self, ctx: &mut ViewContext<Self>) {
         let content = if let Some(match_index) = self.model.as_ref(ctx).focused_match_index() {
             AccessibilityContent::new(
-                format!(
-                    "Result {} of {}.",
-                    match_index + 1,
-                    self.model.as_ref(ctx).match_count()
+                warp_i18n::t!(
+                    "a11y-code-find-result-of",
+                    index = format!("{}", match_index + 1),
+                    count = format!("{}", self.model.as_ref(ctx).match_count())
                 ),
-                "Use enter and shift-enter to navigate between matches. Escape to quit.",
+                warp_i18n::t_static!("a11y-code-find-result-help"),
                 WarpA11yRole::UserAction,
             )
         } else {
-            AccessibilityContent::new_without_help("No results.", WarpA11yRole::UserAction)
+            AccessibilityContent::new_without_help(
+                warp_i18n::t_static!("a11y-code-find-no-results"),
+                WarpA11yRole::UserAction,
+            )
         };
         ctx.emit_a11y_content(content);
     }
@@ -520,8 +523,8 @@ impl<T: FindModel + Entity<Event = FindEvent> + 'static> View for Find<T> {
 
     fn accessibility_contents(&self, _: &AppContext) -> Option<AccessibilityContent> {
         Some(AccessibilityContent::new(
-            "Type searched phrase.",
-            "Press escape to quit, use enter and shift-enter to navigate between matches",
+            warp_i18n::t_static!("a11y-find-bar-help-prompt"),
+            warp_i18n::t_static!("a11y-find-bar-help"),
             WarpA11yRole::TextareaRole,
         ))
     }

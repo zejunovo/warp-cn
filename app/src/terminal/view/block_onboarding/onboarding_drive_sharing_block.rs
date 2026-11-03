@@ -44,7 +44,6 @@ impl Entity for OnboardingDriveSharingBlock {
     type Event = ();
 }
 
-const TITLE_TEXT: &str = "Sharing in Warp Drive";
 const BODY_TEXT: &[&str] = &[
     "You can now share drive objects, in Warp or on the web, with anyone - Warp user or not. Click Share in the Warp Drive menu or the pane header to share via link or email.",
     "You’ll be able to modify the access permissions any time.",
@@ -66,10 +65,14 @@ impl View for OnboardingDriveSharingBlock {
         let font_size = appearance.monospace_font_size();
 
         let header = Container::new(
-            Text::new(TITLE_TEXT, font_family, font_size)
-                .with_color(appearance.theme().accent().into_solid())
-                .with_style(Properties::default().weight(Weight::Bold))
-                .finish(),
+            Text::new(
+                warp_i18n::t_static!("ui-final-sharing-in-warp-drive"),
+                font_family,
+                font_size,
+            )
+            .with_color(appearance.theme().accent().into_solid())
+            .with_style(Properties::default().weight(Weight::Bold))
+            .finish(),
         )
         .with_padding_bottom(BLOCK_PADDING)
         .finish();

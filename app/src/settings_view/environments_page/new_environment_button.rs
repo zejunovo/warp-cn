@@ -96,7 +96,7 @@ impl View for NewEnvironmentButtonView {
                     .with_spacing(4.)
                     .with_child(
                         Text::new(
-                            "New environment",
+                            warp_i18n::t_static!("settings-environments-new-button"),
                             appearance.ui_font_family(),
                             appearance.ui_font_size(),
                         )

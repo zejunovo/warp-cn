@@ -160,7 +160,7 @@ impl View for TerminalViewZeroStateBlock {
             )
             .with_child(
                 Text::new(
-                    "New terminal session",
+                    warp_i18n::t_static!("terminal-zero-new-session"),
                     appearance.ui_font_family(),
                     title_font_size,
                 )
@@ -293,7 +293,7 @@ impl View for TerminalViewZeroStateBlock {
                 theme.disabled_text_color(theme.background())
             };
             Text::new(
-                "Don't show again",
+                warp_i18n::t_static!("terminal-zero-dont-show-again"),
                 appearance.ui_font_family(),
                 appearance.monospace_font_size() - 4.,
             )

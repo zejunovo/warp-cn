@@ -1,0 +1,9 @@
+menu-native-standard-close-window = Close Window
+menu-native-standard-quit = Quit Warp
+menu-native-standard-hide = Hide Warp
+menu-native-standard-hide-others = Hide Others
+menu-native-standard-show-all = Show All
+menu-native-standard-minimize = Minimize
+menu-native-standard-zoom = Zoom
+menu-native-standard-bring-all-to-front = Bring All to Front
+menu-native-standard-toggle-full-screen = ToggleFullScreen

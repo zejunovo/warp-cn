@@ -628,7 +628,7 @@ impl ExecutionProfileEditorView {
                 },
                 ctx,
             );
-            editor.set_placeholder_text("e.g. \"YOLO code\"", ctx);
+            editor.set_placeholder_text(warp_i18n::t_static!("ui-final-e-g-yolo-code"), ctx);
             editor
         });
 

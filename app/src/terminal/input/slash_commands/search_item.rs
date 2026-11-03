@@ -98,7 +98,7 @@ impl SearchItem for InlineItem {
                 .with_child(name_text.finish())
                 .with_child(
                     Text::new(
-                        " or ",
+                        warp_i18n::t_static!("terminal-or-separator"),
                         appearance.ui_font_family(),
                         inline_styles::font_size(appearance),
                     )

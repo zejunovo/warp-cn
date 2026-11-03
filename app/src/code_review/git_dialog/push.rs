@@ -59,7 +59,11 @@ pub(super) fn new_state(publish: bool, commits: Vec<Commit>) -> PushState {
 }
 
 pub(super) fn confirm_label(publish: bool) -> &'static str {
-    if publish { "Publish" } else { "Push" }
+    if publish {
+        warp_i18n::t_static!("code-review-git-push-button-publish")
+    } else {
+        warp_i18n::t_static!("code-review-git-push-button-push")
+    }
 }
 
 pub(super) fn confirm_icon(publish: bool) -> Icon {
@@ -72,9 +76,9 @@ pub(super) fn confirm_icon(publish: bool) -> Icon {
 
 fn loading_label(publish: bool) -> &'static str {
     if publish {
-        "Publishing…"
+        warp_i18n::t_static!("code-review-git-push-publishing-label")
     } else {
-        "Pushing…"
+        warp_i18n::t_static!("code-review-git-push-loading-label")
     }
 }
 
@@ -124,9 +128,9 @@ pub(super) fn finish_push(
     match result {
         Ok(_) => {
             let toast_msg = if publish {
-                "Branch successfully published."
+                warp_i18n::t_static!("code-review-git-push-toast-published")
             } else {
-                "Changes successfully pushed."
+                warp_i18n::t_static!("code-review-git-push-toast-pushed")
             };
             show_toast(toast_msg, ctx);
         }
@@ -175,7 +179,7 @@ fn render_commits_section(state: &PushState, appearance: &Appearance) -> Box<dyn
     let sub_color = theme.sub_text_color(theme.surface_1()).into_solid();
 
     let label = Text::new(
-        "Included commits",
+        warp_i18n::t_static!("coding-git-included-commits"),
         appearance.ui_font_family(),
         appearance.ui_font_size(),
     )

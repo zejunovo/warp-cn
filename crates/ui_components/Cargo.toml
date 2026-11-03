@@ -6,6 +6,7 @@ publish.workspace = true
 license.workspace = true
 
 [dependencies]
+warp_i18n.workspace = true
 pathfinder_color.workspace = true
 pathfinder_geometry.workspace = true
 warpui_core.workspace = true

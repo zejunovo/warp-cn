@@ -200,7 +200,9 @@ impl ConversationEndedTombstoneView {
             Some(TombstoneCta::ContinueInCloud { task_id }) => {
                 Some(ctx.add_typed_action_view(move |_| {
                     ActionButton::new("Continue", PrimaryTheme)
-                        .with_tooltip("Continue this cloud conversation")
+                        .with_tooltip(warp_i18n::t_static!(
+                            "ui-final-continue-this-cloud-conversation"
+                        ))
                         .on_click(move |ctx| {
                             ctx.dispatch_typed_action(
                                 ConversationEndedTombstoneAction::ContinueInCloud { task_id },
@@ -216,7 +218,9 @@ impl ConversationEndedTombstoneView {
             Some(TombstoneCta::ContinueLocally { conversation_id }) => {
                 Some(ctx.add_typed_action_view(move |_| {
                     ActionButton::new("Continue locally", PrimaryTheme)
-                        .with_tooltip("Fork this conversation locally")
+                        .with_tooltip(warp_i18n::t_static!(
+                            "ui-final-fork-this-conversation-locally"
+                        ))
                         .on_click(move |ctx| {
                             ctx.dispatch_typed_action(
                                 ConversationEndedTombstoneAction::ContinueLocally(conversation_id),
@@ -237,7 +241,9 @@ impl ConversationEndedTombstoneView {
                 conversation_id.map(|conv_id| {
                     ctx.add_typed_action_view(move |_| {
                         ActionButton::new("Open in Warp", PrimaryTheme)
-                            .with_tooltip("Open this conversation in the Warp desktop app")
+                            .with_tooltip(warp_i18n::t_static!(
+                                "ui-final-open-this-conversation-in-the-warp-desktop-app"
+                            ))
                             .on_click(move |ctx| {
                                 ctx.dispatch_typed_action(
                                     ConversationEndedTombstoneAction::OpenInWarp(conv_id),
@@ -344,7 +350,7 @@ impl ConversationEndedTombstoneView {
 
         if is_transcript {
             return Text::new(
-                "You're viewing a snapshot",
+                warp_i18n::t_static!("terminal-shared-snapshot-title"),
                 appearance.overline_font_family(),
                 appearance.monospace_font_size(),
             )
@@ -403,8 +409,7 @@ impl ConversationEndedTombstoneView {
         let theme = appearance.theme();
         Container::new(
             Text::new(
-                "This shared conversation shows the state when you opened it. \
-                 If the agent is still running, refresh to see the latest progress.",
+                warp_i18n::t_static!("terminal-shared-snapshot-desc"),
                 appearance.overline_font_family(),
                 appearance.monospace_font_size(),
             )

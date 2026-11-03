@@ -1,0 +1,155 @@
+# Terminal / Block UI strings.
+# Keys MUST start with `terminal-`.
+
+terminal-filter-placeholder = Filter block output
+terminal-context-lines-tooltip = Show context lines around matches
+terminal-regex-tooltip = Regex toggle
+terminal-case-sensitive-tooltip = Case sensitive search
+terminal-invert-filter-tooltip = Invert filter
+terminal-type-search-phrase = Type searched phrase.
+terminal-press-escape = Press escape to quit
+terminal-tag-agent = Tag agent for assistance
+terminal-save-as-workflow = Save as Workflow
+terminal-workflow-secrets-warning = Blocks containing secrets cannot be saved.
+terminal-conversation-restored = Conversation restored
+terminal-previous-session = Previous session
+terminal-copy = Copy
+terminal-cut = Cut
+terminal-paste = Paste
+terminal-select-all = Select all
+terminal-share-block = Share block
+terminal-copy-url = Copy URL
+terminal-copy-path = Copy path
+terminal-show-in-finder = Show in Finder
+terminal-show-containing-folder = Show containing folder
+terminal-open-in-warp = Open in Warp
+terminal-open-in-editor = Open in editor
+terminal-reveal-secret = Reveal secret
+terminal-hide-secret = Hide secret
+terminal-copy-secret = Copy secret
+terminal-insert-into-input = Insert into input
+terminal-copy-command = Copy command
+terminal-copy-commands = Copy commands
+terminal-copy-output = Copy output
+terminal-copy-filtered-output = Copy filtered output
+terminal-copy-prompt = Copy prompt
+terminal-copy-right-prompt = Copy right prompt
+terminal-copy-working-directory = Copy working directory
+terminal-copy-git-branch = Copy git branch
+terminal-copy-output-markdown = Copy output as Markdown
+terminal-copy-conversation-text = Copy conversation text
+terminal-save-as-prompt = Save as prompt
+terminal-ask-warp-ai = Ask Warp AI
+terminal-command-search = Command search
+terminal-ai-command-search = AI command search
+terminal-find-within-block = Find within block
+terminal-find-within-blocks = Find within blocks
+terminal-toggle-block-filter = Toggle block filter
+terminal-toggle-bookmark = Toggle bookmark
+terminal-scroll-top-block = Scroll to top of block
+terminal-scroll-top-blocks = Scroll to top of blocks
+terminal-scroll-bottom-block = Scroll to bottom of block
+terminal-scroll-bottom-blocks = Scroll to bottom of blocks
+terminal-share = Share...
+terminal-share-block-menu = Share block...
+terminal-fork-last-query = Fork from last query
+terminal-fork-query = Fork from "{ $query }"
+terminal-fork-from-here = Fork from here (dev only)
+terminal-rewind-before-here = Rewind to before here
+terminal-split-pane-right = Split pane right
+terminal-split-pane-left = Split pane left
+terminal-split-pane-down = Split pane down
+terminal-split-pane-up = Split pane up
+terminal-close-pane = Close pane
+terminal-edit-cli-agent-toolbelt = Edit CLI agent toolbelt
+terminal-edit-agent-toolbelt = Edit agent toolbelt
+terminal-edit-prompt = Edit prompt
+terminal-hide-input-hint = Hide input hint text
+terminal-show-input-hint = Show input hint text
+terminal-share-session = Share session...
+terminal-stop-sharing = Stop sharing
+terminal-copy-session-sharing-link = Copy session sharing link
+terminal-copy-debugging-link = Copy debugging link
+terminal-copy-conversation-id = Copy conversation ID
+terminal-copy-debugging-id = Copy debugging ID
+terminal-for-terminal = for terminal
+terminal-loading-session = Loading session...
+
+# Link tooltips (rich content + grid links)
+terminal-link-open-folder = Open folder
+terminal-link-open-file = Open file
+terminal-link-open-link = Open link
+
+# Zero state / SSH / shared session / init env / block onboarding
+terminal-zero-new-session = New terminal session
+terminal-zero-dont-show-again = Don't show again
+terminal-ssh-dont-ask-again = Don't ask me this again
+# SSH remote-server failed banner
+terminal-ssh-failed-banner-title = Couldn't connect to the Warp SSH extension
+terminal-ssh-failed-banner-body = While advanced features like file browsing and code review are currently disabled, the rest of your Warpified experience is fully available.
+terminal-shared-snapshot-title = You're viewing a snapshot
+terminal-shared-snapshot-desc = This shared conversation shows the state when you opened it. If the agent is still running, refresh to see the latest progress.
+terminal-init-env-mode-prompt = Choose how you'd like to set up your environment
+terminal-init-env-suggested = Suggested
+terminal-thinking = Thinking...
+terminal-onboarding-welcome = Welcome to Warp!
+terminal-onboarding-ai-examples-prefix = Here are a few examples of how to leverage the power of AI in your terminal using
+terminal-onboarding-agent-mode = Agent Mode
+terminal-onboarding-snake-title = Create a snake game in Python from scratch
+terminal-onboarding-snake-desc = Have Agent Mode walk you through creating a snake game from end-to-end
+terminal-onboarding-git-history-title = Explore git history in { $repo }
+terminal-onboarding-git-history-desc = Work with Agent Mode to understand recent changes to a git repository
+terminal-onboarding-matrix-title = Create a Matrix-styled custom theme
+terminal-onboarding-matrix-desc = Make your terminal look like you entered the Matrix
+terminal-onboarding-other-title = Something else?
+terminal-onboarding-other-desc = Pair with an Agent to accomplish another task
+terminal-onboarding-other-prompt = What can you help me with?
+
+# CLI agent plugin instructions
+terminal-plugin-install-warp-plugin = Install the Warp plugin
+terminal-plugin-install-latest-version = Install the latest plugin version
+terminal-plugin-run-following-commands = Run the following commands.
+terminal-plugin-claude-install-title = Install Warp Plugin for Claude Code
+terminal-plugin-claude-install-subtitle = Ensure that jq is installed on your machine. Then, run these commands.
+terminal-plugin-claude-add-marketplace = Add the Warp plugin marketplace repository
+terminal-plugin-claude-restart-activate = Restart Claude Code to activate the plugin.
+terminal-plugin-claude-known-issues = There are some known issues with Claude Code's plugin system. If the plugin is not found after step 1, you can try manually adding an "extraKnownMarketplaces" entry to ~/.claude/settings.json.
+terminal-plugin-claude-update-title = Update Warp Plugin for Claude Code
+terminal-plugin-claude-remove-marketplace = Remove the existing marketplace (if present)
+terminal-plugin-claude-readd-marketplace = Re-add the marketplace
+terminal-plugin-claude-restart-activate-update = Restart Claude Code to activate the update.
+terminal-plugin-install-warp-extension = Install the Warp extension
+terminal-plugin-update-warp-extension = Update the Warp extension
+terminal-plugin-gemini-install-title = Install Warp Plugin for Gemini CLI
+terminal-plugin-gemini-command-then-restart = Run the following command, then restart Gemini CLI.
+terminal-plugin-gemini-restart-activate = Restart Gemini CLI to activate the plugin.
+terminal-plugin-gemini-update-title = Update Warp Plugin for Gemini CLI
+terminal-plugin-gemini-restart-activate-update = Restart Gemini CLI to activate the update.
+terminal-plugin-opencode-install-title = Install Warp Plugin for OpenCode
+terminal-plugin-opencode-install-subtitle = Add the Warp plugin to your OpenCode configuration, then restart OpenCode.
+terminal-plugin-opencode-open-config = Open or create your opencode.json. This can be in your project root, or the global config path:
+terminal-plugin-opencode-add-plugin = Add "@warp-dot-dev/opencode-warp" to the "plugin" array in the top-level JSON object:
+terminal-plugin-opencode-restart-activate = Restart OpenCode to activate the plugin.
+terminal-plugin-opencode-update-title = Update Warp Plugin for OpenCode
+terminal-plugin-opencode-update-subtitle = Pin the plugin to the latest version in your opencode.json. OpenCode caches plugins per version spec, so changing the pin forces it to re-fetch on restart.
+terminal-plugin-opencode-replace-plugin = Replace the existing "@warp-dot-dev/opencode-warp" entry in the "plugin" array with the explicit version:
+terminal-plugin-opencode-restart-update = Restart OpenCode to load the updated plugin.
+
+# Terminal input
+terminal-no-results = No results
+terminal-billed-to-api = Billed to API
+terminal-or-separator = { " or " }
+
+# Input suggestions mode placeholder texts (terminal/input.rs InputSuggestionsMode)
+terminal-input-placeholder-search-queries = Search queries
+terminal-input-placeholder-search-queries-rewind = Search queries to rewind to
+terminal-input-placeholder-search-conversations = Search conversations
+terminal-input-placeholder-search-skills = Search skills
+terminal-input-placeholder-search-models = Search models
+terminal-input-placeholder-search-profiles = Search profiles
+terminal-input-placeholder-search-commands = Search commands
+terminal-input-placeholder-search-prompts = Search prompts
+terminal-input-placeholder-search-indexed-repos = Search indexed repos
+terminal-input-placeholder-search-plans = Search plans
+terminal-fork = Fork
+terminal-copy-share-link = Copy share link

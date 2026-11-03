@@ -59,6 +59,7 @@ fn demo_offer_variant() -> Option<OfferVariant> {
 }
 
 fn main() -> Result<()> {
+    warp_i18n::init(warp_i18n::Locale::DEFAULT)?;
     // Initialize logging for the onboarding binary.
     warp_logging::init(warp_logging::LogConfig {
         log_destination: None,

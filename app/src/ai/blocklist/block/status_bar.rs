@@ -1062,7 +1062,10 @@ fn render_agent_tip(tip: &AgentTip, app: &AppContext) -> Box<dyn Element> {
         _ => {
             if let Some(link_target) = tip.link.clone() {
                 fragments.push(FormattedTextFragment::plain_text(" "));
-                fragments.push(FormattedTextFragment::hyperlink("Learn more", link_target));
+                fragments.push(FormattedTextFragment::hyperlink(
+                    warp_i18n::t_static!("ai-ui-learn-more"),
+                    link_target,
+                ));
             }
         }
     }

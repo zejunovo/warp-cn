@@ -506,26 +506,34 @@ impl<'a> QuitWarningDialog<'a> {
 
         if let Some(callback) = on_confirm {
             let confirm_title = match state.scope {
-                QuitScope::Window(_) | QuitScope::Tabs(_) | QuitScope::Pane { .. } => "Yes, close",
-                QuitScope::App => "Yes, quit",
+                QuitScope::Window(_) | QuitScope::Tabs(_) | QuitScope::Pane { .. } => {
+                    warp_i18n::t_static!("dialog-yes-close")
+                }
+                QuitScope::App => warp_i18n::t_static!("dialog-yes-quit"),
                 _ => "",
             };
             buttons.push(ModalButton::for_app(confirm_title.to_string(), callback));
         }
 
         if let Some(callback) = on_save_changes {
-            buttons.push(ModalButton::for_app("Save".to_string(), callback));
+            buttons.push(ModalButton::for_app(
+                warp_i18n::t_static!("dialog-save").to_string(),
+                callback,
+            ));
         }
 
         if let Some(callback) = on_discard_changes {
-            buttons.push(ModalButton::for_app("Don't Save".to_string(), callback));
+            buttons.push(ModalButton::for_app(
+                warp_i18n::t_static!("dialog-dont-save").to_string(),
+                callback,
+            ));
         }
 
         if let Some(callback) = on_show_processes
             && state.total_long_running_commands > 0
         {
             buttons.push(ModalButton::for_app(
-                "Show running processes".to_string(),
+                warp_i18n::t_static!("dialog-show-running-processes").to_string(),
                 move |app| {
                     callback(app);
                 },
@@ -533,16 +541,19 @@ impl<'a> QuitWarningDialog<'a> {
         }
 
         if let Some(callback) = on_cancel {
-            buttons.push(ModalButton::for_app("Cancel".to_string(), callback));
+            buttons.push(ModalButton::for_app(
+                warp_i18n::t_static!("dialog-cancel").to_string(),
+                callback,
+            ));
         }
 
         let title = match &state.scope {
-            QuitScope::Pane { .. } => "Close pane?",
-            QuitScope::Tabs(tabs) if tabs.len() == 1 => "Close tab?",
-            QuitScope::Tabs(_) => "Close tabs?",
-            QuitScope::Window(_) => "Close window?",
-            QuitScope::App => "Quit Warp?",
-            QuitScope::EditorTab { .. } => "Save changes?",
+            QuitScope::Pane { .. } => warp_i18n::t_static!("dialog-close-pane"),
+            QuitScope::Tabs(tabs) if tabs.len() == 1 => warp_i18n::t_static!("dialog-close-tab"),
+            QuitScope::Tabs(_) => warp_i18n::t_static!("dialog-close-tabs"),
+            QuitScope::Window(_) => warp_i18n::t_static!("dialog-close-window"),
+            QuitScope::App => warp_i18n::t_static!("dialog-quit-warp"),
+            QuitScope::EditorTab { .. } => warp_i18n::t_static!("dialog-save-changes"),
         };
 
         AlertDialogWithCallbacks::for_app(

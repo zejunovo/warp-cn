@@ -279,7 +279,7 @@ impl View for ExternalEditorView {
 
         let default_editor = render_dropdown_item(
             appearance,
-            "Choose an editor to open file links",
+            warp_i18n::t_static!("settings-code-choose-editor-file-links"),
             None,
             None,
             LocalOnlyIconState::for_setting(
@@ -294,7 +294,7 @@ impl View for ExternalEditorView {
 
         let code_panels_editor = render_dropdown_item(
             appearance,
-            "Choose an editor to open files from the code review panel, project explorer, and global search",
+            warp_i18n::t_static!("settings-code-choose-editor-code-panels"),
             None,
             None,
             LocalOnlyIconState::for_setting(
@@ -309,7 +309,7 @@ impl View for ExternalEditorView {
 
         let default_layout = render_dropdown_item(
             appearance,
-            "Choose a layout to open files in Warp",
+            warp_i18n::t_static!("settings-code-choose-layout"),
             None,
             None,
             LocalOnlyIconState::for_setting(
@@ -357,7 +357,7 @@ impl View for ExternalEditorView {
         }
 
         column.add_child(render_body_item::<ExternalEditorAction>(
-            "Open Markdown files in Warp's Markdown Viewer by default".to_string(),
+            warp_i18n::t_static!("settings-code-open-markdown-viewer").to_string(),
             Some(AdditionalInfo {
                 mouse_state: self.markdown_viewer_mouse_state.clone(),
                 on_click_action: Some(ExternalEditorAction::OpenUrl(

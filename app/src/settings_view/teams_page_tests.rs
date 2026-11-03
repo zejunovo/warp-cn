@@ -25,6 +25,11 @@ use crate::workspaces::workspace::{
     WorkspaceMemberUsageInfo,
 };
 
+fn initialize_english_locale() {
+    warp_i18n::init(warp_i18n::Locale::En).expect("English translations should load");
+    warp_i18n::set_locale(warp_i18n::Locale::En);
+}
+
 fn member(email: &str, role: MembershipRole) -> TeamMember {
     TeamMember {
         uid: UserUid::new(email),
@@ -235,6 +240,7 @@ fn workspace_discovery_page_routes_each_option_through_the_expected_client_bound
             .return_once(|_| Err(anyhow::anyhow!("legacy team join rejected")));
 
         initialize_app_with_team_client(&mut app, Arc::new(team_client));
+        initialize_english_locale();
         let workspace = mock_workspace(&mut app);
         let teams_page = workspace.update(&mut app, |_, ctx| {
             ctx.add_typed_action_view(TeamsPageView::new)
@@ -513,6 +519,7 @@ const MEMBER_EMAIL: &str = "member@example.com";
 
 #[test]
 fn owner_can_transfer_promote_and_remove_without_workspace_admin_role() {
+    initialize_english_locale();
     let team = team_with_members(
         vec![
             member(OWNER_EMAIL, MembershipRole::Owner),
@@ -532,6 +539,7 @@ fn owner_can_transfer_promote_and_remove_without_workspace_admin_role() {
 
 #[test]
 fn team_admin_can_promote_and_remove_without_workspace_admin_role() {
+    initialize_english_locale();
     let team = team_with_members(
         vec![
             member(ADMIN_EMAIL, MembershipRole::Admin),
@@ -568,6 +576,7 @@ fn non_admin_workspace_member_gets_no_member_actions() {
 
 #[test]
 fn workspace_admin_without_team_role_can_promote_demote_and_remove() {
+    initialize_english_locale();
     let team = team_with_members(
         vec![
             member(MEMBER_EMAIL, MembershipRole::User),
@@ -631,6 +640,7 @@ fn workspace_admin_gets_team_management_permissions() {
 
 #[test]
 fn workspace_admin_without_native_workspaces_policy_can_manage_members() {
+    initialize_english_locale();
     let team = team_with_members(
         vec![
             member(MEMBER_EMAIL, MembershipRole::User),
@@ -650,6 +660,7 @@ fn workspace_admin_without_native_workspaces_policy_can_manage_members() {
 
 #[test]
 fn workspace_admin_cannot_transfer_ownership() {
+    initialize_english_locale();
     let team = team_with_members(
         vec![
             member(MEMBER_EMAIL, MembershipRole::User),
@@ -669,6 +680,7 @@ fn workspace_admin_cannot_transfer_ownership() {
 
 #[test]
 fn workspace_admin_without_multi_admin_plan_can_remove_but_not_promote() {
+    initialize_english_locale();
     let team = team_with_members(
         vec![
             member(MEMBER_EMAIL, MembershipRole::User),
@@ -706,6 +718,7 @@ fn current_user_gets_no_actions_against_their_own_row_as_workspace_admin() {
 
 #[test]
 fn non_native_workspace_keeps_create_team_ui() {
+    initialize_english_locale();
     let workspace = workspace_with_member(ADMIN_EMAIL, MembershipRole::Admin, false);
 
     assert_eq!(
@@ -713,7 +726,7 @@ fn non_native_workspace_keeps_create_team_ui() {
         vec![
             TeamsPageSection::CreateTeam,
             TeamsPageSection::JoinTeams {
-                header: OR_JOIN_TEAM_HEADER
+                header: "Or, join an existing team within your company"
             }
         ]
     );
@@ -733,13 +746,14 @@ fn unresolved_workspace_keeps_create_team_ui() {
 
 #[test]
 fn native_workspace_admin_gets_admin_panel_cta() {
+    initialize_english_locale();
     let workspace = admin_workspace(ADMIN_EMAIL);
 
     assert_eq!(
         TeamsWidget::page_sections_for(Some(&workspace), Some(ADMIN_EMAIL), true),
         vec![
             TeamsPageSection::JoinTeams {
-                header: JOIN_TEAM_HEADER
+                header: "Join an existing team within your company"
             },
             TeamsPageSection::AdminPanelCta
         ]
@@ -752,12 +766,13 @@ fn native_workspace_admin_gets_admin_panel_cta() {
 
 #[test]
 fn native_workspace_member_gets_join_or_empty_state() {
+    initialize_english_locale();
     let workspace = workspace_with_member(MEMBER_EMAIL, MembershipRole::User, true);
 
     assert_eq!(
         TeamsWidget::page_sections_for(Some(&workspace), Some(MEMBER_EMAIL), true),
         vec![TeamsPageSection::JoinTeams {
-            header: JOIN_TEAM_HEADER
+            header: "Join an existing team within your company"
         }]
     );
     assert_eq!(
@@ -914,6 +929,7 @@ fn viewer_missing_from_the_workspace_roster_is_not_an_admin() {
 
 #[test]
 fn workspace_admin_can_cancel_pending_invite() {
+    initialize_english_locale();
     let mut team = team_with_members(vec![member(MEMBER_EMAIL, MembershipRole::User)], true);
     team.pending_email_invites.push(EmailInvite {
         invitee_email: "invitee@example.com".to_string(),
@@ -932,6 +948,7 @@ fn workspace_admin_can_cancel_pending_invite() {
 
 #[test]
 fn disabled_member_is_flagged_but_keeps_removal_action() {
+    initialize_english_locale();
     let team = team_with_members(
         vec![
             member(ADMIN_EMAIL, MembershipRole::Admin),
@@ -985,6 +1002,7 @@ fn active_member_is_not_flagged_disabled() {
 
 #[test]
 fn disabled_row_renders_dimmed_and_tooltipped() {
+    initialize_english_locale();
     let appearance = Appearance::mock();
 
     assert_eq!(
@@ -998,7 +1016,7 @@ fn disabled_row_renders_dimmed_and_tooltipped() {
     );
     assert_eq!(
         disabled_member_tooltip_text(true),
-        Some(DISABLED_MEMBER_TOOLTIP_TEXT)
+        Some("This user's account is disabled")
     );
     assert_eq!(disabled_member_tooltip_text(false), None);
 }

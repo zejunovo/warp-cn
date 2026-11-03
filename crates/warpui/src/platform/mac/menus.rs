@@ -256,6 +256,23 @@ fn resolve_standard_action(action: StandardAction) -> StandardMenuItemProperties
     }
 }
 
+fn localized_standard_action_title(action: StandardAction) -> String {
+    match action {
+        StandardAction::Close => warp_i18n::t!("menu-native-standard-close-window"),
+        StandardAction::Quit => warp_i18n::t!("menu-native-standard-quit"),
+        StandardAction::Hide => warp_i18n::t!("menu-native-standard-hide"),
+        StandardAction::HideOtherApps => warp_i18n::t!("menu-native-standard-hide-others"),
+        StandardAction::ShowAllApps => warp_i18n::t!("menu-native-standard-show-all"),
+        StandardAction::Minimize => warp_i18n::t!("menu-native-standard-minimize"),
+        StandardAction::Zoom => warp_i18n::t!("menu-native-standard-zoom"),
+        StandardAction::BringAllToFront => warp_i18n::t!("menu-native-standard-bring-all-to-front"),
+        StandardAction::ToggleFullScreen => {
+            warp_i18n::t!("menu-native-standard-toggle-full-screen")
+        }
+        StandardAction::Paste => warp_i18n::t!("menu-context-paste"),
+    }
+}
+
 /// Determine the key equivalent for the given keystroke
 fn resolve_key_equivalent(keystroke: Option<&Keystroke>) -> (KeyEquivalent, NSEventModifierFlags) {
     let mut flags = NSEventModifierFlags::empty();
@@ -354,9 +371,11 @@ unsafe fn make_menu_item(menu_item: MenuItem) -> id {
             MenuItem::Standard(standard_action) => {
                 let mtm = MainThreadMarker::new_unchecked();
                 let properties = resolve_standard_action(standard_action);
+                let localized_title = warp_i18n::try_global()
+                    .map(|_| NSString::from_str(&localized_standard_action_title(standard_action)));
                 let nsmenu_item = NSMenuItem::initWithTitle_action_keyEquivalent(
                     mtm.alloc(),
-                    properties.title,
+                    localized_title.as_deref().unwrap_or(properties.title),
                     Some(properties.action),
                     properties.shortcut,
                 );

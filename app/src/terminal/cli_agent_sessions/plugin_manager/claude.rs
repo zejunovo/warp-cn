@@ -209,54 +209,56 @@ impl CliAgentPluginManager for ClaudeCodePluginManager {
     }
 }
 
+// Localized slices cannot be const-promoted, so each LazyLock allocates them once.
 static INSTALL_INSTRUCTIONS: LazyLock<PluginInstructions> = LazyLock::new(|| PluginInstructions {
-    title: "Install Warp Plugin for Claude Code",
-    subtitle: "Ensure that jq is installed on your machine. Then, run these commands.",
-    steps: &[
+    title: warp_i18n::t_static!("terminal-plugin-claude-install-title"),
+    subtitle: warp_i18n::t_static!("terminal-plugin-claude-install-subtitle"),
+    steps: Box::leak(Box::new([
         PluginInstructionStep {
-            description: "Add the Warp plugin marketplace repository",
+            description: warp_i18n::t_static!("terminal-plugin-claude-add-marketplace"),
             command: "claude plugin marketplace add warpdotdev/claude-code-warp",
             executable: true,
             link: None,
         },
         PluginInstructionStep {
-            description: "Install the Warp plugin",
+            description: warp_i18n::t_static!("terminal-plugin-install-warp-plugin"),
             command: "claude plugin install warp@claude-code-warp",
             executable: true,
             link: None,
         },
-    ],
-    post_install_notes: &[
-        "Restart Claude Code to activate the plugin.",
-        "There are some known issues with Claude Code's plugin system. \
-             If the plugin is not found after step 1, you can try manually adding an \"extraKnownMarketplaces\" entry to ~/.claude/settings.json.",
-    ],
+    ])),
+    post_install_notes: Box::leak(Box::new([
+        warp_i18n::t_static!("terminal-plugin-claude-restart-activate"),
+        warp_i18n::t_static!("terminal-plugin-claude-known-issues"),
+    ])),
 });
 
 static UPDATE_INSTRUCTIONS: LazyLock<PluginInstructions> = LazyLock::new(|| PluginInstructions {
-    title: "Update Warp Plugin for Claude Code",
-    subtitle: "Run the following commands.",
-    steps: &[
+    title: warp_i18n::t_static!("terminal-plugin-claude-update-title"),
+    subtitle: warp_i18n::t_static!("terminal-plugin-run-following-commands"),
+    steps: Box::leak(Box::new([
         PluginInstructionStep {
-            description: "Remove the existing marketplace (if present)",
+            description: warp_i18n::t_static!("terminal-plugin-claude-remove-marketplace"),
             command: "claude plugin marketplace remove claude-code-warp",
             executable: true,
             link: None,
         },
         PluginInstructionStep {
-            description: "Re-add the marketplace",
+            description: warp_i18n::t_static!("terminal-plugin-claude-readd-marketplace"),
             command: "claude plugin marketplace add warpdotdev/claude-code-warp",
             executable: true,
             link: None,
         },
         PluginInstructionStep {
-            description: "Install the latest plugin version",
+            description: warp_i18n::t_static!("terminal-plugin-install-latest-version"),
             command: "claude plugin install warp@claude-code-warp",
             executable: true,
             link: None,
         },
-    ],
-    post_install_notes: &["Restart Claude Code to activate the update."],
+    ])),
+    post_install_notes: Box::leak(Box::new([warp_i18n::t_static!(
+        "terminal-plugin-claude-restart-activate-update"
+    )])),
 });
 
 fn check_installed(claude_dir: &Path) -> bool {

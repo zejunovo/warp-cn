@@ -16,7 +16,9 @@ const TADA_FONT_SIZE: f32 = 60.;
 const TADA_MARGIN_TOP: f32 = 0.;
 const TADA_MARGIN_BOTTOM: f32 = 50.;
 // Constants for the main title
-const TITLE: &str = "Congrats!";
+fn localized_title() -> &'static str {
+    warp_i18n::t_static!("a11y-reward-title")
+}
 const TITLE_FONT_SIZE: f32 = 20.;
 const TITLE_MARGIN_BOTTOM: f32 = 25.;
 // Constants for the subtitle
@@ -27,12 +29,13 @@ const SUBTITLE_RECEIVED_REFERRAL: &str =
 const SUBTITLE_FONT_SIZE: f32 = 14.;
 const SUBTITLE_MARGIN_BOTTOM: f32 = 40.;
 // Constants for the button
-const BUTTON_CTA: &str = "Try it out!";
 const BUTTON_FONT_SIZE: f32 = 14.;
 const BUTTON_HEIGHT: f32 = 45.;
 const BUTTON_WIDTH: f32 = 240.;
 const BUTTON_MARGIN_BOTTOM: f32 = 14.;
-const ACCESSIBILITY_HELP: &str = "Press enter to open the theme chooser or escape to dismiss.";
+fn localized_accessibility_help() -> &'static str {
+    warp_i18n::t_static!("a11y-reward-help")
+}
 
 pub fn init(app: &mut AppContext) {
     use warpui::keymap::macros::*;
@@ -115,7 +118,7 @@ impl RewardView {
     fn render_title(&self, ui_builder: &UiBuilder) -> Box<dyn Element> {
         Align::new(
             ui_builder
-                .span(TITLE)
+                .span(localized_title())
                 .with_style(UiComponentStyles {
                     font_size: Some(TITLE_FONT_SIZE),
                     margin: Some(Coords {
@@ -153,7 +156,7 @@ impl RewardView {
             Container::new(
                 ui_builder
                     .button(ButtonVariant::Accent, self.cta_mouse_state.clone())
-                    .with_centered_text_label(BUTTON_CTA.into())
+                    .with_centered_text_label(warp_i18n::t_static!("ui-final-try-it-out").into())
                     .with_style(UiComponentStyles {
                         height: Some(BUTTON_HEIGHT),
                         width: Some(BUTTON_WIDTH),
@@ -182,8 +185,8 @@ impl View for RewardView {
 
     fn accessibility_contents(&self, _: &AppContext) -> Option<AccessibilityContent> {
         Some(AccessibilityContent::new(
-            format!("{} {}", TITLE, self.subtitle()),
-            ACCESSIBILITY_HELP,
+            format!("{} {}", localized_title(), self.subtitle()),
+            localized_accessibility_help(),
             WarpA11yRole::WindowRole,
         ))
     }

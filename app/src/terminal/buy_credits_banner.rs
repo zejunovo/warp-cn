@@ -336,9 +336,13 @@ impl BuyCreditsBanner {
 
         let sub_text_color = theme.sub_text_color(theme.surface_1());
 
-        let label = Text::new_inline("Auto reload", appearance.ui_font_family(), 12.)
-            .with_color(sub_text_color.into())
-            .finish();
+        let label = Text::new_inline(
+            warp_i18n::t_static!("settings-billing-auto-reload"),
+            appearance.ui_font_family(),
+            12.,
+        )
+        .with_color(sub_text_color.into())
+        .finish();
 
         let selected_amount = self
             .addon_credits_options
@@ -512,7 +516,7 @@ impl BuyCreditsBanner {
             .with_children([
                 appearance
                     .ui_builder()
-                    .paragraph("Monthly limit reached")
+                    .paragraph(warp_i18n::t_static!("ui-final-monthly-limit-reached"))
                     .with_style(UiComponentStyles {
                         font_size: Some(14.),
                         ..Default::default()
@@ -563,7 +567,7 @@ impl BuyCreditsBanner {
                     }),
                     ..Default::default()
                 })
-                .with_text_label("Manage billing".to_string())
+                .with_text_label(warp_i18n::t_static!("drive-manage-billing").to_string())
                 .build()
                 .on_click(|ctx, _, _| {
                     ctx.dispatch_typed_action(Action::ManageBilling);
@@ -622,7 +626,9 @@ impl BuyCreditsBanner {
             .with_children([
                 appearance
                     .ui_builder()
-                    .paragraph("Finish your purchase in the browser")
+                    .paragraph(warp_i18n::t_static!(
+                        "ui-final-finish-your-purchase-in-the-browser"
+                    ))
                     .with_style(UiComponentStyles {
                         font_size: Some(14.),
                         ..Default::default()

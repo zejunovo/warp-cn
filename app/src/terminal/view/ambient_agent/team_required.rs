@@ -12,15 +12,6 @@ use crate::auth::AuthStateProvider;
 use crate::view_components::action_button::{ActionButton, PrimaryTheme};
 use crate::workspaces::user_workspaces::UserWorkspaces;
 
-pub(crate) const TITLE: &str = "Cloud agents need a team";
-pub(crate) const BODY_ADMIN: &str = "You’re in this workspace but not on a team, so you can’t start cloud runs. Join or create a team, then try again.";
-pub(crate) const BODY_NON_ADMIN: &str = "You’re in this workspace but not on a team, so you can’t start cloud runs. Join a team, then try again.";
-pub(crate) const PRIMARY_CTA_LABEL: &str = "Open teams settings";
-pub(crate) const TOAST_ADMIN: &str =
-    "Cloud agents need a team. Join or create a team to start cloud runs.";
-pub(crate) const TOAST_NON_ADMIN: &str =
-    "Cloud agents need a team. Join a team to start cloud runs.";
-
 fn is_current_user_workspace_admin(app: &AppContext) -> bool {
     let Some(email) = AuthStateProvider::as_ref(app).get().user_email() else {
         return false;
@@ -32,9 +23,9 @@ fn is_current_user_workspace_admin(app: &AppContext) -> bool {
 
 fn body_text(app: &AppContext) -> &'static str {
     if is_current_user_workspace_admin(app) {
-        BODY_ADMIN
+        warp_i18n::t_static!("team-required-body-admin")
     } else {
-        BODY_NON_ADMIN
+        warp_i18n::t_static!("team-required-body-member")
     }
 }
 
@@ -46,9 +37,9 @@ pub(crate) fn should_render(team_required: bool, is_in_setup: bool, is_configuri
 /// admin/non-admin split of the inline blocker's body text.
 pub(crate) fn toast_message(app: &AppContext) -> &'static str {
     if is_current_user_workspace_admin(app) {
-        TOAST_ADMIN
+        warp_i18n::t_static!("team-required-toast-admin")
     } else {
-        TOAST_NON_ADMIN
+        warp_i18n::t_static!("team-required-toast-member")
     }
 }
 
@@ -69,7 +60,11 @@ pub struct CloudAgentTeamRequiredView {
 impl CloudAgentTeamRequiredView {
     pub fn new(ctx: &mut ViewContext<Self>) -> Self {
         let open_teams_settings_button = ctx.add_typed_action_view(|_| {
-            ActionButton::new(PRIMARY_CTA_LABEL, PrimaryTheme).on_click(|ctx| {
+            ActionButton::new(
+                warp_i18n::t_static!("team-required-open-settings"),
+                PrimaryTheme,
+            )
+            .on_click(|ctx| {
                 ctx.dispatch_typed_action(CloudAgentTeamRequiredViewAction::OpenTeamsSettings);
             })
         });
@@ -110,10 +105,14 @@ impl View for CloudAgentTeamRequiredView {
             .with_cross_axis_alignment(CrossAxisAlignment::Start)
             .with_spacing(16.)
             .with_child(
-                Text::new(TITLE, appearance.ui_font_family(), 20.)
-                    .with_style(Properties::default().weight(Weight::Semibold))
-                    .with_color(theme.active_ui_text_color().into_solid())
-                    .finish(),
+                Text::new(
+                    warp_i18n::t_static!("ui-final-cloud-agents-need-a-team"),
+                    appearance.ui_font_family(),
+                    20.,
+                )
+                .with_style(Properties::default().weight(Weight::Semibold))
+                .with_color(theme.active_ui_text_color().into_solid())
+                .finish(),
             )
             .with_child(
                 Text::new(

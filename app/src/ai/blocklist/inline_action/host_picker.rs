@@ -51,7 +51,6 @@ pub enum HostPickerEvent {
     Closed,
 }
 
-const CUSTOM_HOST_LABEL: &str = "Custom host…";
 const DEFAULT_BADGE: &str = "Default";
 const CONNECTED_BADGE: &str = "Connected";
 const DISCONNECTED_BADGE: &str = "Disconnected";
@@ -477,7 +476,7 @@ pub(crate) fn build_menu_items(
         ));
     }
     items.push(MenuItem::Item(
-        MenuItemFields::new(CUSTOM_HOST_LABEL).with_on_select_action(
+        MenuItemFields::new(warp_i18n::t_static!("ui-final-custom-host")).with_on_select_action(
             DropdownAction::select_action_and_close(InternalAction::EnterCustomMode),
         ),
     ));

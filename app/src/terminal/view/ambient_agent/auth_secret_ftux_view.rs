@@ -768,7 +768,7 @@ impl AuthSecretFtuxView {
         };
 
         let privacy_text = Text::new_inline(
-            "Your credentials are encrypted end-to-end. ".to_string(),
+            warp_i18n::t_static!("ui-final-your-credentials-are-encrypted-end-to-end").to_string(),
             font_family,
             TYPE_DESCRIPTION_FONT_SIZE,
         )
@@ -891,7 +891,7 @@ impl AuthSecretFtuxView {
         let theme = appearance.theme();
         let label_color = internal_colors::text_sub(theme, theme.surface_1());
         let label = Text::new_inline(
-            "Share with team".to_string(),
+            warp_i18n::t_static!("settings-environments-update-form-share-with-team").to_string(),
             appearance.ui_font_family(),
             TYPE_DESCRIPTION_FONT_SIZE,
         )
@@ -1019,7 +1019,7 @@ impl AuthSecretFtuxView {
         let accent_fill = Appearance::as_ref(app).theme().accent();
         let continue_disabled = !self.can_submit_creation_form(app);
         row.add_child(self.render_button(
-            "Continue",
+            warp_i18n::t_static!("settings-teams-continue"),
             self.continue_mouse_state.clone(),
             Some(accent_fill),
             AuthSecretFtuxAction::Continue,

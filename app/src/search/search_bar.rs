@@ -690,7 +690,10 @@ impl<T: Action + Clone> SearchBar<T> {
         if let Some(loading_filters) = self.mixer.as_ref(ctx).loading_query_filters() {
             for loading_filter in loading_filters.into_iter() {
                 ctx.emit_a11y_content(AccessibilityContent::new_without_help(
-                    format!("Loading {} suggestions", loading_filter.display_name()),
+                    warp_i18n::t!(
+                        "a11y-search-loading-suggestions",
+                        name = format!("{}", loading_filter.display_name())
+                    ),
                     WarpA11yRole::MenuItemRole,
                 ));
             }
@@ -700,7 +703,7 @@ impl<T: Action + Clone> SearchBar<T> {
 
         if let Some((.., data_source_err)) = self.mixer.as_ref(ctx).first_data_source_error() {
             ctx.emit_a11y_content(AccessibilityContent::new(
-                "Error finding results",
+                warp_i18n::t_static!("a11y-search-error-finding-results"),
                 data_source_err.user_facing_error(),
                 WarpA11yRole::MenuItemRole,
             ));
@@ -708,7 +711,10 @@ impl<T: Action + Clone> SearchBar<T> {
         }
 
         if let Some(selected_result) = self.state.as_ref(ctx).selected_result() {
-            let a11y_content_text = format!("Selected {}", selected_result.accessibility_label(),);
+            let a11y_content_text = warp_i18n::t!(
+                "a11y-search-selected",
+                label = format!("{}", selected_result.accessibility_label())
+            );
             let a11y_content = match selected_result.accessibility_help_message() {
                 None => AccessibilityContent::new_without_help(
                     a11y_content_text,

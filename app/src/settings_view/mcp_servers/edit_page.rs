@@ -133,7 +133,7 @@ pub struct MCPServersEditPageView {
 impl MCPServersEditPageView {
     pub fn new(ctx: &mut ViewContext<Self>) -> Self {
         let save_button = ctx.add_typed_action_view(|_| {
-            ActionButton::new("Save", PrimaryTheme)
+            ActionButton::new(warp_i18n::t_static!("settings-mcp-edit-save"), PrimaryTheme)
                 .with_icon(Icon::Check)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(MCPServersEditPageViewAction::Save);
@@ -141,25 +141,35 @@ impl MCPServersEditPageView {
         });
 
         let reinstall_button = ctx.add_typed_action_view(|_| {
-            ActionButton::new("Edit Variables", PrimaryTheme).on_click(|ctx| {
+            ActionButton::new(
+                warp_i18n::t_static!("settings-mcp-edit-edit-variables"),
+                PrimaryTheme,
+            )
+            .on_click(|ctx| {
                 ctx.dispatch_typed_action(MCPServersEditPageViewAction::Reinstall);
             })
         });
 
         let delete_button = ctx.add_typed_action_view(|_| {
-            ActionButton::new("Delete MCP", DangerSecondaryTheme)
-                .with_icon(Icon::Trash)
-                .on_click(|ctx| {
-                    ctx.dispatch_typed_action(MCPServersEditPageViewAction::Delete);
-                })
+            ActionButton::new(
+                warp_i18n::t_static!("settings-mcp-edit-delete-mcp"),
+                DangerSecondaryTheme,
+            )
+            .with_icon(Icon::Trash)
+            .on_click(|ctx| {
+                ctx.dispatch_typed_action(MCPServersEditPageViewAction::Delete);
+            })
         });
 
         let unshare_button = ctx.add_typed_action_view(|_| {
-            ActionButton::new("Remove from team", DangerNakedTheme)
-                .with_icon(Icon::MinusCircle)
-                .on_click(|ctx| {
-                    ctx.dispatch_typed_action(MCPServersEditPageViewAction::Unshare);
-                })
+            ActionButton::new(
+                warp_i18n::t_static!("settings-mcp-edit-remove-from-team"),
+                DangerNakedTheme,
+            )
+            .with_icon(Icon::MinusCircle)
+            .on_click(|ctx| {
+                ctx.dispatch_typed_action(MCPServersEditPageViewAction::Unshare);
+            })
         });
 
         let json_editor = ctx.add_typed_action_view(|ctx| {
@@ -187,9 +197,9 @@ impl MCPServersEditPageView {
         });
 
         let editing_disabled_banner = ctx.add_typed_action_view(|_| {
-            Banner::new_without_close(BannerTextContent::plain_text(
-                "Only team admins and the creator of the MCP server can edit the MCP server.",
-            ))
+            Banner::new_without_close(BannerTextContent::plain_text(warp_i18n::t_static!(
+                "settings-mcp-edit-disabled-banner"
+            )))
             .with_icon(Icon::Warning)
         });
 
@@ -314,9 +324,12 @@ impl MCPServersEditPageView {
     fn render_header(&self, app: &AppContext) -> Box<dyn Element> {
         let appearance = Appearance::as_ref(app);
         let title = if self.server_card_item_id.is_none() {
-            "Add New MCP Server".to_string()
+            warp_i18n::t_static!("settings-mcp-edit-add-new-title").to_string()
         } else if let Some(name) = self.server_model.name() {
-            format!("Edit {name} MCP Server")
+            warp_i18n::t!(
+                "settings-mcp-edit-edit-title-named",
+                name = format!("{}", name)
+            )
         } else {
             "Edit MCP Server".to_string()
         };
@@ -490,10 +503,17 @@ impl MCPServersEditPageView {
                 .with_cross_axis_alignment(CrossAxisAlignment::Stretch)
                 .with_child(
                     Container::new(
-                        Container::new(Text::new("JSON", ui_font_family, font_size).finish())
-                            .with_vertical_padding(10.)
-                            .with_horizontal_padding(16.)
+                        Container::new(
+                            Text::new(
+                                warp_i18n::t_static!("settings-mcp-edit-format-json"),
+                                ui_font_family,
+                                font_size,
+                            )
                             .finish(),
+                        )
+                        .with_vertical_padding(10.)
+                        .with_horizontal_padding(16.)
+                        .finish(),
                     )
                     .with_background_color(border_color)
                     .finish(),
@@ -546,12 +566,17 @@ impl MCPServersEditPageView {
             let window_id = ctx.window_id();
             ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
                 toast_stack.add_ephemeral_toast(
-                    DismissibleToast::error("This MCP server contains secrets. Visit Settings > Privacy to modify your secret redaction settings.".to_string()),
+                    DismissibleToast::error(
+                        warp_i18n::t_static!("settings-mcp-edit-error-contains-secrets")
+                            .to_string(),
+                    ),
                     window_id,
                     ctx,
                 );
             });
-            return Err("This MCP server contains secrets. Visit Settings > Privacy to modify your secret redaction settings.".to_string());
+            return Err(
+                warp_i18n::t_static!("settings-mcp-edit-error-contains-secrets").to_string(),
+            );
         }
 
         Ok(())
@@ -606,21 +631,8 @@ impl MCPServersEditPageView {
             let window_id = ctx.window_id();
             ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
                 toast_stack.add_ephemeral_toast(
-                    DismissibleToast::error("No MCP Server specified.".to_string()),
-                    window_id,
-                    ctx,
-                );
-            });
-
-            return Err("No MCP Server specified.".to_string());
-        }
-
-        if parsed_templatable_mcp_servers.len() > 1 {
-            let window_id = ctx.window_id();
-            ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
-                toast_stack.add_ephemeral_toast(
                     DismissibleToast::error(
-                        "Cannot add multiple MCP servers while editing a single server."
+                        warp_i18n::t_static!("settings-mcp-edit-error-no-server-specified")
                             .to_string(),
                     ),
                     window_id,
@@ -629,7 +641,25 @@ impl MCPServersEditPageView {
             });
 
             return Err(
-                "Cannot add multiple MCP servers while editing a single server.".to_string(),
+                warp_i18n::t_static!("settings-mcp-edit-error-no-server-specified").to_string(),
+            );
+        }
+
+        if parsed_templatable_mcp_servers.len() > 1 {
+            let window_id = ctx.window_id();
+            ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
+                toast_stack.add_ephemeral_toast(
+                    DismissibleToast::error(
+                        warp_i18n::t_static!("settings-mcp-edit-error-multiple-servers")
+                            .to_string(),
+                    ),
+                    window_id,
+                    ctx,
+                );
+            });
+
+            return Err(
+                warp_i18n::t_static!("settings-mcp-edit-error-multiple-servers").to_string(),
             );
         }
 
@@ -905,7 +935,12 @@ impl TypedActionView for MCPServersEditPageView {
                         let window_id = ctx.window_id();
                         ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
                             toast_stack.add_ephemeral_toast(
-                                DismissibleToast::error("No MCP Server specified.".to_string()),
+                                DismissibleToast::error(
+                                    warp_i18n::t_static!(
+                                        "settings-mcp-edit-error-no-server-specified"
+                                    )
+                                    .to_string(),
+                                ),
                                 window_id,
                                 ctx,
                             );

@@ -70,7 +70,9 @@ impl View for ViewerRequestBody {
         let cancel_button = appearance
             .ui_builder()
             .button(ButtonVariant::Outlined, self.mouse_state_handle.clone())
-            .with_centered_text_label(String::from("Cancel request"))
+            .with_centered_text_label(String::from(warp_i18n::t_static!(
+                "ui-final-cancel-request"
+            )))
             .with_style(UiComponentStyles {
                 font_size: Some(TEXT_FONT_SIZE),
                 font_weight: Some(Weight::Bold),

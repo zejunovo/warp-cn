@@ -488,21 +488,59 @@ impl Default for TextLayoutSystem {
 
 impl TextLayoutSystem {
     pub fn new() -> Self {
+        let locale = warp_i18n::try_global()
+            .map(|i18n| i18n.current().as_bcp47().to_string())
+            .unwrap_or_else(|| "en".to_string());
+        let db = cosmic_text::fontdb::Database::new();
+
+        #[cfg(target_os = "windows")]
+        let db = {
+            let mut db = db;
+            let fonts_dir = std::env::var_os("WINDIR")
+                .map(PathBuf::from)
+                .unwrap_or_else(|| PathBuf::from("C:\\Windows"))
+                .join("Fonts");
+            // cosmic-text needs Han-capable faces in its database before it can shape CJK fallback.
+            // Prefer the small system-font set over a full scan on every startup.
+            let mut loaded_cjk = false;
+            for filename in ["msyh.ttc", "msyhbd.ttc", "msyhl.ttc", "simsun.ttc"] {
+                if db.load_font_file(fonts_dir.join(filename)).is_ok() {
+                    loaded_cjk = true;
+                }
+            }
+            let _ = db.load_font_file(fonts_dir.join("seguiemj.ttf"));
+            // Emoji alone cannot satisfy Chinese glyphs on stripped/custom Windows images.
+            if !loaded_cjk {
+                db.load_system_fonts();
+            }
+            db
+        };
+
+        let font_system = cosmic_text::FontSystem::new_with_locale_and_db(locale, db);
+        #[cfg(feature = "fontkit-rasterizer")]
+        let mut preloaded_font_ids = Vec::new();
+        let font_id_map = {
+            let mut map = BiMap::new();
+            for face in font_system.db().faces() {
+                let font_id = next_font_id();
+                map.insert(font_id, face.id);
+                // Fallback faces must be registered in both shaping and font-kit rasterization.
+                #[cfg(feature = "fontkit-rasterizer")]
+                preloaded_font_ids.push(font_id);
+            }
+            RwLock::new(map)
+        };
+
         Self {
             families: Default::default(),
-            font_store: RwLock::new(cosmic_text::FontSystem::new_with_locale_and_db(
-                // Locale is needed for font fallback. For now, we hardcode this to "en" to match
-                // our mac implementation https://github.com/warpdotdev/warp-internal/blob/bf33d651a9fcece70df8eac35f89b0393ca5189a/ui/src/platform/mac/fonts.rs#L383.
-                "en".into(),
-                Default::default(),
-            )),
-            font_id_map: Default::default(),
+            font_store: RwLock::new(font_system),
+            font_id_map,
             font_selections: Default::default(),
             loaded_fonts: Default::default(),
             #[cfg(not(target_os = "windows"))]
             fallback_fonts: Default::default(),
             #[cfg(feature = "fontkit-rasterizer")]
-            loaded_font_ids_since_last_raster: Default::default(),
+            loaded_font_ids_since_last_raster: RwLock::new(preloaded_font_ids),
         }
     }
 
@@ -1636,3 +1674,7 @@ impl GlyphIdExt for owned_ttf_parser::GlyphId {
 #[cfg(test)]
 #[path = "text_layout_tests.rs"]
 mod layout_tests;
+
+#[cfg(all(test, target_os = "windows"))]
+#[path = "font_fallback_tests.rs"]
+mod font_fallback_tests;

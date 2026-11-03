@@ -39,7 +39,7 @@ pub struct PrState {
 }
 
 pub(super) fn confirm_label_for() -> &'static str {
-    "Create PR"
+    warp_i18n::t_static!("code-review-git-pr-button-create")
 }
 
 pub(super) fn confirm_icon_for() -> Icon {
@@ -47,7 +47,7 @@ pub(super) fn confirm_icon_for() -> Icon {
 }
 
 fn loading_label_for() -> &'static str {
-    "Creating\u{2026}"
+    warp_i18n::t_static!("code-review-git-pr-loading-label")
 }
 
 /// PR mode has no prerequisites beyond a branch with commits; confirm is
@@ -166,9 +166,13 @@ pub(super) fn show_pr_created_toast(pr_info: &PrInfo, ctx: &mut ViewContext<GitD
     let window_id = ctx.window_id();
     let url = pr_info.url.clone();
     ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
-        let link = ToastLink::new("Open PR".to_string()).with_href(url);
-        let toast =
-            DismissibleToast::default("PR successfully created.".to_string()).with_link(link);
+        let link =
+            ToastLink::new(warp_i18n::t_static!("code-review-git-pr-toast-open-link").to_string())
+                .with_href(url);
+        let toast = DismissibleToast::default(
+            warp_i18n::t_static!("code-review-git-pr-toast-created").to_string(),
+        )
+        .with_link(link);
         toast_stack.add_ephemeral_toast(toast, window_id, ctx);
     });
 }
@@ -198,7 +202,7 @@ fn render_changes_section(state: &PrState, appearance: &Appearance) -> Box<dyn E
     let main_color = theme.main_text_color(theme.surface_1()).into_solid();
 
     let label = Text::new(
-        "Changes",
+        warp_i18n::t_static!("coding-git-changes"),
         appearance.ui_font_family(),
         appearance.ui_font_size(),
     )

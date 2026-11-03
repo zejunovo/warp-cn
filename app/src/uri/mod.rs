@@ -1238,8 +1238,8 @@ impl Action {
             | Self::FocusCloudMode
             | Self::AutoHandoffToCloud { .. } => W::default(),
             Self::NewTab => W::ShowPrimaryWindow(WindowActivationFallbackBehavior::Notify {
-                title: "New tab created".to_owned(),
-                description: "Go to Warp to see your new tab.".to_owned(),
+                title: warp_i18n::t_static!("notification-new-tab-title").to_owned(),
+                description: warp_i18n::t_static!("notification-new-tab-body").to_owned(),
             }),
             Self::NewWindow => W::Nothing,
         }

@@ -188,7 +188,7 @@ impl View for CommandSearchZeroStateView {
 
         let command_search_text = Container::new(
             Text::new_inline(
-                "Command Search",
+                warp_i18n::t_static!("a11y-command-search-label"),
                 appearance.ui_font_family(),
                 styles::header_text_font_size(appearance),
             )
@@ -210,7 +210,7 @@ impl View for CommandSearchZeroStateView {
             .with_child(
                 Container::new(
                     Text::new_inline(
-                        "I'm looking for...",
+                        warp_i18n::t_static!("ui-final-i-m-looking-for"),
                         appearance.ui_font_family(),
                         styles::subheader_text_font_size(appearance),
                     )
@@ -229,7 +229,7 @@ impl View for CommandSearchZeroStateView {
             .with_child(
                 Container::new(
                     Text::new_inline(
-                        "Example queries",
+                        warp_i18n::t_static!("ui-final-example-queries"),
                         appearance.ui_font_family(),
                         styles::subheader_text_font_size(appearance),
                     )

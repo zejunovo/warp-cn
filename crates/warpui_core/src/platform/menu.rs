@@ -18,6 +18,8 @@ pub enum MenuItem {
 pub struct Menu {
     pub title: String,
     pub menu_items: Vec<MenuItem>,
+    // AppKit's system Window menu must remain identifiable after its title is translated.
+    is_window: bool,
 }
 
 impl Menu {
@@ -25,11 +27,20 @@ impl Menu {
         Menu {
             title: title.into(),
             menu_items,
+            is_window: false,
+        }
+    }
+
+    pub fn new_window<S: Into<String>>(title: S, menu_items: Vec<MenuItem>) -> Self {
+        Menu {
+            title: title.into(),
+            menu_items,
+            is_window: true,
         }
     }
 
     pub fn is_window_menu(&self) -> bool {
-        &self.title == "Window"
+        self.is_window
     }
 }
 
@@ -95,6 +106,10 @@ impl MenuItemPropertyChanges {
         }
     }
 }
+
+#[cfg(test)]
+#[path = "menu_tests.rs"]
+mod tests;
 
 pub type ItemTriggeredCallback = Box<dyn Fn(&mut AppContext)>;
 

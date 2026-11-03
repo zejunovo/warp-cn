@@ -553,9 +553,13 @@ fn render_new_environment_footer<A: OrchestrationControlAction>(
                         .finish(),
                 )
                 .with_child(
-                    Text::new_inline("New environment", font_family, font_size)
-                        .with_color(text_color.into())
-                        .finish(),
+                    Text::new_inline(
+                        warp_i18n::t_static!("settings-environments-new-button"),
+                        font_family,
+                        font_size,
+                    )
+                    .with_color(text_color.into())
+                    .finish(),
                 )
                 .finish(),
         )
@@ -685,9 +689,10 @@ pub fn populate_auth_secret_picker_for_harness<A: OrchestrationControlAction, V:
         if supports_create_new {
             items.push(MenuItem::Separator);
             items.push(MenuItem::Item(
-                MenuItemFields::new(AUTH_SECRET_CREATE_NEW_LABEL).with_on_select_action(
-                    DropdownAction::select_action_and_close(A::create_new_auth_secret_requested()),
-                ),
+                MenuItemFields::new(warp_i18n::t_static!("ui-final-new-api-key"))
+                    .with_on_select_action(DropdownAction::select_action_and_close(
+                        A::create_new_auth_secret_requested(),
+                    )),
             ));
         }
         let final_selection =
@@ -1074,7 +1079,7 @@ pub fn render_mode_toggle<A: OrchestrationControlAction>(
 ) -> Box<dyn Element> {
     let theme = appearance.theme();
     let label = Text::new(
-        "Agent location".to_string(),
+        warp_i18n::t_static!("ai-ui-orchestration-agent-location").to_string(),
         appearance.ui_font_family(),
         appearance.monospace_font_size() - 1.,
     )

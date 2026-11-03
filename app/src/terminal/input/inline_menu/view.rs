@@ -1011,9 +1011,12 @@ impl<A: InlineMenuAction, T: 'static + Send + Sync> View for InlineMenuView<A, T
         let content: Box<dyn Element>;
         if self.result_renderers.is_empty() {
             content = if self.mixer.as_ref(app).is_loading() {
-                self.render_no_results_state("Loading...".into(), app)
+                self.render_no_results_state(warp_i18n::t_static!("misc-loading").into(), app)
             } else {
-                self.render_no_results_state("No results".into(), app)
+                self.render_no_results_state(
+                    warp_i18n::t_static!("terminal-no-results").into(),
+                    app,
+                )
             };
         } else {
             let results_list = self.render_results_list(app);

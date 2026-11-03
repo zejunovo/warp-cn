@@ -481,7 +481,13 @@ impl Input {
         if command.availability.contains(Availability::AI_ENABLED)
             && !AISettings::as_ref(ctx).is_any_ai_enabled(ctx)
         {
-            show_error_toast(format!("{} requires AI to be enabled", command.name), ctx);
+            show_error_toast(
+                warp_i18n::t!(
+                    "error-slash-command-requires-ai",
+                    command = format!("{}", command.name)
+                ),
+                ctx,
+            );
             return true;
         }
 
@@ -547,9 +553,9 @@ impl Input {
                 {
                     self.ephemeral_message_model.update(ctx, |model, ctx| {
                         let appearance = Appearance::handle(ctx).as_ref(ctx);
-                        let message = Message::from_text(
-                            "cannot start new conversation while terminal command is running",
-                        )
+                        let message = Message::from_text(warp_i18n::t_static!(
+                            "error-cannot-start-conversation-terminal-running"
+                        ))
                         .with_text_color(appearance.theme().ansi_fg_red());
                         model.show_ephemeral_message(
                             EphemeralMessage::new(
@@ -634,7 +640,7 @@ impl Input {
                     .filter(|name| !name.is_empty())
                 else {
                     show_error_toast(
-                        "Please provide a tab name after /rename-tab".to_owned(),
+                        warp_i18n::t_static!("error-rename-tab-missing-name").to_owned(),
                         ctx,
                     );
                     return true;
@@ -720,8 +726,7 @@ impl Input {
             SlashCommandKind::CreateNewProject => {
                 if argument.is_none_or(|args| args.is_empty()) {
                     show_error_toast(
-                        "Please describe the project you want to create after /create-new-project"
-                            .to_owned(),
+                        warp_i18n::t_static!("error-create-project-missing-description").to_owned(),
                         ctx,
                     );
                     return true;
@@ -747,7 +752,7 @@ impl Input {
                             ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
                                 toast_stack.add_ephemeral_toast(
                                     DismissibleToast::error(
-                                        "The /open-file command is only available for local sessions"
+                                        warp_i18n::t_static!("error-open-file-local-only")
                                             .to_owned(),
                                     ),
                                     window_id,
@@ -782,15 +787,17 @@ impl Input {
                             }
                             Ok(_) => {
                                 show_error_toast(
-                                    "The /open-file command only works for files, not directories"
-                                        .to_owned(),
+                                    warp_i18n::t_static!("error-open-file-files-only").to_owned(),
                                     ctx,
                                 );
                                 return true;
                             }
                             Err(_) => {
                                 show_error_toast(
-                                    format!("File not found: {}", file_path.display()),
+                                    warp_i18n::t!(
+                                        "error-open-file-not-found",
+                                        path = format!("{}", file_path.display())
+                                    ),
                                     ctx,
                                 );
                                 return true;
@@ -808,7 +815,7 @@ impl Input {
                 #[cfg(not(feature = "local_fs"))]
                 {
                     show_error_toast(
-                        "The /open-file command is not supported in this build".to_owned(),
+                        warp_i18n::t_static!("error-open-file-unsupported-build").to_owned(),
                         ctx,
                     );
                     return true;
@@ -820,7 +827,10 @@ impl Input {
                     .as_ref(ctx)
                     .active_conversation(self.terminal_view_id)
                 else {
-                    show_error_toast("No active conversation to export".to_owned(), ctx);
+                    show_error_toast(
+                        warp_i18n::t_static!("error-no-active-conversation").to_owned(),
+                        ctx,
+                    );
                     return true;
                 };
 
@@ -833,9 +843,9 @@ impl Input {
                 // Show a toast to confirm the export
                 let window_id = ctx.window_id();
                 ToastStack::handle(ctx).update(ctx, |toast_stack, ctx| {
-                    let toast = DismissibleToast::default(String::from(
-                        "Conversation exported to clipboard",
-                    ));
+                    let toast = DismissibleToast::default(String::from(warp_i18n::t_static!(
+                        "notification-conversation-exported-to-clipboard"
+                    )));
                     toast_stack.add_ephemeral_toast(toast, window_id, ctx);
                 });
             }
@@ -882,7 +892,8 @@ impl Input {
                 #[cfg(target_family = "wasm")]
                 {
                     show_error_toast(
-                        "Export conversation to file unsupported in web".to_owned(),
+                        warp_i18n::t_static!("error-export-conversation-file-unsupported-web")
+                            .to_owned(),
                         ctx,
                     );
                     return true;
@@ -1047,7 +1058,10 @@ impl Input {
                     .shared_session_status()
                     .is_sharer_or_viewer()
                 {
-                    show_error_toast("Session is already being shared".to_owned(), ctx);
+                    show_error_toast(
+                        warp_i18n::t_static!("error-session-already-shared").to_owned(),
+                        ctx,
+                    );
                     return true;
                 }
                 ctx.emit(Event::StartRemoteControl);
@@ -1059,17 +1073,19 @@ impl Input {
                     .active_conversation(self.terminal_view_id);
                 if conversation.is_none() {
                     show_error_toast(
-                        "Cannot show conversation cost: no active conversation".to_owned(),
+                        warp_i18n::t_static!("error-conversation-cost-no-active-conversation")
+                            .to_owned(),
                         ctx,
                     );
                 } else if conversation.is_some_and(|c| c.is_empty()) {
                     show_error_toast(
-                        "Cannot show conversation cost: conversation is empty".to_owned(),
+                        warp_i18n::t_static!("error-conversation-cost-empty-conversation")
+                            .to_owned(),
                         ctx,
                     );
                 } else if conversation.is_some_and(|c| !c.status().is_done()) {
                     show_error_toast(
-                        "Cannot show conversation cost: conversation is in progress".to_owned(),
+                        warp_i18n::t_static!("error-conversation-cost-in-progress").to_owned(),
                         ctx,
                     );
                 } else {
@@ -1131,7 +1147,10 @@ impl Input {
                     .as_ref(ctx)
                     .selected_conversation_id(ctx)
                 else {
-                    show_error_toast("/fork requires an active conversation".to_owned(), ctx);
+                    show_error_toast(
+                        warp_i18n::t_static!("error-fork-requires-active-conversation").to_owned(),
+                        ctx,
+                    );
                     return true;
                 };
 
@@ -1214,7 +1233,8 @@ impl Input {
                     .selected_conversation_id(ctx)
                 else {
                     show_error_toast(
-                        "/fork-and-compact requires an active conversation".to_owned(),
+                        warp_i18n::t_static!("error-fork-and-compact-requires-active-conversation")
+                            .to_owned(),
                         ctx,
                     );
                     return true;
@@ -1247,7 +1267,8 @@ impl Input {
                         .selected_conversation_id(ctx)
                     else {
                         show_error_toast(
-                            "/compact-and requires an active conversation".to_owned(),
+                            warp_i18n::t_static!("error-compact-and-requires-active-conversation")
+                                .to_owned(),
                             ctx,
                         );
                         return true;
@@ -1280,12 +1301,18 @@ impl Input {
                     .as_ref(ctx)
                     .selected_conversation_id(ctx)
                 else {
-                    show_error_toast("/queue requires an active conversation".to_owned(), ctx);
+                    show_error_toast(
+                        warp_i18n::t_static!("error-queue-requires-active-conversation").to_owned(),
+                        ctx,
+                    );
                     return true;
                 };
 
                 let Some(prompt) = argument.filter(|a| !a.is_empty()).cloned() else {
-                    show_error_toast("/queue requires a prompt argument".to_owned(), ctx);
+                    show_error_toast(
+                        warp_i18n::t_static!("error-queue-requires-prompt").to_owned(),
+                        ctx,
+                    );
                     return true;
                 };
 

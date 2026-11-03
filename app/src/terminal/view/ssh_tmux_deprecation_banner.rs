@@ -20,11 +20,6 @@ use crate::terminal::model::session::SessionId;
 use crate::terminal::warpify::render::SSH_DOCS_URL;
 use crate::ui_components::icons::Icon;
 
-const BANNER_TITLE: &str = "Tmux SSH warpification has been deprecated";
-
-const BANNER_BODY: &str = "Warp now connects to remote sessions using the SSH extension, which is \
-    more robust than the tmux-based flow. The tmux option has been removed.";
-
 const LEARN_MORE_LABEL: &str = "Learn more";
 
 #[derive(Clone, Debug)]
@@ -87,7 +82,7 @@ impl View for SshTmuxDeprecationBanner {
         .finish();
 
         let title = Text::new(
-            BANNER_TITLE.to_string(),
+            warp_i18n::t_static!("ui-final-tmux-ssh-warpification-has-been-deprecated").to_string(),
             appearance.ui_font_family(),
             font_size,
         )
@@ -95,7 +90,7 @@ impl View for SshTmuxDeprecationBanner {
         .finish();
 
         let body = Text::new(
-            BANNER_BODY.to_string(),
+            warp_i18n::t_static!("ui-final-warp-now-connects-to-remote-sessions-using-the-ssh-extension-which-is-more-robust-than-the").to_string(),
             appearance.ui_font_family(),
             small_font_size,
         )

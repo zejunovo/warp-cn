@@ -93,29 +93,31 @@ impl LoginPurpose {
     fn copy(self) -> (&'static str, &'static str) {
         match self {
             LoginPurpose::WarpDrive => (
-                "Get started with Warp Drive",
-                "Connect your account to save and share notebooks, workflows, and more across devices.",
+                warp_i18n::t_static!("onboarding-login-title-drive"),
+                warp_i18n::t_static!("onboarding-login-subtitle-drive"),
             ),
             LoginPurpose::WarpAgent => (
-                "Get started with AI",
-                "Connect your account to enable AI-powered planning, coding, and automation.",
+                warp_i18n::t_static!("onboarding-login-title-ai"),
+                warp_i18n::t_static!("onboarding-login-subtitle-ai"),
             ),
             LoginPurpose::ThirdParty => (
-                "Create an account",
-                "Create a Warp account to enable AI-powered planning, coding, and automations.",
+                warp_i18n::t_static!("onboarding-login-title-third-party"),
+                warp_i18n::t_static!("onboarding-login-subtitle-third-party"),
             ),
             LoginPurpose::AccountFirst => (
-                "Create an account",
-                "Access AI, run cloud agents, collaborate with teammates, and sync settings across devices.",
+                warp_i18n::t_static!("onboarding-login-title-third-party"),
+                warp_i18n::t_static!("onboarding-account-first-description"),
             ),
         }
     }
 
     fn work_email_callout_copy(self) -> Option<(&'static str, &'static str)> {
-        matches!(self, LoginPurpose::AccountFirst).then_some((
-            "Use a work email to find teammates",
-            "Signing in with a work email helps us find your teammates and may unlock special offers.",
-        ))
+        matches!(self, LoginPurpose::AccountFirst).then(|| {
+            (
+                warp_i18n::t_static!("onboarding-account-first-work-email-title"),
+                warp_i18n::t_static!("onboarding-account-first-work-email-description"),
+            )
+        })
     }
 }
 
@@ -351,7 +353,10 @@ impl LoginSlideView {
                 },
                 ctx,
             );
-            editor.set_placeholder_text("Auth Token", ctx);
+            editor.set_placeholder_text(
+                warp_i18n::t_static!("onboarding-login-browser-token-input-placeholder"),
+                ctx,
+            );
             editor
         });
 
@@ -585,9 +590,11 @@ impl LoginSlideView {
     /// Terminal+Drive), since there are no AI features to opt out of there.
     fn privacy_disclaimer_prefix(&self) -> &'static str {
         if self.ai_enabled {
-            "If you'd like to opt out of analytics and AI features, you can adjust your "
+            warp_i18n::t_static!("onboarding-account-first-privacy-ai")
         } else {
-            "If you'd like to opt out of analytics, you can adjust your "
+            warp_i18n::t_static!(
+                "ui-final-if-you-d-like-to-opt-out-of-analytics-you-can-adjust-your"
+            )
         }
     }
 
@@ -641,7 +648,9 @@ impl LoginSlideView {
         let tos_line = Flex::row()
             .with_child(
                 ui_builder
-                    .span("By continuing, you agree to Warp's ")
+                    .span(warp_i18n::t_static!(
+                        "ui-final-by-continuing-you-agree-to-warp-s"
+                    ))
                     .with_style(disclaimer_styles)
                     .build()
                     .finish(),
@@ -649,7 +658,7 @@ impl LoginSlideView {
             .with_child(
                 ui_builder
                     .link(
-                        "Terms of Service".into(),
+                        warp_i18n::t_static!("onboarding-login-disclaimer-tos-link").into(),
                         Some(TOS_URL.into()),
                         None,
                         self.tos_mouse_state.clone(),
@@ -675,7 +684,7 @@ impl LoginSlideView {
             .with_child(
                 ui_builder
                     .link(
-                        "Privacy Settings".into(),
+                        warp_i18n::t_static!("onboarding-login-disclaimer-privacy-link").into(),
                         None,
                         Some(Box::new(|ctx| {
                             ctx.dispatch_typed_action(LoginSlideAction::ShowPrivacySettings);
@@ -783,7 +792,7 @@ impl LoginSlideView {
         let back_button = self.back_button.render(
             appearance,
             button::Params {
-                content: button::Content::Label("Back".into()),
+                content: button::Content::Label(warp_i18n::t_static!("onboarding-nav-back").into()),
                 theme: &button::themes::Naked,
                 options: button::Options {
                     on_click: Some(Box::new(|ctx, _app, _pos| {
@@ -796,10 +805,10 @@ impl LoginSlideView {
 
         let cmd_enter = Keystroke::parse("cmdorctrl-enter").unwrap_or_default();
         let skip_label = match self.login_purpose() {
-            LoginPurpose::WarpDrive => "Disable Warp Drive",
-            LoginPurpose::WarpAgent => "Skip for now",
-            LoginPurpose::ThirdParty => "Skip for now",
-            LoginPurpose::AccountFirst => "Skip",
+            LoginPurpose::WarpDrive => warp_i18n::t_static!("onboarding-login-skip-disable-drive"),
+            LoginPurpose::WarpAgent => warp_i18n::t_static!("onboarding-login-skip-for-now"),
+            LoginPurpose::ThirdParty => warp_i18n::t_static!("onboarding-login-skip-for-now"),
+            LoginPurpose::AccountFirst => warp_i18n::t_static!("onboarding-project-skip"),
         };
         let skip_keystroke = if matches!(self.login_purpose(), LoginPurpose::AccountFirst) {
             None
@@ -825,7 +834,9 @@ impl LoginSlideView {
         let login_button = self.login_button.render(
             appearance,
             button::Params {
-                content: button::Content::Label("Continue".into()),
+                content: button::Content::Label(
+                    warp_i18n::t_static!("onboarding-login-button-continue").into(),
+                ),
                 theme: &button::themes::Primary,
                 options: button::Options {
                     keystroke: Some(enter),
@@ -875,7 +886,7 @@ impl LoginSlideView {
         };
 
         let title = FormattedTextElement::from_str(
-            "Sign in on your browser to continue",
+            warp_i18n::t_static!("onboarding-login-browser-title"),
             appearance.ui_font_family(),
             36.,
         )
@@ -892,7 +903,9 @@ impl LoginSlideView {
                 Flex::row()
                     .with_child(
                         ui_builder
-                            .span("If your browser hasn't launched, ")
+                            .span(warp_i18n::t_static!(
+                                "ui-final-if-your-browser-hasn-t-launched"
+                            ))
                             .with_style(sub_text_styles)
                             .build()
                             .finish(),
@@ -900,7 +913,8 @@ impl LoginSlideView {
                     .with_child(
                         ui_builder
                             .link(
-                                "copy the URL".into(),
+                                warp_i18n::t_static!("onboarding-login-browser-hint-link-copy")
+                                    .into(),
                                 None,
                                 Some(Box::new(|ctx| {
                                     ctx.dispatch_typed_action(LoginSlideAction::CopyLoginUrl);
@@ -913,7 +927,7 @@ impl LoginSlideView {
                     )
                     .with_child(
                         ui_builder
-                            .span(" and open")
+                            .span(warp_i18n::t_static!("ui-final-and-open"))
                             .with_style(sub_text_styles)
                             .build()
                             .finish(),
@@ -922,7 +936,7 @@ impl LoginSlideView {
             )
             .with_child(
                 ui_builder
-                    .span("the page manually.")
+                    .span(warp_i18n::t_static!("ui-final-the-page-manually"))
                     .with_style(sub_text_styles)
                     .build()
                     .finish(),
@@ -976,7 +990,7 @@ impl LoginSlideView {
                 .with_child(
                     ui_builder
                         .link(
-                            "Click here to paste your token from the browser".into(),
+                            warp_i18n::t_static!("onboarding-login-browser-token-link").into(),
                             None,
                             Some(Box::new(|ctx| {
                                 ctx.dispatch_typed_action(LoginSlideAction::EnterToken);
@@ -1005,7 +1019,7 @@ impl LoginSlideView {
         let back_button = self.browser_back_button.render(
             appearance,
             button::Params {
-                content: button::Content::Label("Back".into()),
+                content: button::Content::Label(warp_i18n::t_static!("onboarding-nav-back").into()),
                 theme: &button::themes::Naked,
                 options: button::Options {
                     on_click: Some(Box::new(|ctx, _app, _pos| {
@@ -1037,15 +1051,18 @@ impl LoginSlideView {
     ) -> Vec<Box<dyn Element>> {
         let theme = appearance.theme();
 
-        let title =
-            FormattedTextElement::from_str("Privacy Settings", appearance.ui_font_family(), 36.)
-                .with_color(internal_colors::text_main(
-                    theme,
-                    theme.background().into_solid(),
-                ))
-                .with_weight(Weight::Medium)
-                .with_alignment(TextAlignment::Left)
-                .finish();
+        let title = FormattedTextElement::from_str(
+            warp_i18n::t_static!("onboarding-login-privacy-title"),
+            appearance.ui_font_family(),
+            36.,
+        )
+        .with_color(internal_colors::text_main(
+            theme,
+            theme.background().into_solid(),
+        ))
+        .with_weight(Weight::Medium)
+        .with_alignment(TextAlignment::Left)
+        .finish();
 
         let actions = PrivacySettingsActions {
             toggle_telemetry: LoginSlideAction::ToggleTelemetry,
@@ -1069,7 +1086,7 @@ impl LoginSlideView {
         let back_button = self.done_button.render(
             appearance,
             button::Params {
-                content: button::Content::Label("Back".into()),
+                content: button::Content::Label(warp_i18n::t_static!("onboarding-nav-back").into()),
                 theme: &button::themes::Naked,
                 options: button::Options {
                     on_click: Some(Box::new(|ctx, _app, _pos| {
@@ -1107,16 +1124,16 @@ impl LoginSlideView {
             &'static str,
         ) = match self.login_purpose() {
             LoginPurpose::WarpDrive => (
-                "Are you sure you want to disable Warp Drive?",
-                "Warp Drive lets you save workflows and knowledge across devices and share them with your team. By continuing, you won't have access to the following features:",
-                WARP_DRIVE_FEATURES,
-                "Enable Warp Drive",
+                warp_i18n::t_static!("onboarding-login-skip-dialog-title-drive"),
+                warp_i18n::t_static!("onboarding-login-skip-dialog-body-drive"),
+                WARP_DRIVE_FEATURES.as_slice(),
+                warp_i18n::t_static!("onboarding-login-skip-dialog-cancel-drive"),
             ),
             LoginPurpose::WarpAgent | LoginPurpose::ThirdParty | LoginPurpose::AccountFirst => (
-                "Continue without signing in?",
-                "Without an account, you won't have access to Warp's AI features. Sign in anytime to unlock agents and other AI features.",
+                warp_i18n::t_static!("onboarding-login-skip-dialog-title-ai"),
+                warp_i18n::t_static!("onboarding-login-skip-dialog-body-ai"),
                 &[],
-                "Sign in",
+                warp_i18n::t_static!("onboarding-login-skip-dialog-cancel-ai"),
             ),
         };
 
@@ -1155,7 +1172,9 @@ impl LoginSlideView {
         let confirm_button = self.dialog_skip_button.render(
             appearance,
             button::Params {
-                content: button::Content::Label("Skip for now".into()),
+                content: button::Content::Label(
+                    warp_i18n::t_static!("onboarding-login-skip-dialog-confirm").into(),
+                ),
                 theme: &button::themes::Primary,
                 options: button::Options {
                     keystroke: Some(dialog_enter),

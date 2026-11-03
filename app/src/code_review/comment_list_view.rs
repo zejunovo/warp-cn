@@ -213,18 +213,21 @@ impl CommentListView {
         });
 
         let send_button = ctx.add_view(|ctx| {
-            ActionButton::new("Send to Agent", PrimaryTheme)
-                .with_size(ButtonSize::Small)
-                .with_keybinding(
-                    KeystrokeSource::Fixed(
-                        Keystroke::parse(crate::code_review::CODE_REVIEW_SUBMIT_KEYSTROKE)
-                            .unwrap_or_default(),
-                    ),
-                    ctx,
-                )
-                .on_click(|ctx| {
-                    ctx.dispatch_typed_action(CommentListAction::Submit);
-                })
+            ActionButton::new(
+                warp_i18n::t_static!("code-review-comment-list-send-to-agent-button"),
+                PrimaryTheme,
+            )
+            .with_size(ButtonSize::Small)
+            .with_keybinding(
+                KeystrokeSource::Fixed(
+                    Keystroke::parse(crate::code_review::CODE_REVIEW_SUBMIT_KEYSTROKE)
+                        .unwrap_or_default(),
+                ),
+                ctx,
+            )
+            .on_click(|ctx| {
+                ctx.dispatch_typed_action(CommentListAction::Submit);
+            })
         });
 
         ctx.subscribe_to_view(&menu, |me, _, event, ctx| match event {
@@ -900,7 +903,9 @@ impl CommentListView {
                     ButtonVariant::Text,
                     self.view_state.cancel_button_mouse_state.clone(),
                 )
-                .with_text_label("Cancel".to_string())
+                .with_text_label(
+                    warp_i18n::t_static!("code-review-comment-list-cancel").to_string(),
+                )
                 .build()
                 .finish(),
         )
@@ -966,20 +971,33 @@ impl CommentListView {
     ) -> Cow<'static, str> {
         if let ReviewDestination::Cli(agent) = destination {
             if !has_sendable_comments {
-                Cow::Borrowed("No non-outdated comments to send")
+                Cow::Borrowed(warp_i18n::t_static!(
+                    "code-review-comment-list-no-non-outdated"
+                ))
             } else {
-                Cow::Owned(format!("Send diff comments to {}", agent.display_name()))
+                Cow::Owned(warp_i18n::t!(
+                    "code-review-comment-list-send-to-cli-tooltip",
+                    label = format!("{}", agent.display_name())
+                ))
             }
         } else if !ai_enabled {
-            Cow::Borrowed("AI must be enabled to send comments to Agent")
+            Cow::Borrowed(warp_i18n::t_static!("code-review-comment-list-ai-disabled"))
         } else if !ai_available {
-            Cow::Borrowed("Agent code review requires AI credits")
+            Cow::Borrowed(warp_i18n::t_static!(
+                "code-review-comment-list-ai-credits-required"
+            ))
         } else if matches!(destination, ReviewDestination::None) {
-            Cow::Borrowed("All terminals are busy")
+            Cow::Borrowed(warp_i18n::t_static!(
+                "code-review-comment-list-all-terminals-busy"
+            ))
         } else if !has_sendable_comments {
-            Cow::Borrowed("No non-outdated comments to send")
+            Cow::Borrowed(warp_i18n::t_static!(
+                "code-review-comment-list-no-non-outdated"
+            ))
         } else {
-            Cow::Borrowed("Send diff comments to Agent")
+            Cow::Borrowed(warp_i18n::t_static!(
+                "code-review-comment-list-send-to-agent-tooltip"
+            ))
         }
     }
 
@@ -1062,13 +1080,15 @@ impl CommentListView {
         appearance: &Appearance,
     ) -> Vec<MenuItem<CommentListAction>> {
         let mut items = vec![
-            MenuItemFields::new("Copy text")
-                .with_icon(Icon::Copy)
-                .with_on_select_action(CommentListAction::CopyCommentText)
-                .into_item(),
+            MenuItemFields::new(warp_i18n::t_static!(
+                "code-review-comment-list-menu-copy-text"
+            ))
+            .with_icon(Icon::Copy)
+            .with_on_select_action(CommentListAction::CopyCommentText)
+            .into_item(),
         ];
 
-        let mut edit_item = MenuItemFields::new("Edit")
+        let mut edit_item = MenuItemFields::new(warp_i18n::t_static!("menu-app-edit"))
             .with_icon(Icon::Pencil)
             .with_on_select_action(CommentListAction::EditComment);
         if is_file_level || is_outdated {
@@ -1083,17 +1103,19 @@ impl CommentListView {
 
         if let Some(url) = html_url {
             items.push(
-                MenuItemFields::new("View in GitHub")
-                    .with_icon(Icon::Github)
-                    .with_on_select_action(CommentListAction::ViewInGitHub {
-                        url: url.to_string(),
-                    })
-                    .into_item(),
+                MenuItemFields::new(warp_i18n::t_static!(
+                    "code-review-comment-list-menu-view-in-github"
+                ))
+                .with_icon(Icon::Github)
+                .with_on_select_action(CommentListAction::ViewInGitHub {
+                    url: url.to_string(),
+                })
+                .into_item(),
             );
         }
 
         items.push(
-            MenuItemFields::new("Remove")
+            MenuItemFields::new(warp_i18n::t_static!("code-review-comment-list-menu-remove"))
                 .with_icon(Icon::Trash)
                 .with_override_text_color(Fill::Solid(appearance.theme().ansi_fg_red()))
                 .with_override_icon_color(Fill::Solid(appearance.theme().ansi_fg_red()))

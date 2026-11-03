@@ -122,28 +122,33 @@ impl CliAgentPluginManager for GeminiPluginManager {
     }
 }
 
+// Localized slices cannot be const-promoted, so each LazyLock allocates them once.
 static INSTALL_INSTRUCTIONS: LazyLock<PluginInstructions> = LazyLock::new(|| PluginInstructions {
-    title: "Install Warp Plugin for Gemini CLI",
-    subtitle: "Run the following command, then restart Gemini CLI.",
-    steps: &[PluginInstructionStep {
-        description: "Install the Warp extension",
+    title: warp_i18n::t_static!("terminal-plugin-gemini-install-title"),
+    subtitle: warp_i18n::t_static!("terminal-plugin-gemini-command-then-restart"),
+    steps: Box::leak(Box::new([PluginInstructionStep {
+        description: warp_i18n::t_static!("terminal-plugin-install-warp-extension"),
         command: "gemini extensions install https://github.com/warpdotdev/gemini-cli-warp --consent",
         executable: true,
         link: None,
-    }],
-    post_install_notes: &["Restart Gemini CLI to activate the plugin."],
+    }])),
+    post_install_notes: Box::leak(Box::new([warp_i18n::t_static!(
+        "terminal-plugin-gemini-restart-activate"
+    )])),
 });
 
 static UPDATE_INSTRUCTIONS: LazyLock<PluginInstructions> = LazyLock::new(|| PluginInstructions {
-    title: "Update Warp Plugin for Gemini CLI",
-    subtitle: "Run the following command, then restart Gemini CLI.",
-    steps: &[PluginInstructionStep {
-        description: "Update the Warp extension",
+    title: warp_i18n::t_static!("terminal-plugin-gemini-update-title"),
+    subtitle: warp_i18n::t_static!("terminal-plugin-gemini-command-then-restart"),
+    steps: Box::leak(Box::new([PluginInstructionStep {
+        description: warp_i18n::t_static!("terminal-plugin-update-warp-extension"),
         command: "gemini extensions update gemini-warp",
         executable: true,
         link: None,
-    }],
-    post_install_notes: &["Restart Gemini CLI to activate the update."],
+    }])),
+    post_install_notes: Box::leak(Box::new([warp_i18n::t_static!(
+        "terminal-plugin-gemini-restart-activate-update"
+    )])),
 });
 
 fn check_installed(extensions_dir: &Path) -> bool {

@@ -162,7 +162,7 @@ pub fn init(app: &mut AppContext) {
         FixedBinding::custom(
             CustomAction::Copy,
             ShareBlockModalAction::CopyLink,
-            "Copy",
+            warp_i18n::t_static!("terminal-copy"),
             id!(ShareBlockModal::ui_name()),
         ),
         FixedBinding::new(
@@ -764,7 +764,9 @@ impl ShareBlockModal {
                     .manage_permalinks_mouse_state
                     .clone(),
             )
-            .with_centered_text_label("Manage shared blocks".to_string())
+            .with_centered_text_label(
+                warp_i18n::t_static!("ui-final-manage-shared-blocks").to_string(),
+            )
             .with_style(
                 self.button_style_overrides(appearance)
                     .set_font_size(12.)
@@ -796,7 +798,7 @@ impl ShareBlockModal {
     ) -> Box<dyn Element> {
         let text_and_icon = TextAndIcon::new(
             TextAndIconAlignment::TextFirst,
-            "Copy".to_string(),
+            warp_i18n::t_static!("terminal-copy").to_string(),
             Icon::Copy.to_warpui_icon(appearance.theme().active_ui_text_color()),
             MainAxisSize::Max,
             MainAxisAlignment::Center,
@@ -870,7 +872,7 @@ impl ShareBlockModal {
             if link_generated {
                 self.block_title_editor.as_ref(app).buffer_text(app)
             } else {
-                "Share block".to_string()
+                warp_i18n::t_static!("terminal-share-block").to_string()
             },
             appearance.ui_font_family(),
             24.,
@@ -958,7 +960,7 @@ impl ShareBlockModal {
                 .finish();
             let show_prompt_description = appearance
                 .ui_builder()
-                .span("Show prompt".to_string())
+                .span(warp_i18n::t_static!("ui-final-show-prompt").to_string())
                 .build()
                 .with_margin_left(2.)
                 .finish();
@@ -1059,7 +1061,12 @@ impl ShareBlockModal {
 
             let redact_secrets_description = appearance
                 .ui_builder()
-                .span("Redact secrets (API keys, passwords, IP addresses, PII etc.)".to_string())
+                .span(
+                    warp_i18n::t_static!(
+                        "ui-final-redact-secrets-api-keys-passwords-ip-addresses-pii-etc"
+                    )
+                    .to_string(),
+                )
                 .build()
                 .with_margin_left(4.)
                 .finish();

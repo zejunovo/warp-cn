@@ -778,6 +778,8 @@ fn apply_scroll_multiplier(event: &mut Event, app: &AppContext) {
 /// parser and therefore do not require a separate mode flag.
 #[::tracing::instrument(skip_all, fields(tags.cloud_agent = true))]
 pub fn run() -> Result<()> {
+    warp_i18n::init(warp_i18n::Locale::DEFAULT)?;
+
     // Perform any necessary platform-specific initialization.
     platform::init();
 

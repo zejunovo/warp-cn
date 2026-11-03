@@ -34,6 +34,7 @@ test-util = ["warpui_core/test-util"]
 experimental-wgpu-renderer = ["dep:wgpu", "dep:bytemuck", "dep:version-compare"]
 
 [dependencies]
+warp_i18n.workspace = true
 warp_errors.workspace = true
 async-task.workspace = true
 anyhow.workspace = true

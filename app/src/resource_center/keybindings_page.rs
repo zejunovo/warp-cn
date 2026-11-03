@@ -90,7 +90,7 @@ impl KeybindingsView {
 
         search_editor.update(ctx, |editor, ctx| {
             editor.clear_buffer_and_reset_undo_stack(ctx);
-            editor.set_placeholder_text(settings_view::keybindings::SEARCH_PLACEHOLDER, ctx);
+            editor.set_placeholder_text(settings_view::keybindings::search_placeholder(), ctx);
         });
 
         let search_bar = {
@@ -346,7 +346,11 @@ impl KeybindingsView {
                         .build()
                         .finish(),
                 )
-                .with_child(self.render_text("To toggle this panel".into(), None, appearance))
+                .with_child(self.render_text(
+                    warp_i18n::t_static!("resource-center-keybindings-toggle-hint").into(),
+                    None,
+                    appearance,
+                ))
                 .with_cross_axis_alignment(CrossAxisAlignment::Center)
                 .finish();
 
@@ -361,7 +365,7 @@ impl KeybindingsView {
             appearance
                 .ui_builder()
                 .link(
-                    "here.".into(),
+                    warp_i18n::t_static!("resource-center-keybindings-settings-link").into(),
                     None,
                     Some(Box::new(|ctx| {
                         ctx.dispatch_typed_action(WorkspaceAction::ConfigureKeybindingSettings {
@@ -384,7 +388,7 @@ impl KeybindingsView {
         Container::new(
             column
                 .with_child(self.render_text(
-                    "Go to settings > keyboard shortcuts to configure custom keybindings".into(),
+                    warp_i18n::t_static!("resource-center-keybindings-configure-message").into(),
                     None,
                     appearance,
                 ))
@@ -412,11 +416,21 @@ impl KeybindingsView {
             Flex::column().with_cross_axis_alignment(CrossAxisAlignment::Stretch);
 
         let title = match section {
-            KeybindingSection::Essentials => "Essentials",
-            KeybindingSection::Blocks => "Blocks",
-            KeybindingSection::InputEditor => "Input Editor",
-            KeybindingSection::Terminal => "Terminal",
-            KeybindingSection::Fundamentals => "Fundamentals",
+            KeybindingSection::Essentials => {
+                warp_i18n::t_static!("resource-center-keybindings-section-essentials")
+            }
+            KeybindingSection::Blocks => {
+                warp_i18n::t_static!("resource-center-keybindings-section-blocks")
+            }
+            KeybindingSection::InputEditor => {
+                warp_i18n::t_static!("resource-center-keybindings-section-input-editor")
+            }
+            KeybindingSection::Terminal => {
+                warp_i18n::t_static!("resource-center-keybindings-section-terminal")
+            }
+            KeybindingSection::Fundamentals => {
+                warp_i18n::t_static!("resource-center-keybindings-section-fundamentals")
+            }
         };
 
         let mut section_header = self.render_text(

@@ -177,7 +177,7 @@ impl NodeVersionPopupView {
 
         col.add_child(
             Text::new(
-                "Install nvm to enable version switching",
+                warp_i18n::t_static!("misc-node-install-nvm"),
                 styles.ui_font_family,
                 styles.detail_font_size + 2.,
             )
@@ -189,7 +189,7 @@ impl NodeVersionPopupView {
         col.add_child(
             Container::new(
                 Text::new(
-                    "This menu helps you switch between Node.js versions — but it requires nvm to be installed.",
+                    warp_i18n::t_static!("misc-node-nvm-required"),
                     styles.ui_font_family,
                     styles.detail_font_size,
                 )
@@ -238,7 +238,7 @@ impl NodeVersionPopupView {
         // Heading
         col.add_child(
             Text::new(
-                "No node versions installed",
+                warp_i18n::t_static!("misc-node-no-versions"),
                 styles.ui_font_family,
                 styles.detail_font_size + 2.,
             )
@@ -251,7 +251,7 @@ impl NodeVersionPopupView {
         col.add_child(
             Container::new(
                 Text::new(
-                    "Try installing versions with nvm",
+                    warp_i18n::t_static!("misc-node-try-nvm"),
                     styles.ui_font_family,
                     styles.detail_font_size,
                 )
@@ -282,10 +282,14 @@ impl NodeVersionPopupView {
 
         col.add_child(
             Container::new(
-                Text::new("Installed", styles.ui_font_family, styles.detail_font_size)
-                    .with_style(Properties::default())
-                    .with_color(styles.secondary_text_color)
-                    .finish(),
+                Text::new(
+                    warp_i18n::t_static!("misc-node-installed-badge"),
+                    styles.ui_font_family,
+                    styles.detail_font_size,
+                )
+                .with_style(Properties::default())
+                .with_color(styles.secondary_text_color)
+                .finish(),
             )
             .with_horizontal_padding(12.)
             .finish(),

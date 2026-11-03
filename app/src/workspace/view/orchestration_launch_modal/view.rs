@@ -269,7 +269,7 @@ impl OrchestrationLaunchModal {
 
     fn render_title(appearance: &Appearance) -> Box<dyn Element> {
         Text::new(
-            "Orchestrate any agent, anywhere",
+            warp_i18n::t_static!("ai-ui-orchestration-modal-title"),
             appearance.ui_font_family(),
             20.,
         )
@@ -280,7 +280,7 @@ impl OrchestrationLaunchModal {
 
     fn render_description(appearance: &Appearance) -> Box<dyn Element> {
         Text::new(
-            "We've made major improvements to Warp's cloud agent orchestration platform, Oz.",
+            warp_i18n::t_static!("ai-ui-orchestration-modal-description"),
             appearance.ui_font_family(),
             14.,
         )

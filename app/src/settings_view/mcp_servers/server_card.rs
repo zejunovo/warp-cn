@@ -223,7 +223,9 @@ impl From<ServerCardStatus> for ServerCardOptions {
                     indicator_type: StatusElementTypes::Circle,
                     color: StatusColor::Neutral,
                 }),
-                status_line: Some("Offline".to_string()),
+                status_line: Some(
+                    warp_i18n::t_static!("settings-mcp-card-status-offline").to_string(),
+                ),
                 background: Background::Filled,
                 full_card_clickable: false,
             },
@@ -243,7 +245,9 @@ impl From<ServerCardStatus> for ServerCardOptions {
                     indicator_type: StatusElementTypes::Circle,
                     color: StatusColor::Yellow,
                 }),
-                status_line: Some("Starting server...".to_string()),
+                status_line: Some(
+                    warp_i18n::t_static!("settings-mcp-card-status-starting").to_string(),
+                ),
                 background: Background::Filled,
                 full_card_clickable: false,
             },
@@ -263,7 +267,9 @@ impl From<ServerCardStatus> for ServerCardOptions {
                     indicator_type: StatusElementTypes::Circle,
                     color: StatusColor::Yellow,
                 }),
-                status_line: Some("Authenticating...".to_string()),
+                status_line: Some(
+                    warp_i18n::t_static!("settings-mcp-card-status-authenticating").to_string(),
+                ),
                 background: Background::Filled,
                 full_card_clickable: false,
             },
@@ -303,7 +309,9 @@ impl From<ServerCardStatus> for ServerCardOptions {
                     indicator_type: StatusElementTypes::Circle,
                     color: StatusColor::Neutral,
                 }),
-                status_line: Some("Shutting down...".to_string()),
+                status_line: Some(
+                    warp_i18n::t_static!("settings-mcp-card-status-shutting-down").to_string(),
+                ),
                 background: Background::Filled,
                 full_card_clickable: false,
             },
@@ -474,7 +482,7 @@ impl ServerCardView {
 
         if tools.is_empty() {
             return Text::new(
-                "No tools available".to_string(),
+                warp_i18n::t_static!("settings-mcp-no-tools-available").to_string(),
                 appearance.ui_font_family(),
                 appearance.ui_font_size(),
             )
@@ -496,7 +504,10 @@ impl ServerCardView {
                 .with_cross_axis_alignment(CrossAxisAlignment::Center)
                 .with_child(
                     Text::new(
-                        format!("{} tools available", tools.len()),
+                        warp_i18n::t!(
+                            "settings-mcp-n-tools-available",
+                            count = tools.len().to_string()
+                        ),
                         appearance.ui_font_family(),
                         appearance.ui_font_size(),
                     )
@@ -745,7 +756,7 @@ impl ServerCardView {
                     self.build_icon_button(
                         appearance,
                         Icon::Code1,
-                        "Show logs".to_string(),
+                        warp_i18n::t_static!("settings-mcp-card-tooltip-show-logs").to_string(),
                         self.mouse_handles.show_logs_icon_button.clone(),
                     )
                     .on_click(move |ctx, _, _| {
@@ -760,7 +771,7 @@ impl ServerCardView {
                     self.build_icon_button(
                         appearance,
                         Icon::LogOut,
-                        "Log out".to_string(),
+                        warp_i18n::t_static!("settings-mcp-card-tooltip-log-out").to_string(),
                         self.mouse_handles.logout_icon_button.clone(),
                     )
                     .on_click(move |ctx, _, _| {
@@ -775,7 +786,7 @@ impl ServerCardView {
                     self.build_icon_button(
                         appearance,
                         Icon::Share,
-                        "Share server".to_string(),
+                        warp_i18n::t_static!("settings-mcp-card-tooltip-share-server").to_string(),
                         self.mouse_handles.share_icon_button.clone(),
                     )
                     .on_click(move |ctx, _, _| {
@@ -790,7 +801,7 @@ impl ServerCardView {
                     self.build_icon_button(
                         appearance,
                         Icon::Pencil,
-                        "Edit".to_string(),
+                        warp_i18n::t_static!("settings-mcp-card-tooltip-edit").to_string(),
                         self.mouse_handles.edit_icon_button.clone(),
                     )
                     .on_click(move |ctx, _, _| {
@@ -812,7 +823,9 @@ impl ServerCardView {
                     ButtonVariant::Secondary,
                     self.mouse_handles.view_logs_button.clone(),
                 )
-                .with_centered_text_label("View logs".to_string())
+                .with_centered_text_label(
+                    warp_i18n::t_static!("settings-mcp-card-button-view-logs").to_string(),
+                )
                 .build()
                 .on_click(move |ctx, _, _| {
                     ctx.dispatch_typed_action(ServerCardAction::ViewLogs(item_id))
@@ -828,7 +841,9 @@ impl ServerCardView {
                     ButtonVariant::Accent,
                     self.mouse_handles.edit_config_button.clone(),
                 )
-                .with_centered_text_label("Edit config".to_string())
+                .with_centered_text_label(
+                    warp_i18n::t_static!("settings-mcp-card-button-edit-config").to_string(),
+                )
                 .build()
                 .on_click(move |ctx, _, _| {
                     ctx.dispatch_typed_action(ServerCardAction::Edit(item_id));
@@ -844,7 +859,9 @@ impl ServerCardView {
                     ButtonVariant::Accent,
                     self.mouse_handles.setup_button.clone(),
                 )
-                .with_centered_text_label("Set up".to_string())
+                .with_centered_text_label(
+                    warp_i18n::t_static!("settings-mcp-card-button-set-up").to_string(),
+                )
                 .build()
                 .on_click(move |ctx, _, _| {
                     ctx.dispatch_typed_action(ServerCardAction::Install(item_id));
@@ -892,7 +909,7 @@ impl ServerCardView {
             .build_icon_button(
                 appearance,
                 Icon::Refresh,
-                "Server update available".to_string(),
+                warp_i18n::t_static!("settings-mcp-card-tooltip-update-available").to_string(),
                 self.mouse_handles.update_icon_button.clone(),
             )
             .on_click(move |ctx, _, _| {

@@ -727,7 +727,7 @@ fn read_openai_api_key_secret_value(
                 // Non-interactive: leave the base URL unset rather than prompting or failing.
                 None
             } else {
-                match inquire::Text::new("OpenAI base URL (optional, press Enter to skip):")
+                match inquire::Text::new(warp_i18n::t_static!("ai-ui-openai-base-url-prompt"))
                     .with_help_message("e.g. https://us.api.openai.com/v1 for a regional endpoint")
                     .prompt()
                 {
@@ -937,7 +937,7 @@ fn read_docker_registry_secret_value(
             if !is_terminal {
                 return Err(anyhow::anyhow!(NON_INTERACTIVE_REQUIRED_MSG));
             }
-            match inquire::Text::new("Registry host (e.g. ghcr.io):").prompt() {
+            match inquire::Text::new(warp_i18n::t_static!("ai-ui-registry-host-prompt")).prompt() {
                 Ok(value) if !value.is_empty() => value,
                 Ok(_) => return Ok(None),
                 Err(InquireError::OperationCanceled | InquireError::OperationInterrupted) => {
@@ -955,7 +955,9 @@ fn read_docker_registry_secret_value(
             if !is_terminal {
                 return Err(anyhow::anyhow!(NON_INTERACTIVE_REQUIRED_MSG));
             }
-            match inquire::Text::new("Registry username:").prompt() {
+            match inquire::Text::new(warp_i18n::t_static!("ai-ui-registry-username-prompt"))
+                .prompt()
+            {
                 Ok(value) if !value.is_empty() => value,
                 Ok(_) => return Ok(None),
                 Err(InquireError::OperationCanceled | InquireError::OperationInterrupted) => {

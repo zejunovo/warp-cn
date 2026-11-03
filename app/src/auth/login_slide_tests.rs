@@ -2,6 +2,8 @@ use super::LoginPurpose;
 
 #[test]
 fn account_first_copy_matches_product_spec() {
+    warp_i18n::init(warp_i18n::Locale::En).unwrap();
+    warp_i18n::set_locale(warp_i18n::Locale::En);
     assert_eq!(
         LoginPurpose::AccountFirst.copy(),
         (

@@ -33,7 +33,9 @@ impl WarpifyFooterView {
             ActionButton::new("Warpify subshell", AgentFooterButtonTheme::new(None))
                 .with_icon(Icon::Warp)
                 .with_size(button_size)
-                .with_tooltip("Enable Warp shell integration in this session")
+                .with_tooltip(warp_i18n::t_static!(
+                    "ui-final-enable-warp-shell-integration-in-this-session"
+                ))
                 .with_tooltip_alignment(TooltipAlignment::Left)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(WarpifyFooterViewAction::Warpify);
@@ -45,7 +47,9 @@ impl WarpifyFooterView {
                 .with_icon(Icon::Agent)
                 .with_keybinding(KeystrokeSource::Fixed(USE_AGENT_KEYSTROKE.clone()), ctx)
                 .with_size(button_size)
-                .with_tooltip("Ask the Warp agent to assist")
+                .with_tooltip(warp_i18n::t_static!(
+                    "ui-final-ask-the-warp-agent-to-assist"
+                ))
                 .with_tooltip_alignment(TooltipAlignment::Left)
                 .on_click(|ctx| {
                     ctx.dispatch_typed_action(WarpifyFooterViewAction::UseAgent);

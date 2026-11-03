@@ -65,7 +65,7 @@ impl Viewer {
                     .with_icon(Icon::Check)
                     .with_disabled(is_reconnecting)
                     .into_item(),
-                MenuItemFields::new("Edit")
+                MenuItemFields::new(warp_i18n::t_static!("menu-app-edit"))
                     .with_indent()
                     .with_disabled(is_reconnecting)
                     .with_on_select_action(
@@ -81,7 +81,7 @@ impl Viewer {
                     .with_disabled(true)
                     .into_item(),
                 // TODO: this should still dispatch an action that eventually no-ops
-                MenuItemFields::new("Edit")
+                MenuItemFields::new(warp_i18n::t_static!("menu-app-edit"))
                     .with_icon(Icon::Check)
                     .with_disabled(is_reconnecting)
                     .into_item(),

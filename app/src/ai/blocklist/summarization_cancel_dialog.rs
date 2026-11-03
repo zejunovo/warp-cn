@@ -87,7 +87,9 @@ impl View for SummarizationCancelDialog {
             appearance
                 .ui_builder()
                 .button(ButtonVariant::Secondary, self.cancel_mouse.clone())
-                .with_centered_text_label("Cancel summarization".into())
+                .with_centered_text_label(
+                    warp_i18n::t_static!("ui-final-cancel-summarization").into(),
+                )
                 .with_style(UiComponentStyles {
                     width: Some(CANCEL_BUTTON_WIDTH),
                     ..button_style
@@ -105,7 +107,9 @@ impl View for SummarizationCancelDialog {
         let continue_button = appearance
             .ui_builder()
             .button(ButtonVariant::Accent, self.continue_mouse.clone())
-            .with_centered_text_label("Continue summarization".into())
+            .with_centered_text_label(
+                warp_i18n::t_static!("ui-final-continue-summarization").into(),
+            )
             .with_style(UiComponentStyles {
                 width: Some(CONTINUE_BUTTON_WIDTH),
                 ..button_style
@@ -163,8 +167,8 @@ impl View for SummarizationCancelDialog {
 
         // Build dialog content
         let dialog_core = Dialog::new(
-            "Cancel summarization?".to_string(),
-            Some("Summarization is already running. If you cancel now, the request may still incur cost, any progress so far will be lost, and restarting will take longer.\n\nAre you sure you want to cancel?".to_string()),
+            warp_i18n::t_static!("ui-final-cancel-summarization-f3e11f").to_string(),
+            Some(warp_i18n::t!("dialog-cancel-summarization-body")),
             UiComponentStyles {
                 padding: Some(Coords::uniform(24.)),
                 ..dialog_styles

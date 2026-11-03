@@ -112,7 +112,7 @@ pub fn render_input_row<A: Action + Clone>(
             height: Some(SKIP_BUTTON_HEIGHT),
             ..Default::default()
         })
-        .with_centered_text_label("Create team".to_owned());
+        .with_centered_text_label(warp_i18n::t_static!("drive-create-team").to_owned());
     if name(ctx, team_name_editor).is_none() {
         create_team_button = create_team_button
             .with_style(UiComponentStyles {

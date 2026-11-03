@@ -90,9 +90,13 @@ impl CodexModal {
         // Magenta/pink color for the badge
         let magenta: ColorU = theme.terminal_colors().normal.magenta.into();
         Container::new(
-            Text::new("New", appearance.ui_font_family(), 12.)
-                .with_color(magenta)
-                .finish(),
+            Text::new(
+                warp_i18n::t_static!("ai-ui-codex-new"),
+                appearance.ui_font_family(),
+                12.,
+            )
+            .with_color(magenta)
+            .finish(),
         )
         .with_vertical_padding(4.)
         .with_horizontal_padding(10.)

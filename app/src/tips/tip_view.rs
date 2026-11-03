@@ -395,7 +395,9 @@ impl TipsView {
                         Align::new(
                             appearance
                                 .ui_builder()
-                                .paragraph("Skip Welcome Tips".to_string())
+                                .paragraph(
+                                    warp_i18n::t_static!("ui-final-skip-welcome-tips").to_string(),
+                                )
                                 .build()
                                 .finish(),
                         )
@@ -460,7 +462,9 @@ impl TipsView {
             .finish();
 
         let sub_text = ui_builder
-            .paragraph("Nice work on finishing the welcome tips!")
+            .paragraph(warp_i18n::t_static!(
+                "ui-final-nice-work-on-finishing-the-welcome-tips"
+            ))
             .with_style(UiComponentStyles {
                 font_size: Some(12.),
                 font_color: Some(Fill::white().into()),
@@ -480,7 +484,9 @@ impl TipsView {
                     .set_width(152.)
                     .set_height(34.),
             )
-            .with_centered_text_label("Close Welcome Tips".to_string())
+            .with_centered_text_label(
+                warp_i18n::t_static!("ui-final-close-welcome-tips").to_string(),
+            )
             .build()
             .on_click(|ctx, _, _| ctx.dispatch_typed_action(TipsAction::DismissTips))
             .finish();
